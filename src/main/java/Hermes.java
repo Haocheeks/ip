@@ -3,6 +3,9 @@ import java.util.Scanner;
 public class Hermes {
 
     private static final String EXIT_COMMAND = "bye"; // possible to use ENUM here
+    private static final String LIST_COMMAND = "list";
+    private static String[] logBook = new String[100];
+    private static int curr = 0;
 
     public static void main(String[] args) {
         String opening = """
@@ -29,7 +32,12 @@ public class Hermes {
                 break;
             }
 
-            respond(command);
+            if (command.equals(LIST_COMMAND)) {
+                vommit();
+                continue;
+            }
+
+            log(command);
         }
     }
 
@@ -47,6 +55,27 @@ public class Hermes {
                 ____________________________________________________________
                 
                 """, message);
+
+        System.out.println(output);
+    }
+
+    private static void log(String message) {
+        Hermes.logBook[curr++] = message;
+        respond("Added: " + message);
+    }
+
+    private static void vommit() {
+        String output = """
+               ____________________________________________________________
+                
+                """;
+
+        for (int i = 0; i < Hermes.curr; i++) {
+            String temp = String.format("%d. %s\n", i + 1, Hermes.logBook[i]);
+            output += temp;
+        }
+
+        output += "____________________________________________________________";
 
         System.out.println(output);
     }
