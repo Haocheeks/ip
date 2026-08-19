@@ -8,20 +8,21 @@ public class LogBook {
     }
 
     /**
-     * Adds message to the logBook for storage and replies to provide an update
-     * with a message wrapped in divider line.
+     * Stores an already-built task and reports how many tasks are now held.
      *
-     * @param message the text that is logged
+     * <p>The caller decides which kind of {@link Task} to create, so this
+     * method works unchanged for todos, deadlines and events.
+     *
+     * @param task the task to store
+     * @return the message confirming the task was added
      */
-    public String log(String message) {
-        Task task = new Task(message);
-
+    public String log(Task task) {
         this.logBook.add(task);
         return String.format("""
                 Got it. I've added this task:
                   %s
-                Now you have %d tasks in the list.
-                """, task, this.logBook.size());
+                Now you have %d task%s in the list.
+                """, task, this.logBook.size(), (this.logBook.size() == 1 ? "" : "s"));
     }
 
     /**

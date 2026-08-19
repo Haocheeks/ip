@@ -9,7 +9,7 @@ public class Deadline extends Task {
 
     @Override
     public String toString() {
-        String output = String.format("[D] %s (by: %s)",
+        String output = String.format("[D]%s (by: %s)",
                 super.toString(), by);
         return output;
     }

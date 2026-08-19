@@ -6,7 +6,7 @@ public class ToDo extends Task {
 
     @Override
     public String toString(){
-        String output = String.format("[T] %s", super.toString());
+        String output = String.format("[T]%s", super.toString());
         return output;
     }
 }
