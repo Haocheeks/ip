@@ -1,11 +1,12 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class LogBook {
-    private Task[] logBook;
-    private int curr = 0;
+    private ArrayList<Task> logBook;
+    private int curr = 1;
 
     public LogBook(int size) {
-        this.logBook = new Task[size];
+        this.logBook = new ArrayList<>();
     }
 
     /**
@@ -15,9 +16,9 @@ public class LogBook {
      * @param message the text that is logged
      */
     public void log(String message) {
-        Task task = new Task(message, this.curr + 1);
+        Task task = new Task(message, this.curr++);
 
-        this.logBook[curr++] = task;
+        this.logBook.add(task);
         System.out.printf("""
                 ____________________________________________________________
                 Added: %s
@@ -32,8 +33,8 @@ public class LogBook {
                 ____________________________________________________________
                 """;
 
-        for (int i = 0; i < curr; i++) {
-            output += logBook[i].toString() + "\n";
+        for (int i = 0; i < this.logBook.size(); i++) {
+            output += logBook.get(i) + "\n";
         }
 
         output += """
