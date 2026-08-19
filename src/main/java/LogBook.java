@@ -2,7 +2,6 @@ import java.util.ArrayList;
 
 public class LogBook {
     private ArrayList<Task> logBook;
-    private int curr = 1;
 
     public LogBook() {
         this.logBook = new ArrayList<>();
@@ -15,10 +14,14 @@ public class LogBook {
      * @param message the text that is logged
      */
     public String log(String message) {
-        Task task = new Task(message, this.curr++);
+        Task task = new Task(message);
 
         this.logBook.add(task);
-        return String.format("Added: %s", message);
+        return String.format("""
+                Got it. I've added this task:
+                  %s
+                Now you have %d tasks in the list.
+                """, task, this.logBook.size());
     }
 
     /**

@@ -3,7 +3,7 @@ public class Task {
     private String message;
     private boolean completed = false;
 
-    public Task(String message, int id) {
+    public Task(String message) {
         this.message = message;
     }
 
