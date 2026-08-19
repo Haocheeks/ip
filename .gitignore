@@ -20,3 +20,5 @@ _temp/
 text-ui-test/EXPECTED-UNIX.TXT
 
 *.class
+
+.codex
