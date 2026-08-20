@@ -2,14 +2,6 @@ import java.util.Scanner;
 
 public class Hermes {
 
-    private static final String EXIT_COMMAND = "bye"; // possible to use ENUM here
-    private static final String LIST_COMMAND = "list";
-    private static final String MARK_COMMAND = "mark";
-    private static final String DELETE_COMMAND = "delete";
-    private static final String UNMARK_COMMAND = "unmark";
-    private static final String TODO_COMMAND = "todo";
-    private static final String DEADLINE_COMMAND = "deadline";
-    private static final String EVENT_COMMAND = "event";
     private static final String DIVIDER =
             "____________________________________________________________";
 
@@ -45,21 +37,21 @@ public class Hermes {
 
             String[] parts = command.split("\\s+", 2);
             String keyword = parts[0];
+            Command instruction = Command.fromKeyword(keyword);
 
             try {
-                switch (keyword) {
-                    case EXIT_COMMAND -> {
+                switch (instruction) {
+                    case BYE -> {
                         respond("Goodbye, thank you for contacting me!");
                         isRunning = false;
                     }
-                    case LIST_COMMAND -> respond(logBook.toString());
-                    case MARK_COMMAND -> respond(changeStatus(parts, true));
-                    case UNMARK_COMMAND -> respond(changeStatus(parts, false));
-                    case DELETE_COMMAND -> respond(delete(parts));
-                    case TODO_COMMAND -> respond(addToDo(parts));
-                    case DEADLINE_COMMAND -> respond(addDeadline(parts));
-                    case EVENT_COMMAND -> respond(addEvent(parts));
-                    default -> respond(String.format(
+                    case LIST -> respond(logBook.toString());
+                    case MARK, UNMARK -> respond(changeStatus(instruction, parts));
+                    case DELETE -> respond(delete(parts));
+                    case TODO -> respond(addToDo(parts));
+                    case DEADLINE -> respond(addDeadline(parts));
+                    case EVENT -> respond(addEvent(parts));
+                    case UNKNOWN -> respond(String.format(
                             "Sorry, I am not familiar with the '%s' command.", keyword));
                 }
             } catch (HermesException e) {
@@ -72,15 +64,17 @@ public class Hermes {
      * Handles the {@code mark} and {@code unmark} commands, which both expect a
      * task number as their argument.
      *
-     * @param parts      the command split into keyword and argument
-     * @param markAsDone true to mark the task complete, false to un-complete it
-     * @return the message to show the user, including any error message
+     * @param instruction either {@link Command#MARK} or {@link Command#UNMARK}
+     * @param parts       the command split into keyword and argument
+     * @return the message confirming the change
+     * @throws HermesException if the task number is missing or not valid
      */
-    private static String changeStatus(String[] parts, boolean markAsDone) throws HermesException {
-        String keyword = markAsDone ? MARK_COMMAND : UNMARK_COMMAND;
+    private static String changeStatus(Command instruction, String[] parts) throws HermesException {
+        boolean markAsDone = instruction == Command.MARK;
 
         if (parts.length < 2) {
-            throw new HermesException(String.format("Please tell me which task, for example: %s 1", keyword));
+            throw new HermesException(
+                    "Please tell me which task, for example: " + instruction.getExample());
         }
 
         try {
@@ -91,10 +85,18 @@ public class Hermes {
         }
     }
 
+    /**
+     * Handles the {@code delete} command, which expects a task number.
+     *
+     * @param parts the command split into keyword and argument
+     * @return the message confirming the removal
+     * @throws HermesException if the task number is missing or not valid
+     */
     private static String delete(String[] parts) throws HermesException {
 
         if (parts.length < 2) {
-            throw new HermesException("Please tell me which task you will like to delete, for example: delete 3");
+            throw new HermesException("Please tell me which task you will like to delete, for example: "
+                    + Command.DELETE.getExample());
         }
 
         try {
@@ -110,11 +112,13 @@ public class Hermes {
      * Creates a {@link ToDo} from a command such as {@code todo borrow book}.
      *
      * @param parts the command split into keyword and argument
-     * @return the message to show the user, including any error message
+     * @return the message to show the user
+     * @throws HermesException if a todo description is missing
      */
     private static String addToDo(String[] parts) throws HermesException {
         if (parts.length < 2 || parts[1].isBlank()) {
-            throw new HermesException("A todo needs a description, for example: todo borrow book");
+            throw new HermesException("A todo needs a description, for example: "
+                    + Command.TODO.getExample());
         }
 
         return logBook.log(new ToDo(parts[1].trim()));
@@ -125,10 +129,11 @@ public class Hermes {
      * {@code deadline return book /by Sunday}.
      *
      * @param parts the command split into keyword and argument
-     * @return the message to show the user, including any error message
+     * @return the message to show the user
+     * @throws HermesException if any name or deadline is missing
      */
     private static String addDeadline(String[] parts) throws HermesException {
-        String example = "for example: deadline complete tutorial /by Sunday";
+        String example = "for example: " + Command.DEADLINE.getExample();
 
         if (parts.length < 2 || parts[1].isBlank()) {
             throw new HermesException("A deadline needs a description, " + example);
@@ -155,10 +160,11 @@ public class Hermes {
      * {@code event project meeting /from Mon 2pm /to 4pm}.
      *
      * @param parts the command split into keyword and argument
-     * @return the message to show the user, including any error message
+     * @return the message to show the user
+     * @throws HermesException if any name, start or end time is missing
      */
     private static String addEvent(String[] parts) throws HermesException {
-        String example = "for example: event project meeting /from Mon 2pm /to 4pm";
+        String example = "for example: " + Command.EVENT.getExample();
 
         if (parts.length < 2 || parts[1].isBlank()) {
             throw new HermesException("An event needs a description, " + example);
