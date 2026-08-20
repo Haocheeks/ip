@@ -5,6 +5,7 @@ public class Hermes {
     private static final String EXIT_COMMAND = "bye"; // possible to use ENUM here
     private static final String LIST_COMMAND = "list";
     private static final String MARK_COMMAND = "mark";
+    private static final String DELETE_COMMAND = "delete";
     private static final String UNMARK_COMMAND = "unmark";
     private static final String TODO_COMMAND = "todo";
     private static final String DEADLINE_COMMAND = "deadline";
@@ -54,6 +55,7 @@ public class Hermes {
                     case LIST_COMMAND -> respond(logBook.toString());
                     case MARK_COMMAND -> respond(changeStatus(parts, true));
                     case UNMARK_COMMAND -> respond(changeStatus(parts, false));
+                    case DELETE_COMMAND -> respond(delete(parts));
                     case TODO_COMMAND -> respond(addToDo(parts));
                     case DEADLINE_COMMAND -> respond(addDeadline(parts));
                     case EVENT_COMMAND -> respond(addEvent(parts));
@@ -85,8 +87,23 @@ public class Hermes {
             int index = Integer.parseInt(parts[1].trim()) - 1;
             return markAsDone ? logBook.mark(index) : logBook.unmark(index);
         } catch (NumberFormatException e) {
-            return String.format("'%s' is not a task number.", parts[1]);
+            throw new HermesException(String.format("'%s' is not a task number.", parts[1]));
         }
+    }
+
+    private static String delete(String[] parts) throws HermesException {
+
+        if (parts.length < 2) {
+            throw new HermesException("Please tell me which task you will like to delete, for example: delete 3");
+        }
+
+        try {
+            int index = Integer.parseInt(parts[1].trim()) - 1;
+            return logBook.delete(index);
+        } catch (NumberFormatException e) {
+            throw new HermesException(String.format("'%s' is not a task number.", parts[1]));
+        }
+
     }
 
     /**

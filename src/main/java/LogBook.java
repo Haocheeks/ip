@@ -31,10 +31,8 @@ public class LogBook {
      * @param id the task index in the array
      * @return a response
      */
-    public String mark(int id) {
-        if (id < 0 || id >= this.logBook.size()) {
-            return "Sorry, I have no task numbered " + (id + 1) + ".";
-        }
+    public String mark(int id) throws HermesException {
+        checkIndex(id);
         return this.logBook.get(id).mark();
     }
 
@@ -44,11 +42,40 @@ public class LogBook {
      * @param id the task index in the array
      * @return a response
      */
-    public String unmark(int id) {
-        if (id < 0 || id >= this.logBook.size()) {
-            return "Sorry, I have no task numbered " + (id + 1) + ".";
-        }
+    public String unmark(int id) throws HermesException {
+        checkIndex(id);
         return this.logBook.get(id).unmark();
+    }
+
+    /**
+     * Deletes a task from storage
+     *
+     * @param id the task index in the array
+     * @return a response
+     */
+    public String delete(int id) throws HermesException {
+        checkIndex(id);
+
+        Task removed = this.logBook.remove(id);
+        int remaining = this.logBook.size();
+
+        return String.format("""
+                Roger, I've removed this task:
+                  %s
+                Now you have %d task%s in the list. 
+                """, removed, remaining, (remaining == 1 ? "" : "s"));
+    }
+
+    /**
+     * Checks to ensure that the index inputted into the method is a valid one
+     *
+     * @param id index of task we are manipulating
+     * @throws HermesException error indicating index out of bounds exception
+     */
+    private void checkIndex(int id) throws HermesException {
+        if (id < 0 || id >= this.logBook.size()) {
+            throw new HermesException("Sorry, I have no task numbered " + (id + 1) + ".");
+        }
     }
 
     @Override
