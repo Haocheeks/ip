@@ -65,7 +65,7 @@ public class Hermes {
      * task number as their argument.
      *
      * @param instruction either {@link Command#MARK} or {@link Command#UNMARK}
-     * @param parts       the command split into keyword and argument
+     * @param parts the command split into keyword and argument
      * @return the message confirming the change
      * @throws HermesException if the task number is missing or not valid
      */
