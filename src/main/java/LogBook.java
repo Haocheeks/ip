@@ -1,10 +1,50 @@
 import java.util.ArrayList;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+
 public class LogBook {
     private ArrayList<Task> logBook;
+    private File hermesFile;
 
     public LogBook() {
         this.logBook = new ArrayList<>();
+        this.hermesFile = new File("data/Hermes.txt");
+        System.out.println("Hermes File: " + this.hermesFile);
+        loadLogBook();
+    }
+
+    /**
+     * Loads data from data/Hermes.txt into the LogBook class
+     */
+    private void loadLogBook() {
+        try {
+            Scanner scanner = new Scanner(this.hermesFile);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine().trim();
+                String[] parts = line.split("\\|");
+                String type =  parts[0].trim();
+
+                switch (type) {
+                    case "T" -> {
+                        Task task = new ToDo("1".equals(parts[1].trim()), parts[2].trim());
+                        logBook.add(task);
+                    }
+                    case "D" -> {
+                        Task task = new Deadline("1".equals(parts[1].trim()), parts[2].trim(), parts[3].trim());
+                        logBook.add(task);
+                    }
+                    case "E" -> {
+                        Task task = new Event("1".equals(parts[1].trim()), parts[2].trim(),  parts[3].trim(), parts[4].trim());
+                        logBook.add(task);
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
