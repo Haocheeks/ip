@@ -5,6 +5,9 @@ public class Hermes {
     private static final String DIVIDER =
             "____________________________________________________________";
 
+    /** The character used to separate fields in the data file. */
+    private static final String SEPARATOR = "|";
+
     private static LogBook logBook = new LogBook();
 
     public static void main(String[] args) {
@@ -22,6 +25,7 @@ public class Hermes {
                 """;
 
         System.out.println(opening);
+        warnAboutSkippedLines();
 
         Scanner scanner = new Scanner(System.in);
         boolean isRunning = true;
@@ -58,6 +62,28 @@ public class Hermes {
                 respond(e.getMessage());
             }
         }
+    }
+
+    /**
+     * Tells the user if any lines of the data file could not be understood
+     * when Hermes started.
+     *
+     * <p>Skipped lines are not held in memory, so the next save rewrites the
+     * file without them. Saying so up front gives the user the chance to
+     * repair the file before that happens.
+     */
+    private static void warnAboutSkippedLines() {
+        int skipped = logBook.getSkippedLines();
+
+        if (skipped == 0) {
+            return;
+        }
+
+        respond(String.format("""
+                Sorry, I could not read %d line%s in my records and have skipped %s.
+                Anything I cannot read is lost the next time I save, so please check
+                data/Hermes.txt first if you need it.
+                """, skipped, skipped == 1 ? "" : "s", skipped == 1 ? "it" : "them"));
     }
 
     /**
@@ -109,6 +135,26 @@ public class Hermes {
     }
 
     /**
+     * Rejects any user-supplied field containing the '|' character.
+     *
+     * <p>Tasks are stored as pipe-separated fields, so a '|' inside a field
+     * would make the saved line impossible to read back correctly. Refusing it
+     * here means Hermes never writes a line it cannot understand later.
+     *
+     * @param fields the parts of the task that will be written to file
+     * @throws HermesException if any field contains the separator
+     */
+    private static void rejectSeparator(String... fields) throws HermesException {
+        for (String field : fields) {
+            if (field.contains(SEPARATOR)) {
+                throw new HermesException(String.format(
+                        "Sorry, a task cannot contain '%s', as I use it to separate "
+                                + "fields when saving your tasks.", SEPARATOR));
+            }
+        }
+    }
+
+    /**
      * Creates a {@link ToDo} from a command such as {@code todo borrow book}.
      *
      * @param parts the command split into keyword and argument
@@ -121,7 +167,10 @@ public class Hermes {
                     + Command.TODO.getExample());
         }
 
-        return logBook.log(new ToDo(parts[1].trim()));
+        String description = parts[1].trim();
+        rejectSeparator(description);
+
+        return logBook.log(new ToDo(description));
     }
 
     /**
@@ -151,6 +200,8 @@ public class Hermes {
         if (description.isEmpty() || by.isEmpty()) {
             throw new HermesException("A deadline needs both a description and a /by date, " + example);
         }
+
+        rejectSeparator(description, by);
 
         return logBook.log(new Deadline(description, by));
     }
@@ -189,6 +240,8 @@ public class Hermes {
         if (description.isEmpty() || start.isEmpty() || end.isEmpty()) {
             throw new HermesException("An event needs a description, a /from time and a /to time, " + example);
         }
+
+        rejectSeparator(description, start, end);
 
         return logBook.log(new Event(description, start, end));
     }
