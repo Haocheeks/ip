@@ -15,19 +15,18 @@ public class Event extends Task {
         this.end = end;
     }
 
+    @Override
     public String fileContent() {
-        String output = String.format("D | %d | %s | %s | %s",
+        return String.format("E | %d | %s | %s | %s",
                 this.isCompleted ? 1 : 0,
                 this.message,
                 this.start,
                 this.end);
-        return output;
     }
 
     @Override
     public String toString() {
-        String output = String.format("[E]%s (from: %s to: %s)",
+        return String.format("[E]%s (from: %s to: %s)",
                 super.toString(), start, end);
-        return output;
     }
 }

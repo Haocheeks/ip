@@ -1,7 +1,9 @@
-import java.util.ArrayList;
-
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -12,7 +14,6 @@ public class LogBook {
     public LogBook() {
         this.logBook = new ArrayList<>();
         this.hermesFile = new File("data/Hermes.txt");
-        System.out.println("Hermes File: " + this.hermesFile);
         loadLogBook();
     }
 
@@ -37,11 +38,13 @@ public class LogBook {
                         logBook.add(task);
                     }
                     case "E" -> {
-                        Task task = new Event("1".equals(parts[1].trim()), parts[2].trim(),  parts[3].trim(), parts[4].trim());
+                        Task task = new Event("1".equals(parts[1].trim()), parts[2].trim(), parts[3].trim(), parts[4].trim());
                         logBook.add(task);
                     }
                 }
             }
+
+            scanner.close();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -58,11 +61,34 @@ public class LogBook {
      */
     public String log(Task task) {
         this.logBook.add(task);
+        this.save();
         return String.format("""
                 Got it. I've added this task:
                   %s
                 Now you have %d task%s in the list.
                 """, task, this.logBook.size(), (this.logBook.size() == 1 ? "" : "s"));
+    }
+
+    /**
+     * Writes every task held in memory to data/Hermes.txt, replacing whatever
+     * the file held before.
+     *
+     * <p>The in-memory list is the single source of truth: the file is only ever
+     * a dump of it. Rewriting the file in full means no operation has to keep
+     * file lines and list indices in step by hand.
+     */
+    private void save() {
+        List<String> lines = new ArrayList<>();
+
+        for (Task task : this.logBook) {
+            lines.add(task.fileContent());
+        }
+
+        try {
+            Files.write(this.hermesFile.toPath(), lines);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -73,7 +99,9 @@ public class LogBook {
      */
     public String mark(int id) throws HermesException {
         checkIndex(id);
-        return this.logBook.get(id).mark();
+        String output = this.logBook.get(id).mark();
+        this.save();
+        return output;
     }
 
     /**
@@ -84,7 +112,9 @@ public class LogBook {
      */
     public String unmark(int id) throws HermesException {
         checkIndex(id);
-        return this.logBook.get(id).unmark();
+        String output = this.logBook.get(id).unmark();
+        this.save();
+        return output;
     }
 
     /**
@@ -98,11 +128,12 @@ public class LogBook {
 
         Task removed = this.logBook.remove(id);
         int remaining = this.logBook.size();
+        this.save();
 
         return String.format("""
                 Roger, I've removed this task:
                   %s
-                Now you have %d task%s in the list. 
+                Now you have %d task%s in the list.
                 """, removed, remaining, (remaining == 1 ? "" : "s"));
     }
 
