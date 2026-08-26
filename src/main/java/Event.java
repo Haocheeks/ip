@@ -1,15 +1,17 @@
+import java.time.LocalDateTime;
+
 public class Event extends Task {
 
-    protected String start;
-    protected String end;
+    protected LocalDateTime start;
+    protected LocalDateTime end;
 
-    public Event(String message, String start, String end) {
+    public Event(String message, LocalDateTime start, LocalDateTime end) {
         super(message);
         this.start = start;
         this.end = end;
     }
 
-    public Event(Boolean isCompleted, String message, String start, String end) {
+    public Event(Boolean isCompleted, String message, LocalDateTime start, LocalDateTime end) {
         super(isCompleted, message);
         this.start = start;
         this.end = end;
