@@ -1,9 +1,14 @@
-public class Task {
+public abstract class Task {
 
-    private String message;
-    private boolean completed = false;
+    protected String message;
+    protected boolean isCompleted = false;
 
     public Task(String message) {
+        this.message = message;
+    }
+
+    public Task(boolean isCompleted, String message) {
+        this.isCompleted = isCompleted;
         this.message = message;
     }
 
@@ -13,13 +18,12 @@ public class Task {
      * @return a response
      */
     public String mark() {
-        if (!this.completed) {
-            this.completed = true;
-            String response = String.format("""
+        if (!this.isCompleted) {
+            this.isCompleted = true;
+            return String.format("""
                     Roger, I will mark this task as completed:
                       %s
                     """, this);
-            return response;
         } else {
             return "The task is already marked as completed.";
         }
@@ -31,8 +35,8 @@ public class Task {
      * @return
      */
     public String unmark() {
-        if (this.completed) {
-            this.completed = false;
+        if (this.isCompleted) {
+            this.isCompleted = false;
 
             String response = String.format("""
                     Alright, I will mark this task as incomplete:
@@ -45,12 +49,13 @@ public class Task {
         }
     }
 
+    public abstract String fileContent();
+
     @Override
     public String toString() {
-        String output = String.format(
+        return String.format(
                 "[%c] %s",
-                completed ? 'X' : ' ',
+                isCompleted ? 'X' : ' ',
                 this.message);
-        return output;
     }
 }

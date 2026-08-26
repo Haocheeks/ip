@@ -4,9 +4,17 @@ public class ToDo extends Task {
         super(message);
     }
 
+    public ToDo(boolean isCompleted, String message) {
+        super(isCompleted, message);
+    }
+
+    @Override
+    public String fileContent() {
+        return String.format("T | %d | %s", this.isCompleted ? 1 : 0, this.message);
+    }
+
     @Override
     public String toString(){
-        String output = String.format("[T]%s", super.toString());
-        return output;
+        return String.format("[T]%s", super.toString());
     }
 }
