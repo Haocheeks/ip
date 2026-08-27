@@ -1,3 +1,9 @@
+package hermes.command;
+
+import hermes.HermesException;
+import hermes.task.LogBook;
+import hermes.ui.Ui;
+
 /** Removes one task from the list. */
 public class DeleteCommand extends Command {
 

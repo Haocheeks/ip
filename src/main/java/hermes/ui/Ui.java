@@ -1,3 +1,5 @@
+package hermes.ui;
+
 import java.util.Scanner;
 
 /**

@@ -1,3 +1,7 @@
+package hermes.parser;
+
+import hermes.command.Command;
+
 /**
  * The command words Hermes understands, each paired with an example of correct
  * usage.

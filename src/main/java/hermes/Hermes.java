@@ -1,3 +1,11 @@
+package hermes;
+
+import hermes.command.Command;
+import hermes.parser.Parser;
+import hermes.task.LogBook;
+import hermes.task.Storage;
+import hermes.ui.Ui;
+
 /**
  * A command-line task assistant.
  *
