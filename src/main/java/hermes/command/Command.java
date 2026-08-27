@@ -1,9 +1,15 @@
+package hermes.command;
+
+import hermes.task.LogBook;
+import hermes.ui.Ui;
+import hermes.HermesException;
+
 /**
  * One instruction from the user, parsed and ready to carry out.
  *
  * <p>A Command holds whatever the user supplied — a task, an index, a date —
  * already checked and converted, so carrying it out cannot fail for want of
- * valid input. {@link Parser} decides which Command to build; {@link Hermes}
+ * valid input. Parser decides which Command to build; Hermes
  * runs it without knowing which one it has.
  */
 public abstract class Command {

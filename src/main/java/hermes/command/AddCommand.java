@@ -1,8 +1,15 @@
+package hermes.command;
+
+import hermes.HermesException;
+import hermes.task.LogBook;
+import hermes.task.Task;
+import hermes.ui.Ui;
+
 /**
  * Adds a task to the list.
  *
  * <p>One class serves todo, deadline and event: by the time a Command is built
- * the {@link Parser} has already produced the right kind of {@link Task}, so
+ * the Parser has already produced the right kind of {@link Task}, so
  * adding it is the same work in all three cases.
  */
 public class AddCommand extends Command {
