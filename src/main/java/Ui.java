@@ -63,6 +63,37 @@ public class Ui {
         System.out.println();
     }
 
+    /** Prints the parting message shown when the user types bye. */
+    public void showGoodbye() {
+        show("Goodbye, thank you for contacting me!");
+    }
+
+    /**
+     * Reports that the user typed something Hermes does not recognise.
+     *
+     * @param keyword the word the user typed in place of a command
+     */
+    public void showUnknownCommand(String keyword) {
+        show(String.format("Sorry, I am not familiar with the '%s' command.", keyword));
+    }
+
+    /**
+     * Reports that some of the stored records could not be read.
+     *
+     * <p>Skipped lines are not held in memory, so the next save rewrites the
+     * file without them. Saying so up front gives the user the chance to
+     * repair the file before that happens.
+     *
+     * @param skippedLines how many lines were unreadable, always at least one
+     */
+    public void showLoadingError(int skippedLines) {
+        show(String.format("""
+                Sorry, I could not read %d line%s in my records and have skipped %s.
+                Anything I cannot read is lost the next time I save, so please check
+                data/Hermes.txt first if you need it.
+                """, skippedLines, skippedLines == 1 ? "" : "s", skippedLines == 1 ? "it" : "them"));
+    }
+
     /**
      * Reports something that went wrong.
      *

@@ -31,7 +31,7 @@ public class Hermes {
             try {
                 switch (instruction) {
                     case BYE -> {
-                        ui.show("Goodbye, thank you for contacting me!");
+                        ui.showGoodbye();
                         isRunning = false;
                     }
                     case LIST -> ui.show(logBook.toString());
@@ -42,8 +42,7 @@ public class Hermes {
                     case EVENT -> ui.show(addEvent(parts));
                     case DUE -> ui.show(listTasksDueBy(command));
                     case SORT -> ui.show(logBook.sort());
-                    case UNKNOWN -> ui.show(String.format(
-                            "Sorry, I am not familiar with the '%s' command.", keyword));
+                    case UNKNOWN -> ui.showUnknownCommand(keyword);
                 }
             } catch (HermesException e) {
                 ui.showError(e.getMessage());
@@ -53,24 +52,14 @@ public class Hermes {
 
     /**
      * Tells the user if any lines of the data file could not be understood
-     * when Hermes started.
-     *
-     * <p>Skipped lines are not held in memory, so the next save rewrites the
-     * file without them. Saying so up front gives the user the chance to
-     * repair the file before that happens.
+     * when Hermes started, and says nothing when they all loaded.
      */
     private static void warnAboutSkippedLines() {
         int skipped = logBook.getSkippedLines();
 
-        if (skipped == 0) {
-            return;
+        if (skipped > 0) {
+            ui.showLoadingError(skipped);
         }
-
-        ui.show(String.format("""
-                Sorry, I could not read %d line%s in my records and have skipped %s.
-                Anything I cannot read is lost the next time I save, so please check
-                data/Hermes.txt first if you need it.
-                """, skipped, skipped == 1 ? "" : "s", skipped == 1 ? "it" : "them"));
     }
 
     /**
