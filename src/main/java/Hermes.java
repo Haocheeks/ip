@@ -57,6 +57,7 @@ public class Hermes {
                     case DEADLINE -> respond(addDeadline(parts));
                     case EVENT -> respond(addEvent(parts));
                     case DUE -> respond(listTasksDueBy(command));
+                    case SORT -> respond(logBook.sort());
                     case UNKNOWN -> respond(String.format(
                             "Sorry, I am not familiar with the '%s' command.", keyword));
                 }

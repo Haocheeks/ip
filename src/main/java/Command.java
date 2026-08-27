@@ -15,6 +15,7 @@ public enum Command {
     DEADLINE("deadline", "deadline complete tutorial /by 27 Aug 2026 1500"),
     EVENT("event", "event project meeting /from 27 Aug 2026 1500 /to 27 Aug 2026 1630"),
     DUE("due", "due /by 28 Aug 2026 1600"),
+    SORT("sort", "sort"),
 
     /** Anything the user typed that is not a recognised command. */
     UNKNOWN("", "");

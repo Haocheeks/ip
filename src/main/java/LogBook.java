@@ -223,6 +223,27 @@ public class LogBook {
     }
 
     /**
+     * Reorders the tasks by deadline, soonest first. Tasks without a date follow
+     * the dated ones, and completed tasks come last. The new order is written to
+     * storage, so it is still in place the next time Hermes starts.
+     *
+     * @return the reordered tasks, numbered exactly as the list command shows them
+     * @throws HermesException if the reordered tasks could not be written to storage
+     */
+    public String sort() throws HermesException {
+        if (this.logBook.isEmpty()) {
+            return "There is nothing to sort, your list is empty!";
+        }
+
+        // Comparator.naturalOrder() routes through Task.compareTo, which already
+        // defines this ordering, rather than restating it here.
+        this.logBook.sort(Comparator.naturalOrder());
+        this.save();
+
+        return String.format("I have sorted your tasks by deadline:%n%s", this);
+    }
+
+    /**
      * Checks to ensure that the index inputted into the method is a valid one
      *
      * @param id index of task we are manipulating
