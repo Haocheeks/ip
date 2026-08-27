@@ -85,13 +85,15 @@ public class Ui {
      * repair the file before that happens.
      *
      * @param skippedLines how many lines were unreadable, always at least one
+     * @param path where those records are stored, so the message can name it
      */
-    public void showLoadingError(int skippedLines) {
+    public void showLoadingError(int skippedLines, String path) {
         show(String.format("""
                 Sorry, I could not read %d line%s in my records and have skipped %s.
                 Anything I cannot read is lost the next time I save, so please check
-                data/Hermes.txt first if you need it.
-                """, skippedLines, skippedLines == 1 ? "" : "s", skippedLines == 1 ? "it" : "them"));
+                %s first if you need it.
+                """, skippedLines, skippedLines == 1 ? "" : "s",
+                skippedLines == 1 ? "it" : "them", path));
     }
 
     /**

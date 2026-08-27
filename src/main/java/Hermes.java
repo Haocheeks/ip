@@ -7,7 +7,9 @@ public class Hermes {
 
     private static Ui ui = new Ui();
 
-    private static LogBook logBook = new LogBook();
+    private static Storage storage = new Storage("data/Hermes.txt");
+
+    private static LogBook logBook = new LogBook(storage);
 
     public static void main(String[] args) {
         ui.showWelcome();
@@ -55,10 +57,10 @@ public class Hermes {
      * when Hermes started, and says nothing when they all loaded.
      */
     private static void warnAboutSkippedLines() {
-        int skipped = logBook.getSkippedLines();
+        int skipped = storage.getSkippedLines();
 
         if (skipped > 0) {
-            ui.showLoadingError(skipped);
+            ui.showLoadingError(skipped, storage.getPath());
         }
     }
 
