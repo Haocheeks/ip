@@ -99,8 +99,13 @@ def parse_plan(path):
         if current:
             aim = re.match(r"^\*\*Aim:\*\*\s*(.*)$", line)
             if aim:
-                current.aim = aim.group(1).strip()
+                # An aim may wrap over several lines; it ends at the first blank line.
+                parts = [aim.group(1).strip()]
                 index += 1
+                while index < len(lines) and lines[index].strip():
+                    parts.append(lines[index].strip())
+                    index += 1
+                current.aim = " ".join(part for part in parts if part)
                 continue
 
             if re.match(r"^\*\*Setup:\*\*", line):
