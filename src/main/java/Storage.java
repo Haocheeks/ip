@@ -16,6 +16,9 @@ import java.util.Scanner;
  */
 public class Storage {
 
+    /** The character used to separate fields in a stored line. */
+    private static final String SEPARATOR = "|";
+
     private final File file;
 
     /** How many lines the most recent {@link #load()} could not understand. */
@@ -151,6 +154,31 @@ public class Storage {
                     Your change applies to this session, but I will not remember it
                     once I close.
                     """, this.file));
+        }
+    }
+
+    /**
+     * Rejects any user-supplied field containing the '|' character.
+     *
+     * <p>Tasks are stored as pipe-separated fields, so a '|' inside a field
+     * would make the saved line impossible to read back correctly. Refusing it
+     * before a task is built means Hermes never writes a line it cannot
+     * understand later.
+     *
+     * <p>This is static because it describes the storage format itself rather
+     * than any particular file, so a caller can check text without holding a
+     * Storage of its own.
+     *
+     * @param fields the parts of the task that will be written to file
+     * @throws HermesException if any field contains the separator
+     */
+    public static void rejectSeparator(String... fields) throws HermesException {
+        for (String field : fields) {
+            if (field.contains(SEPARATOR)) {
+                throw new HermesException(String.format(
+                        "Sorry, a task cannot contain '%s', as I use it to separate "
+                                + "fields when saving your tasks.", SEPARATOR));
+            }
         }
     }
 
