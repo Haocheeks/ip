@@ -159,7 +159,7 @@ def normalise(raw):
 
 
 def compile_sources(classes_dir):
-    sources = sorted(str(p) for p in SOURCE_DIR.glob("*.java"))
+    sources = sorted(str(p) for p in SOURCE_DIR.rglob("*.java"))
     if not sources:
         raise SystemExit(f"No .java sources found in {SOURCE_DIR}")
     result = subprocess.run(
