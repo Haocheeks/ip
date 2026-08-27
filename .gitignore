@@ -24,3 +24,5 @@ text-ui-test/EXPECTED-UNIX.TXT
 .codex
 
 /data/
+# Python cache from the UI test runner
+__pycache__/
