@@ -25,6 +25,20 @@ public class LogBook {
     }
 
     /**
+     * Returns how many stored records could not be read when these tasks were
+     * loaded.
+     *
+     * <p>Storage counts them, since it is the class that reads the file. This
+     * exists so a caller can ask the task list whether it holds everything that
+     * was saved, without needing a reference to storage of its own.
+     *
+     * @return the number of skipped records, zero if everything loaded
+     */
+    public int getSkippedLines() {
+        return this.storage.getSkippedLines();
+    }
+
+    /**
      * Stores an already-built task and reports how many tasks are now held.
      *
      * <p>The caller decides which kind of {@link Task} to create, so this

@@ -163,14 +163,4 @@ public class Storage {
     public int getSkippedLines() {
         return this.skippedLines;
     }
-
-    /**
-     * Returns where the tasks are stored, so a message can name the file
-     * without a second copy of the path.
-     *
-     * @return the data file's path as given to the constructor
-     */
-    public String getPath() {
-        return this.file.getPath();
-    }
 }

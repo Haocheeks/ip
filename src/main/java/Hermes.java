@@ -5,11 +5,12 @@ public class Hermes {
     /** The character used to separate fields in the data file. */
     private static final String SEPARATOR = "|";
 
+    /** Where tasks are kept between runs. */
+    private static final String DATA_PATH = "data/Hermes.txt";
+
     private static Ui ui = new Ui();
 
-    private static Storage storage = new Storage("data/Hermes.txt");
-
-    private static LogBook logBook = new LogBook(storage);
+    private static LogBook logBook = new LogBook(new Storage(DATA_PATH));
 
     public static void main(String[] args) {
         ui.showWelcome();
@@ -57,10 +58,10 @@ public class Hermes {
      * when Hermes started, and says nothing when they all loaded.
      */
     private static void warnAboutSkippedLines() {
-        int skipped = storage.getSkippedLines();
+        int skipped = logBook.getSkippedLines();
 
         if (skipped > 0) {
-            ui.showLoadingError(skipped, storage.getPath());
+            ui.showLoadingError(skipped, DATA_PATH);
         }
     }
 
