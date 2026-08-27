@@ -11,13 +11,33 @@ import java.time.LocalDateTime;
 public class Parser {
 
     /**
-     * Identifies which command the user typed.
+     * Turns one line of input into the command it asks for.
+     *
+     * <p>Everything the command needs is read and checked here, so a command
+     * that comes back is ready to run. Input Hermes cannot use is reported as a
+     * {@link HermesException} instead, and nothing is carried out.
      *
      * @param input one full line of input, already trimmed
-     * @return the matching command, or {@link Keyword#UNKNOWN} if there is none
+     * @return the command the user asked for
+     * @throws HermesException if the input names a command but cannot supply it
      */
-    public Keyword parseKeyword(String input) {
-        return Keyword.of(parseCommandWord(input));
+    public Command parse(String input) throws HermesException {
+        Keyword keyword = Keyword.of(parseCommandWord(input));
+        String arguments = parseArguments(input);
+
+        return switch (keyword) {
+            case BYE -> new ByeCommand();
+            case LIST -> new ListCommand();
+            case MARK -> new MarkCommand(parseTaskNumber(arguments, keyword));
+            case UNMARK -> new UnmarkCommand(parseTaskNumber(arguments, keyword));
+            case DELETE -> new DeleteCommand(parseTaskNumber(arguments, keyword));
+            case TODO -> new AddCommand(parseToDo(arguments));
+            case DEADLINE -> new AddCommand(parseDeadline(arguments));
+            case EVENT -> new AddCommand(parseEvent(arguments));
+            case DUE -> new DueCommand(parseDueCutoff(arguments));
+            case SORT -> new SortCommand();
+            case UNKNOWN -> new UnknownCommand(parseCommandWord(input));
+        };
     }
 
     /**
@@ -27,7 +47,7 @@ public class Parser {
      * @param input one full line of input, already trimmed
      * @return the word the user typed as a command
      */
-    public String parseCommandWord(String input) {
+    private String parseCommandWord(String input) {
         return input.split("\\s+", 2)[0];
     }
 
@@ -37,7 +57,7 @@ public class Parser {
      * @param input one full line of input, already trimmed
      * @return the arguments, or an empty string if the command stood alone
      */
-    public String parseArguments(String input) {
+    private String parseArguments(String input) {
         String[] parts = input.split("\\s+", 2);
         return parts.length < 2 ? "" : parts[1];
     }
@@ -53,7 +73,7 @@ public class Parser {
      * @return the task's index in the list, counting from zero
      * @throws HermesException if the number is missing or is not a number
      */
-    public int parseTaskNumber(String arguments, Keyword instruction) throws HermesException {
+    private int parseTaskNumber(String arguments, Keyword instruction) throws HermesException {
         if (arguments.isBlank()) {
             throw new HermesException(missingTaskNumberMessage(instruction));
         }
@@ -84,7 +104,7 @@ public class Parser {
      * @return the task the user described
      * @throws HermesException if the description is missing or cannot be stored
      */
-    public Task parseToDo(String arguments) throws HermesException {
+    private Task parseToDo(String arguments) throws HermesException {
         if (arguments.isBlank()) {
             throw new HermesException("A todo needs a description, for example: "
                     + Keyword.TODO.getExample());
@@ -105,7 +125,7 @@ public class Parser {
      * @throws HermesException if the description or date is missing, cannot be
      *     stored, or is not a date Hermes recognises
      */
-    public Task parseDeadline(String arguments) throws HermesException {
+    private Task parseDeadline(String arguments) throws HermesException {
         String example = "for example: " + Keyword.DEADLINE.getExample();
 
         if (arguments.isBlank()) {
@@ -139,7 +159,7 @@ public class Parser {
      * @throws HermesException if any part is missing, cannot be stored, or is
      *     not a date Hermes recognises
      */
-    public Task parseEvent(String arguments) throws HermesException {
+    private Task parseEvent(String arguments) throws HermesException {
         String example = "for example: " + Keyword.EVENT.getExample();
 
         if (arguments.isBlank()) {
@@ -183,7 +203,7 @@ public class Parser {
      * @throws HermesException if the date is missing or is not one Hermes
      *     recognises
      */
-    public LocalDateTime parseDueCutoff(String arguments) throws HermesException {
+    private LocalDateTime parseDueCutoff(String arguments) throws HermesException {
         String[] fields = arguments.split("\\s*/by\\s*", 2);
 
         if (fields.length < 2 || fields[1].isBlank()) {

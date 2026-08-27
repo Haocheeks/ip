@@ -1,10 +1,10 @@
 /**
  * A command-line task assistant.
  *
- * <p>This class assembles the parts and runs the conversation. It reads a line
- * through {@link Ui}, has {@link Parser} make sense of it, asks {@link LogBook}
- * to carry it out, and shows the answer. It holds no user-facing text and no
- * knowledge of how input is worded or how tasks are stored.
+ * <p>This class assembles the parts and runs the conversation: read a line
+ * through {@link Ui}, have {@link Parser} turn it into a {@link Command}, run
+ * it, repeat. It does not know which commands exist, how they are worded, what
+ * they do, or how tasks are stored.
  */
 public class Hermes {
 
@@ -23,8 +23,6 @@ public class Hermes {
 
         boolean isRunning = true;
 
-        // The "bye" case cannot break out of the loop from inside a switch,
-        // so this flag ends the conversation instead.
         while (isRunning && ui.hasNextCommand()) {
             String input = ui.readCommand();
 
@@ -32,29 +30,10 @@ public class Hermes {
                 continue;
             }
 
-            Keyword instruction = parser.parseKeyword(input);
-            String arguments = parser.parseArguments(input);
-
             try {
-                switch (instruction) {
-                    case BYE -> {
-                        ui.showGoodbye();
-                        isRunning = false;
-                    }
-                    case LIST -> ui.show(logBook.toString());
-                    case MARK -> ui.show(logBook.mark(
-                            parser.parseTaskNumber(arguments, instruction)));
-                    case UNMARK -> ui.show(logBook.unmark(
-                            parser.parseTaskNumber(arguments, instruction)));
-                    case DELETE -> ui.show(logBook.delete(
-                            parser.parseTaskNumber(arguments, instruction)));
-                    case TODO -> ui.show(logBook.log(parser.parseToDo(arguments)));
-                    case DEADLINE -> ui.show(logBook.log(parser.parseDeadline(arguments)));
-                    case EVENT -> ui.show(logBook.log(parser.parseEvent(arguments)));
-                    case DUE -> ui.show(logBook.listTaskDueBy(parser.parseDueCutoff(arguments)));
-                    case SORT -> ui.show(logBook.sort());
-                    case UNKNOWN -> ui.showUnknownCommand(parser.parseCommandWord(input));
-                }
+                Command command = parser.parse(input);
+                command.execute(logBook, ui);
+                isRunning = !command.isExit();
             } catch (HermesException e) {
                 ui.showError(e.getMessage());
             }
