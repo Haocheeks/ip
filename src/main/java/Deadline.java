@@ -10,9 +10,9 @@ public class Deadline extends Task {
         this.by = by;
     }
 
-    public Deadline(Boolean isCompleted, String message, LocalDateTime by) {
+    public Deadline(Boolean isCompleted, String message, String deadline) {
         super(isCompleted, message);
-        this.by = by;
+        this.by = LocalDateTime.parse(deadline);
     }
 
     @Override
@@ -26,6 +26,7 @@ public class Deadline extends Task {
     @Override
     public String toString() {
         return String.format("[D]%s (by: %s)",
-                super.toString(), by);
+                super.toString(),
+                this.by.format(formatter));
     }
 }

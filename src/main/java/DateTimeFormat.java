@@ -7,9 +7,9 @@ public enum DateTimeFormat {
 
     DateFormatA("yyyy-MM-dd", true),
     DateFormatB("yyyy MM dd", true),
-    DateFormatC("d/M/yyy", true),
+    DateFormatC("d/M/yyyy", true),
     DateFormatD("d MMM yyyy", true),
-    DateFormatE("MMM d yyyyy", true),
+    DateFormatE("MMM d yyyy", true),
     DateTimeFormatA("yyyy-MM-dd HHmm", false),
     DateTimeFormatB("yyyy-MM-dd HH:mm", false),
     DateTimeFormatC("yyyy/MM/dd HHmm", false),
@@ -33,7 +33,7 @@ public enum DateTimeFormat {
         this.isDateOnly = isDateOnly;
     }
 
-    public static DateTimeFormat getFormat(String dateTime) {
+    private static DateTimeFormat getFormat(String dateTime) {
 
         for (DateTimeFormat format : DateTimeFormat.values()) {
             if (matchesFormat(dateTime, format.formatter, format.isDateOnly)) {
@@ -59,4 +59,22 @@ public enum DateTimeFormat {
     public DateTimeFormatter getFormatter() {
         return formatter;
     }
+
+    public boolean isDateOnly() {
+        return isDateOnly;
+    }
+
+    public static LocalDateTime parseTime(String DateTime) throws HermesException {
+        DateTimeFormat format = DateTimeFormat.getFormat(DateTime);
+        if (format == null) {
+            throw new HermesException(" The date-time format " + DateTime
+                    + " is not recognised, try formatting it as dd MM yyyy HHmm instead.");
+        }
+        DateTimeFormatter formatter = format.getFormatter();
+        return format.isDateOnly
+                ? LocalDate.parse(DateTime, formatter).atStartOfDay()
+                : LocalDateTime.parse(DateTime, formatter);
+    }
+
+
 }

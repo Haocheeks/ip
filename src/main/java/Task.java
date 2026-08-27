@@ -1,7 +1,11 @@
+import java.time.format.DateTimeFormatter;
+
 public abstract class Task {
 
     protected String message;
     protected boolean isCompleted = false;
+    protected static final DateTimeFormatter formatter =
+            DateTimeFormatter.ofPattern("dd MMM yyyy HHmm");
 
     public Task(String message) {
         this.message = message;

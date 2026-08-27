@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -54,14 +55,17 @@ public class LogBook {
 
                 boolean isCompleted = "1".equals(parts[1].trim());
 
-                switch (type) {
-                    case "T" -> logBook.add(new ToDo(isCompleted, parts[2].trim()));
-                    case "D" -> logBook.add(new Deadline(isCompleted, parts[2].trim(), parts[3].trim()));
-                    case "E" -> logBook.add(
-                            new Event(isCompleted, parts[2].trim(), parts[3].trim(), parts[4].trim()));
+                try {
+                    switch (type) {
+                        case "T" -> logBook.add(new ToDo(isCompleted, parts[2].trim()));
+                        case "D" -> logBook.add(new Deadline(isCompleted, parts[2].trim(), parts[3].trim()));
+                        case "E" -> logBook.add(
+                                new Event(isCompleted, parts[2].trim(), parts[3].trim(), parts[4].trim()));
+                    }
+                } catch (DateTimeParseException e) {
+                    this.skippedLines++;
                 }
             }
-
             scanner.close();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);

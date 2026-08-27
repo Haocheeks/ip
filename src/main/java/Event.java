@@ -1,4 +1,5 @@
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Event extends Task {
 
@@ -11,10 +12,10 @@ public class Event extends Task {
         this.end = end;
     }
 
-    public Event(Boolean isCompleted, String message, LocalDateTime start, LocalDateTime end) {
+    public Event(Boolean isCompleted, String message, String start, String end) {
         super(isCompleted, message);
-        this.start = start;
-        this.end = end;
+        this.start = LocalDateTime.parse(start);
+        this.end = LocalDateTime.parse(end);
     }
 
     @Override
@@ -29,6 +30,6 @@ public class Event extends Task {
     @Override
     public String toString() {
         return String.format("[E]%s (from: %s to: %s)",
-                super.toString(), start, end);
+                super.toString(), start.format(formatter), end.format(formatter));
     }
 }

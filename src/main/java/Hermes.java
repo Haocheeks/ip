@@ -1,3 +1,7 @@
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.Temporal;
 import java.util.Scanner;
 
 public class Hermes {
@@ -195,6 +199,7 @@ public class Hermes {
         }
 
         String description = fields[0].trim();
+
         String by = fields[1].trim();
 
         if (description.isEmpty() || by.isEmpty()) {
@@ -203,7 +208,9 @@ public class Hermes {
 
         rejectSeparator(description, by);
 
-        return logBook.log(new Deadline(description, by));
+        LocalDateTime deadline = DateTimeFormat.parseTime(by);
+
+        return logBook.log(new Deadline(description, deadline));
     }
 
     /**
@@ -241,9 +248,12 @@ public class Hermes {
             throw new HermesException("An event needs a description, a /from time and a /to time, " + example);
         }
 
+        LocalDateTime startDateTime =  DateTimeFormat.parseTime(start);
+        LocalDateTime endDateTime =  DateTimeFormat.parseTime(end);
+
         rejectSeparator(description, start, end);
 
-        return logBook.log(new Event(description, start, end));
+        return logBook.log(new Event(description, startDateTime, endDateTime));
     }
 
     /**
