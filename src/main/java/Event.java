@@ -1,5 +1,4 @@
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class Event extends Task {
 
@@ -16,6 +15,11 @@ public class Event extends Task {
         super(isCompleted, message);
         this.start = LocalDateTime.parse(start);
         this.end = LocalDateTime.parse(end);
+    }
+
+    @Override
+    public LocalDateTime dueDateTime() {
+        return this.start;
     }
 
     @Override

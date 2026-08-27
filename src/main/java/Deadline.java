@@ -16,6 +16,11 @@ public class Deadline extends Task {
     }
 
     @Override
+    public LocalDateTime dueDateTime() {
+        return this.by;
+    }
+
+    @Override
     public String fileContent() {
         return String.format("D | %d | %s | %s",
                 this.isCompleted ? 1 : 0,

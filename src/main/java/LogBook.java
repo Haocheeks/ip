@@ -2,10 +2,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 
 public class LogBook {
@@ -207,6 +210,16 @@ public class LogBook {
                   %s
                 Now you have %d task%s in the list.
                 """, removed, remaining, (remaining == 1 ? "" : "s"));
+    }
+
+    public String listTaskDueBy(LocalDateTime deadline) {
+        String output = this.logBook.stream()
+                .filter(task -> task.isDueBy(deadline) && !task.isCompleted)
+                .sorted(Comparator.comparing(Task::dueDateTime))
+                .map(Task::toString)
+                .collect(Collectors.joining("\n"));
+        String outIfEmpty = "Nothing is due by " + deadline.format(Task.formatter);
+        return output.isEmpty() ? outIfEmpty : output;
     }
 
     /**
