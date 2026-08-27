@@ -1,3 +1,4 @@
+import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class Hermes {
@@ -55,6 +56,8 @@ public class Hermes {
                     case TODO -> respond(addToDo(parts));
                     case DEADLINE -> respond(addDeadline(parts));
                     case EVENT -> respond(addEvent(parts));
+                    case DUE -> respond(listTasksDueBy(command));
+                    case SORT -> respond(logBook.sort());
                     case UNKNOWN -> respond(String.format(
                             "Sorry, I am not familiar with the '%s' command.", keyword));
                 }
@@ -195,6 +198,7 @@ public class Hermes {
         }
 
         String description = fields[0].trim();
+
         String by = fields[1].trim();
 
         if (description.isEmpty() || by.isEmpty()) {
@@ -203,7 +207,9 @@ public class Hermes {
 
         rejectSeparator(description, by);
 
-        return logBook.log(new Deadline(description, by));
+        LocalDateTime deadline = DateTimeFormat.parseTime(by);
+
+        return logBook.log(new Deadline(description, deadline));
     }
 
     /**
@@ -241,9 +247,28 @@ public class Hermes {
             throw new HermesException("An event needs a description, a /from time and a /to time, " + example);
         }
 
+        LocalDateTime startDateTime =  DateTimeFormat.parseTime(start);
+        LocalDateTime endDateTime =  DateTimeFormat.parseTime(end);
+
         rejectSeparator(description, start, end);
 
-        return logBook.log(new Event(description, start, end));
+        return logBook.log(new Event(description, startDateTime, endDateTime));
+    }
+
+    private static String listTasksDueBy(String command) throws HermesException {
+        String example = "for example: " + Command.DUE.getExample();
+
+        String[] parts = command.split("\\s*/by\\s*", 2);
+
+        if (parts.length < 2 || parts[1].isBlank()) {
+            throw new HermesException("A due needs a /by date, " + example);
+        }
+
+        String by = parts[1].trim();
+
+        LocalDateTime deadline = DateTimeFormat.parseTime(by);
+
+        return logBook.listTaskDueBy(deadline);
     }
 
     /**

@@ -1,7 +1,12 @@
-public abstract class Task {
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+public abstract class Task implements Comparable<Task> {
 
     protected String message;
     protected boolean isCompleted = false;
+    protected static final DateTimeFormatter formatter =
+            DateTimeFormatter.ofPattern("dd MMM yyyy HHmm");
 
     public Task(String message) {
         this.message = message;
@@ -50,6 +55,37 @@ public abstract class Task {
     }
 
     public abstract String fileContent();
+
+    public abstract LocalDateTime dueDateTime();
+
+    public boolean isDueBy(LocalDateTime deadline) {
+        LocalDateTime due = dueDateTime();
+        return due != null && !due.isAfter(deadline);
+    }
+
+    /**
+     * Groups tasks for sorting: 0 = active and dated, 1 = active but undated,
+     * 2 = completed. Tasks with something to do soonest come first.
+     */
+    private int sortRank() {
+        if (this.isCompleted) {
+            return 2;
+        }
+        return this.dueDateTime() == null ? 1 : 0;
+    }
+
+    @Override
+    public int compareTo(Task otherTask) {
+        int rankDifference = Integer.compare(this.sortRank(), otherTask.sortRank());
+        if (rankDifference != 0) {
+            return rankDifference;
+        }
+        // Same rank, so only dated active tasks have anything left to separate them.
+        if (this.sortRank() == 0) {
+            return this.dueDateTime().compareTo(otherTask.dueDateTime());
+        }
+        return 0;
+    }
 
     @Override
     public String toString() {

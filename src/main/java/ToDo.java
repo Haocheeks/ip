@@ -1,3 +1,5 @@
+import java.time.LocalDateTime;
+
 public class ToDo extends Task {
 
     public ToDo(String message) {
@@ -6,6 +8,11 @@ public class ToDo extends Task {
 
     public ToDo(boolean isCompleted, String message) {
         super(isCompleted, message);
+    }
+
+    @Override
+    public LocalDateTime dueDateTime() {
+        return null;
     }
 
     @Override

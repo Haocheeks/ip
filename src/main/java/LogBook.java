@@ -2,9 +2,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 
 public class LogBook {
@@ -54,14 +58,17 @@ public class LogBook {
 
                 boolean isCompleted = "1".equals(parts[1].trim());
 
-                switch (type) {
-                    case "T" -> logBook.add(new ToDo(isCompleted, parts[2].trim()));
-                    case "D" -> logBook.add(new Deadline(isCompleted, parts[2].trim(), parts[3].trim()));
-                    case "E" -> logBook.add(
-                            new Event(isCompleted, parts[2].trim(), parts[3].trim(), parts[4].trim()));
+                try {
+                    switch (type) {
+                        case "T" -> logBook.add(new ToDo(isCompleted, parts[2].trim()));
+                        case "D" -> logBook.add(new Deadline(isCompleted, parts[2].trim(), parts[3].trim()));
+                        case "E" -> logBook.add(
+                                new Event(isCompleted, parts[2].trim(), parts[3].trim(), parts[4].trim()));
+                    }
+                } catch (DateTimeParseException e) {
+                    this.skippedLines++;
                 }
             }
-
             scanner.close();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -203,6 +210,37 @@ public class LogBook {
                   %s
                 Now you have %d task%s in the list.
                 """, removed, remaining, (remaining == 1 ? "" : "s"));
+    }
+
+    public String listTaskDueBy(LocalDateTime deadline) {
+        String output = this.logBook.stream()
+                .filter(task -> task.isDueBy(deadline) && !task.isCompleted)
+                .sorted(Comparator.comparing(Task::dueDateTime))
+                .map(Task::toString)
+                .collect(Collectors.joining("\n"));
+        String outIfEmpty = "Nothing is due by " + deadline.format(Task.formatter);
+        return output.isEmpty() ? outIfEmpty : output;
+    }
+
+    /**
+     * Reorders the tasks by deadline, soonest first. Tasks without a date follow
+     * the dated ones, and completed tasks come last. The new order is written to
+     * storage, so it is still in place the next time Hermes starts.
+     *
+     * @return the reordered tasks, numbered exactly as the list command shows them
+     * @throws HermesException if the reordered tasks could not be written to storage
+     */
+    public String sort() throws HermesException {
+        if (this.logBook.isEmpty()) {
+            return "There is nothing to sort, your list is empty!";
+        }
+
+        // Comparator.naturalOrder() routes through Task.compareTo, which already
+        // defines this ordering, rather than restating it here.
+        this.logBook.sort(Comparator.naturalOrder());
+        this.save();
+
+        return String.format("I have sorted your tasks by deadline:%n%s", this);
     }
 
     /**

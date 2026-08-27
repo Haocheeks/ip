@@ -1,15 +1,23 @@
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Deadline extends Task {
 
-    protected String by;
+    protected LocalDateTime by;
 
-    public Deadline(String message,  String by) {
+    public Deadline(String message, LocalDateTime by) {
         super(message);
         this.by = by;
     }
 
-    public Deadline(Boolean isCompleted, String message, String by) {
+    public Deadline(Boolean isCompleted, String message, String deadline) {
         super(isCompleted, message);
-        this.by = by;
+        this.by = LocalDateTime.parse(deadline);
+    }
+
+    @Override
+    public LocalDateTime dueDateTime() {
+        return this.by;
     }
 
     @Override
@@ -23,6 +31,7 @@ public class Deadline extends Task {
     @Override
     public String toString() {
         return String.format("[D]%s (by: %s)",
-                super.toString(), by);
+                super.toString(),
+                this.by.format(formatter));
     }
 }
