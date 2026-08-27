@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
  * Makes sense of what the user typed.
  *
  * <p>This class turns text into the values the rest of Hermes works with: a
- * {@link Command}, a task number, a {@link Task}, a cutoff date. It decides
+ * {@link Keyword}, a task number, a {@link Task}, a cutoff date. It decides
  * whether input is usable and says so with a {@link HermesException}, but it
  * never acts on the result — the caller does that.
  */
@@ -14,10 +14,10 @@ public class Parser {
      * Identifies which command the user typed.
      *
      * @param input one full line of input, already trimmed
-     * @return the matching command, or {@link Command#UNKNOWN} if there is none
+     * @return the matching command, or {@link Keyword#UNKNOWN} if there is none
      */
-    public Command parseCommand(String input) {
-        return Command.fromKeyword(parseKeyword(input));
+    public Keyword parseKeyword(String input) {
+        return Keyword.of(parseCommandWord(input));
     }
 
     /**
@@ -27,7 +27,7 @@ public class Parser {
      * @param input one full line of input, already trimmed
      * @return the word the user typed as a command
      */
-    public String parseKeyword(String input) {
+    public String parseCommandWord(String input) {
         return input.split("\\s+", 2)[0];
     }
 
@@ -53,7 +53,7 @@ public class Parser {
      * @return the task's index in the list, counting from zero
      * @throws HermesException if the number is missing or is not a number
      */
-    public int parseTaskNumber(String arguments, Command instruction) throws HermesException {
+    public int parseTaskNumber(String arguments, Keyword instruction) throws HermesException {
         if (arguments.isBlank()) {
             throw new HermesException(missingTaskNumberMessage(instruction));
         }
@@ -70,8 +70,8 @@ public class Parser {
      * given none. Deleting is worded differently from marking, so the wording
      * follows the command.
      */
-    private String missingTaskNumberMessage(Command instruction) {
-        String request = instruction == Command.DELETE
+    private String missingTaskNumberMessage(Keyword instruction) {
+        String request = instruction == Keyword.DELETE
                 ? "Please tell me which task you will like to delete, "
                 : "Please tell me which task, ";
         return request + "for example: " + instruction.getExample();
@@ -87,7 +87,7 @@ public class Parser {
     public Task parseToDo(String arguments) throws HermesException {
         if (arguments.isBlank()) {
             throw new HermesException("A todo needs a description, for example: "
-                    + Command.TODO.getExample());
+                    + Keyword.TODO.getExample());
         }
 
         String description = arguments.trim();
@@ -106,7 +106,7 @@ public class Parser {
      *     stored, or is not a date Hermes recognises
      */
     public Task parseDeadline(String arguments) throws HermesException {
-        String example = "for example: " + Command.DEADLINE.getExample();
+        String example = "for example: " + Keyword.DEADLINE.getExample();
 
         if (arguments.isBlank()) {
             throw new HermesException("A deadline needs a description, " + example);
@@ -140,7 +140,7 @@ public class Parser {
      *     not a date Hermes recognises
      */
     public Task parseEvent(String arguments) throws HermesException {
-        String example = "for example: " + Command.EVENT.getExample();
+        String example = "for example: " + Keyword.EVENT.getExample();
 
         if (arguments.isBlank()) {
             throw new HermesException("An event needs a description, " + example);
@@ -188,7 +188,7 @@ public class Parser {
 
         if (fields.length < 2 || fields[1].isBlank()) {
             throw new HermesException("A due needs a /by date, for example: "
-                    + Command.DUE.getExample());
+                    + Keyword.DUE.getExample());
         }
 
         return DateTimeFormat.parseTime(fields[1].trim());

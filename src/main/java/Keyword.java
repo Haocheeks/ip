@@ -1,11 +1,15 @@
 /**
- * The commands Hermes understands, each paired with the keyword the user types
- * and an example of correct usage.
+ * The command words Hermes understands, each paired with an example of correct
+ * usage.
+ *
+ * <p>This names which command was typed. Carrying it out is the job of a
+ * {@link Command}, which is built from one of these together with whatever
+ * arguments followed it.
  *
  * <p>Keeping the example next to the keyword means error messages can quote the
  * correct usage without each helper method having to repeat it.
  */
-public enum Command {
+public enum Keyword {
     BYE("bye", "bye"),
     LIST("list", "list"),
     MARK("mark", "mark 1"),
@@ -23,7 +27,7 @@ public enum Command {
     private final String keyword;
     private final String example;
 
-    Command(String keyword, String example) {
+    Keyword(String keyword, String example) {
         this.keyword = keyword;
         this.example = example;
     }
@@ -38,15 +42,15 @@ public enum Command {
     }
 
     /**
-     * Finds the command matching a typed keyword.
+     * Finds the keyword matching what the user typed.
      *
      * @param input the first word of what the user typed
-     * @return the matching command, or {@link #UNKNOWN} if there is none
+     * @return the matching keyword, or {@link #UNKNOWN} if there is none
      */
-    public static Command fromKeyword(String input) {
-        for (Command command : values()) {
-            if (command.keyword.equals(input)) {
-                return command;
+    public static Keyword of(String input) {
+        for (Keyword candidate : values()) {
+            if (candidate.keyword.equals(input)) {
+                return candidate;
             }
         }
 

@@ -32,7 +32,7 @@ public class Hermes {
                 continue;
             }
 
-            Command instruction = parser.parseCommand(input);
+            Keyword instruction = parser.parseKeyword(input);
             String arguments = parser.parseArguments(input);
 
             try {
@@ -53,7 +53,7 @@ public class Hermes {
                     case EVENT -> ui.show(logBook.log(parser.parseEvent(arguments)));
                     case DUE -> ui.show(logBook.listTaskDueBy(parser.parseDueCutoff(arguments)));
                     case SORT -> ui.show(logBook.sort());
-                    case UNKNOWN -> ui.showUnknownCommand(parser.parseKeyword(input));
+                    case UNKNOWN -> ui.showUnknownCommand(parser.parseCommandWord(input));
                 }
             } catch (HermesException e) {
                 ui.showError(e.getMessage());
