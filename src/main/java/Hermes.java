@@ -1,40 +1,24 @@
 import java.time.LocalDateTime;
-import java.util.Scanner;
 
 public class Hermes {
-
-    private static final String DIVIDER =
-            "____________________________________________________________";
 
     /** The character used to separate fields in the data file. */
     private static final String SEPARATOR = "|";
 
+    private static Ui ui = new Ui();
+
     private static LogBook logBook = new LogBook();
 
     public static void main(String[] args) {
-        String opening = """
-                ____________________________________________________________
-                 _   _
-                | | | | ___ _ __ _ __ ___   ___  ___
-                | |_| |/ _ \\ '__| '_ ` _ \\ / _ \\/ __|
-                |  _  |  __/ |  | | | | | |  __/\\__ \\
-                |_| |_|\\___|_|  |_| |_| |_|\\___||___/
-                Greetings! I am Hermes.
-                How may I assist you today?
-                ____________________________________________________________
-                
-                """;
-
-        System.out.println(opening);
+        ui.showWelcome();
         warnAboutSkippedLines();
 
-        Scanner scanner = new Scanner(System.in);
         boolean isRunning = true;
 
         // The "bye" case cannot break out of the loop from inside a switch,
         // so this flag ends the conversation instead.
-        while (isRunning && scanner.hasNextLine()) {
-            String command = scanner.nextLine().trim();
+        while (isRunning && ui.hasNextCommand()) {
+            String command = ui.readCommand();
 
             if (command.isEmpty()) {
                 continue;
@@ -47,22 +31,22 @@ public class Hermes {
             try {
                 switch (instruction) {
                     case BYE -> {
-                        respond("Goodbye, thank you for contacting me!");
+                        ui.show("Goodbye, thank you for contacting me!");
                         isRunning = false;
                     }
-                    case LIST -> respond(logBook.toString());
-                    case MARK, UNMARK -> respond(changeStatus(instruction, parts));
-                    case DELETE -> respond(delete(parts));
-                    case TODO -> respond(addToDo(parts));
-                    case DEADLINE -> respond(addDeadline(parts));
-                    case EVENT -> respond(addEvent(parts));
-                    case DUE -> respond(listTasksDueBy(command));
-                    case SORT -> respond(logBook.sort());
-                    case UNKNOWN -> respond(String.format(
+                    case LIST -> ui.show(logBook.toString());
+                    case MARK, UNMARK -> ui.show(changeStatus(instruction, parts));
+                    case DELETE -> ui.show(delete(parts));
+                    case TODO -> ui.show(addToDo(parts));
+                    case DEADLINE -> ui.show(addDeadline(parts));
+                    case EVENT -> ui.show(addEvent(parts));
+                    case DUE -> ui.show(listTasksDueBy(command));
+                    case SORT -> ui.show(logBook.sort());
+                    case UNKNOWN -> ui.show(String.format(
                             "Sorry, I am not familiar with the '%s' command.", keyword));
                 }
             } catch (HermesException e) {
-                respond(e.getMessage());
+                ui.showError(e.getMessage());
             }
         }
     }
@@ -82,7 +66,7 @@ public class Hermes {
             return;
         }
 
-        respond(String.format("""
+        ui.show(String.format("""
                 Sorry, I could not read %d line%s in my records and have skipped %s.
                 Anything I cannot read is lost the next time I save, so please check
                 data/Hermes.txt first if you need it.
@@ -269,19 +253,6 @@ public class Hermes {
         LocalDateTime deadline = DateTimeFormat.parseTime(by);
 
         return logBook.listTaskDueBy(deadline);
-    }
-
-    /**
-     * Prints a single message wrapped in divider lines, so every reply from
-     * Hermes has the same shape.
-     *
-     * @param message the text to show to the user
-     */
-    private static void respond(String message) {
-        System.out.println(DIVIDER);
-        System.out.println(message.strip());
-        System.out.println(DIVIDER);
-        System.out.println();
     }
 
 }
