@@ -24,6 +24,7 @@ public enum Keyword {
     EVENT("event", "event project meeting /from 27 Aug 2026 1500 /to 27 Aug 2026 1630"),
     DUE("due", "due /by 28 Aug 2026 1600"),
     SORT("sort", "sort"),
+    FIND("find", "find book"),
 
     /** Anything the user typed that is not a recognised command. */
     UNKNOWN("", "");
