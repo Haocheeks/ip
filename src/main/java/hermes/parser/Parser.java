@@ -3,16 +3,7 @@ package hermes.parser;
 import java.time.LocalDateTime;
 
 import hermes.HermesException;
-import hermes.command.AddCommand;
-import hermes.command.ByeCommand;
-import hermes.command.Command;
-import hermes.command.DeleteCommand;
-import hermes.command.DueCommand;
-import hermes.command.ListCommand;
-import hermes.command.MarkCommand;
-import hermes.command.SortCommand;
-import hermes.command.UnknownCommand;
-import hermes.command.UnmarkCommand;
+import hermes.command.*;
 import hermes.task.Deadline;
 import hermes.task.Event;
 import hermes.task.Storage;

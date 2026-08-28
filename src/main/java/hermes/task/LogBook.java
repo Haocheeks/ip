@@ -149,11 +149,11 @@ public class LogBook {
      * List out the tasks that contain the keyword in its description
      */
     public String findTask(String keyword) {
-        if (this.logBook.isEmpty()) {
+        if (this.tasks.isEmpty()) {
             return "There is nothing to search, your list is empty!";
         }
 
-        String output = this.logBook.stream()
+        String output = this.tasks.stream()
                 .filter(task -> task.message.toLowerCase().contains(keyword))
                 .map(Task::toString)
                 .collect(Collectors.joining("\n"));
