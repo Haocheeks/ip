@@ -17,7 +17,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SOURCE_DIR = PROJECT_ROOT / "src" / "main" / "java"
 PLAN_FILE = PROJECT_ROOT / "test" / "ui-test-plan.md"
-MAIN_CLASS = "Hermes"
+MAIN_CLASS = "hermes.Hermes"
 
 # Output above this line is the startup banner, which carries no behaviour worth
 # asserting in every case, so comparison starts after it.
