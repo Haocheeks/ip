@@ -28,6 +28,24 @@ Unless the user says otherwise, assume that you are assisting a student working 
 
 Ensure that Java 25 is used when running the application or build tasks. On macOS, use `sdk use java 25.0.3.fx-zulu` to switch to Java 25 if needed.
 
+## Coding standard
+
+All Java code in this project MUST follow the SE-EDU Java coding standard
+(intermediate level), as recorded in the `seedu-java-coding-standard` skill.
+This is mandatory, not advisory.
+
+* Invoke the `seedu-java-coding-standard` skill before writing or modifying any
+  Java file, and follow it for every line you add or change.
+* Header comments are required for every class and every public method. They may
+  be omitted only for getters and setters, for overriding methods whose parent
+  Javadoc applies as is, and for test code.
+* Do not leave a file less compliant than you found it. When editing a file that
+  already violates the standard, fix the violations you touch, and mention the
+  rest rather than silently leaving them.
+* The standard supersedes any conflicting formatting habit, including the
+  Javadoc guidance under "Guidance for interacting with users" above, which it
+  extends rather than replaces.
+
 ## Git
 
 Use lightweight tags unless the user requests an annotated tag.
@@ -35,5 +53,9 @@ When proposing or creating a commit message, include enough detail to explain th
 Do not commit or push unless explicitly asked.
 
 ## Code Updates
+
+After changing code that affects what the program prints, ensure that:
+
+1. the code follows the `seedu-java-coding-standard` skill,
 2. the `test/ui-test-plan.md` is updated (if needed), and,
-2. the `test-ui` skill is invoked.
+3. the `test-ui` skill is invoked.
