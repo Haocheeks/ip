@@ -60,6 +60,12 @@ public abstract class Task implements Comparable<Task> {
 
     public abstract LocalDateTime dueDateTime();
 
+    /**
+     * Checks if the task is due no later than a deadline
+     *
+     * @param deadline
+     * @return false if there is no due date or the task is due after the deadline
+     */
     public boolean isDueBy(LocalDateTime deadline) {
         LocalDateTime due = dueDateTime();
         return due != null && !due.isAfter(deadline);

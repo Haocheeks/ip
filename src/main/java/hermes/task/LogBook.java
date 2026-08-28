@@ -107,6 +107,12 @@ public class LogBook {
                 """, removed, remaining, (remaining == 1 ? "" : "s"));
     }
 
+    /**
+     * List all tasks in the list due no later than a specific date and time
+     *
+     * @param deadline filter condition
+     * @return all tasks due not later than the deadline
+     */
     public String listTaskDueBy(LocalDateTime deadline) {
         String output = this.logBook.stream()
                 .filter(task -> task.isDueBy(deadline) && !task.isCompleted)

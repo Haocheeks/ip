@@ -7,6 +7,14 @@ import java.time.format.DateTimeParseException;
 
 import hermes.HermesException;
 
+/**
+ * List of the various DateFormat and DateTimeFormat Hermes can accept.
+ *
+ * <P>This names the type of Date and DateTimeFormat users might input and converts
+ * the String into a DateTimeFormatter.
+ *
+ * <P>A boolean variable called isDateOnly to differentiate between DateFormat and DateTimeFormat.
+ */
 public enum DateTimeFormat {
 
     DateFormatA("yyyy-MM-dd", true),
@@ -37,6 +45,12 @@ public enum DateTimeFormat {
         this.isDateOnly = isDateOnly;
     }
 
+    /**
+     * Analyses a Date Time String and attempts to parse the value with an appropriate formatter.
+     *
+     * @param dateTime String of the date (and time) inputted by the users
+     * @return the appropriate DateTimeFormatter if present else returns null
+     */
     private static DateTimeFormat getFormat(String dateTime) {
 
         for (DateTimeFormat format : DateTimeFormat.values()) {
@@ -47,6 +61,15 @@ public enum DateTimeFormat {
         return null;
     }
 
+    /**
+     * Helper function to check if the formatter is able to parse the date (and time) String input
+     * from the user.
+     *
+     * @param dateTime String of the date (and time) the user inputted
+     * @param format A DateTimeFormatter that will be used to attempt to parse the dateTime
+     * @param isDateOnly Determines if LocalDate.parse or LocalDateTime.parse is used
+     * @return true if format is able to parse the dateTime
+     */
     private static boolean matchesFormat(String dateTime, DateTimeFormatter format, boolean isDateOnly) {
         try {
             if (isDateOnly) {
@@ -68,6 +91,13 @@ public enum DateTimeFormat {
         return isDateOnly;
     }
 
+    /**
+     * Parses the date (and time) the user input and convert it into a LocalDatetime
+     *
+     * @param DateTime date (and time) the user input
+     * @return the DateTime input string as a parsed LocalDateTime
+     * @throws HermesException when the input DateTime is not a recognised format
+     */
     public static LocalDateTime parseTime(String DateTime) throws HermesException {
         DateTimeFormat format = DateTimeFormat.getFormat(DateTime);
         if (format == null) {
