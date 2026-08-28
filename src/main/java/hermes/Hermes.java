@@ -25,6 +25,11 @@ public class Hermes {
 
     private static LogBook logBook = new LogBook(new Storage(DATA_PATH));
 
+    /**
+     * Starts Hermes and runs the conversation until the user says goodbye.
+     *
+     * @param args Command line arguments, which Hermes does not use.
+     */
     public static void main(String[] args) {
         ui.showWelcome();
         warnAboutSkippedLines();

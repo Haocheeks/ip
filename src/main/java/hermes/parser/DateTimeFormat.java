@@ -92,22 +92,22 @@ public enum DateTimeFormat {
     }
 
     /**
-     * Parses the date (and time) the user input and convert it into a LocalDatetime
+     * Parses the date (and time) the user typed and converts it into a LocalDateTime.
      *
-     * @param DateTime date (and time) the user input
-     * @return the DateTime input string as a parsed LocalDateTime
-     * @throws HermesException when the input DateTime is not a recognised format
+     * @param dateTime Date (and time) the user typed.
+     * @return The input parsed as a LocalDateTime.
+     * @throws HermesException If the input is not in a recognised format.
      */
-    public static LocalDateTime parseTime(String DateTime) throws HermesException {
-        DateTimeFormat format = DateTimeFormat.getFormat(DateTime);
+    public static LocalDateTime parseTime(String dateTime) throws HermesException {
+        DateTimeFormat format = DateTimeFormat.getFormat(dateTime);
         if (format == null) {
-            throw new HermesException(" The date-time format " + DateTime
+            throw new HermesException(" The date-time format " + dateTime
                     + " is not recognised, try formatting it as dd MM yyyy HHmm instead.");
         }
         DateTimeFormatter formatter = format.getFormatter();
         return format.isDateOnly
-                ? LocalDate.parse(DateTime, formatter).atStartOfDay()
-                : LocalDateTime.parse(DateTime, formatter);
+                ? LocalDate.parse(dateTime, formatter).atStartOfDay()
+                : LocalDateTime.parse(dateTime, formatter);
     }
 
 

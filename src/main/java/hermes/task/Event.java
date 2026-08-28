@@ -2,17 +2,20 @@ package hermes.task;
 
 import java.time.LocalDateTime;
 
+/** A task that runs between two moments, measured by its start time. */
 public class Event extends Task {
 
     protected LocalDateTime start;
     protected LocalDateTime end;
 
+    /** Creates an event that is not yet completed. */
     public Event(String message, LocalDateTime start, LocalDateTime end) {
         super(message);
         this.start = start;
         this.end = end;
     }
 
+    /** Creates an event in a known state from its stored ISO-8601 dates. */
     public Event(Boolean isCompleted, String message, String start, String end) {
         super(isCompleted, message);
         this.start = LocalDateTime.parse(start);
@@ -36,6 +39,6 @@ public class Event extends Task {
     @Override
     public String toString() {
         return String.format("[E]%s (from: %s to: %s)",
-                super.toString(), start.format(formatter), end.format(formatter));
+                super.toString(), start.format(FORMATTER), end.format(FORMATTER));
     }
 }

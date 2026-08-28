@@ -1,10 +1,11 @@
 package hermes.task;
 
-import hermes.HermesException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Collectors;
+
+import hermes.HermesException;
 
 /**
  * Holds the tasks Hermes is keeping track of and the operations that change
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
  * to {@link Storage} straight away, so the file always matches the list.
  */
 public class LogBook {
-    private final ArrayList<Task> logBook;
+    private final ArrayList<Task> tasks;
     private final Storage storage;
 
     /**
@@ -24,7 +25,7 @@ public class LogBook {
      */
     public LogBook(Storage storage) {
         this.storage = storage;
-        this.logBook = storage.load();
+        this.tasks = storage.load();
     }
 
     /**
@@ -52,13 +53,13 @@ public class LogBook {
      * @throws HermesException if the task could not be written to storage
      */
     public String log(Task task) throws HermesException {
-        this.logBook.add(task);
-        this.storage.save(this.logBook);
+        this.tasks.add(task);
+        this.storage.save(this.tasks);
         return String.format("""
                 Got it. I've added this task:
                   %s
                 Now you have %d task%s in the list.
-                """, task, this.logBook.size(), (this.logBook.size() == 1 ? "" : "s"));
+                """, task, this.tasks.size(), (this.tasks.size() == 1 ? "" : "s"));
     }
 
     /**
@@ -69,8 +70,8 @@ public class LogBook {
      */
     public String mark(int id) throws HermesException {
         checkIndex(id);
-        String output = this.logBook.get(id).mark();
-        this.storage.save(this.logBook);
+        String output = this.tasks.get(id).mark();
+        this.storage.save(this.tasks);
         return output;
     }
 
@@ -82,8 +83,8 @@ public class LogBook {
      */
     public String unmark(int id) throws HermesException {
         checkIndex(id);
-        String output = this.logBook.get(id).unmark();
-        this.storage.save(this.logBook);
+        String output = this.tasks.get(id).unmark();
+        this.storage.save(this.tasks);
         return output;
     }
 
@@ -96,9 +97,9 @@ public class LogBook {
     public String delete(int id) throws HermesException {
         checkIndex(id);
 
-        Task removed = this.logBook.remove(id);
-        int remaining = this.logBook.size();
-        this.storage.save(this.logBook);
+        Task removed = this.tasks.remove(id);
+        int remaining = this.tasks.size();
+        this.storage.save(this.tasks);
 
         return String.format("""
                 Roger, I've removed this task:
@@ -114,12 +115,12 @@ public class LogBook {
      * @return all tasks due not later than the deadline
      */
     public String listTaskDueBy(LocalDateTime deadline) {
-        String output = this.logBook.stream()
+        String output = this.tasks.stream()
                 .filter(task -> task.isDueBy(deadline) && !task.isCompleted)
                 .sorted(Comparator.comparing(Task::dueDateTime))
                 .map(Task::toString)
                 .collect(Collectors.joining("\n"));
-        String outIfEmpty = "Nothing is due by " + deadline.format(Task.formatter);
+        String outIfEmpty = "Nothing is due by " + deadline.format(Task.FORMATTER);
         return output.isEmpty() ? outIfEmpty : output;
     }
 
@@ -132,14 +133,14 @@ public class LogBook {
      * @throws HermesException if the reordered tasks could not be written to storage
      */
     public String sort() throws HermesException {
-        if (this.logBook.isEmpty()) {
+        if (this.tasks.isEmpty()) {
             return "There is nothing to sort, your list is empty!";
         }
 
         // Comparator.naturalOrder() routes through Task.compareTo, which already
         // defines this ordering, rather than restating it here.
-        this.logBook.sort(Comparator.naturalOrder());
-        this.storage.save(this.logBook);
+        this.tasks.sort(Comparator.naturalOrder());
+        this.storage.save(this.tasks);
 
         return String.format("I have sorted your tasks by deadline:%n%s", this);
     }
@@ -151,7 +152,7 @@ public class LogBook {
      * @throws HermesException error indicating index out of bounds exception
      */
     private void checkIndex(int id) throws HermesException {
-        if (id < 0 || id >= this.logBook.size()) {
+        if (id < 0 || id >= this.tasks.size()) {
             throw new HermesException("Sorry, I have no task numbered " + (id + 1) + ".");
         }
     }
@@ -160,8 +161,8 @@ public class LogBook {
     public String toString() {
         StringBuilder output = new StringBuilder();
 
-        for (int i = 0; i < this.logBook.size(); i++) {
-            String temp = String.format("%d. %s\n", i + 1, this.logBook.get(i));
+        for (int i = 0; i < this.tasks.size(); i++) {
+            String temp = String.format("%d. %s\n", i + 1, this.tasks.get(i));
             output.append(temp);
         }
 

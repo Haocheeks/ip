@@ -3,27 +3,26 @@ package hermes.task;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/** One thing the user wants to keep track of. */
 public abstract class Task implements Comparable<Task> {
 
     protected String message;
     protected boolean isCompleted = false;
-    protected static final DateTimeFormatter formatter =
+    protected static final DateTimeFormatter FORMATTER =
             DateTimeFormatter.ofPattern("dd MMM yyyy HHmm");
 
+    /** Creates a task that is not yet completed. */
     public Task(String message) {
         this.message = message;
     }
 
+    /** Creates a task in a known state, used when loading from storage. */
     public Task(boolean isCompleted, String message) {
         this.isCompleted = isCompleted;
         this.message = message;
     }
 
-    /**
-     * Marks the task as complete
-     *
-     * @return a response
-     */
+    /** Marks the task as completed and returns the reply to show the user. */
     public String mark() {
         if (!this.isCompleted) {
             this.isCompleted = true;
@@ -36,11 +35,7 @@ public abstract class Task implements Comparable<Task> {
         }
     }
 
-    /**
-     * Marks a task as incomplete
-     *
-     * @return
-     */
+    /** Marks the task as not completed and returns the reply to show the user. */
     public String unmark() {
         if (this.isCompleted) {
             this.isCompleted = false;
@@ -56,25 +51,19 @@ public abstract class Task implements Comparable<Task> {
         }
     }
 
+    /** Returns this task as one line of the data file. */
     public abstract String fileContent();
 
+    /** Returns the moment this task is measured against, or null if it has none. */
     public abstract LocalDateTime dueDateTime();
 
-    /**
-     * Checks if the task is due no later than a deadline
-     *
-     * @param deadline
-     * @return false if there is no due date or the task is due after the deadline
-     */
+    /** Returns true if this task has a date falling no later than the given moment. */
     public boolean isDueBy(LocalDateTime deadline) {
         LocalDateTime due = dueDateTime();
         return due != null && !due.isAfter(deadline);
     }
 
-    /**
-     * Groups tasks for sorting: 0 = active and dated, 1 = active but undated,
-     * 2 = completed. Tasks with something to do soonest come first.
-     */
+    /** Groups tasks for sorting: 0 = active and dated, 1 = active undated, 2 = completed. */
     private int sortRank() {
         if (this.isCompleted) {
             return 2;

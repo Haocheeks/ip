@@ -1,10 +1,23 @@
 package hermes.parser;
 
-import hermes.HermesException;
-import hermes.command.*;
-import hermes.task.*;
-
 import java.time.LocalDateTime;
+
+import hermes.HermesException;
+import hermes.command.AddCommand;
+import hermes.command.ByeCommand;
+import hermes.command.Command;
+import hermes.command.DeleteCommand;
+import hermes.command.DueCommand;
+import hermes.command.ListCommand;
+import hermes.command.MarkCommand;
+import hermes.command.SortCommand;
+import hermes.command.UnknownCommand;
+import hermes.command.UnmarkCommand;
+import hermes.task.Deadline;
+import hermes.task.Event;
+import hermes.task.Storage;
+import hermes.task.Task;
+import hermes.task.ToDo;
 
 /**
  * Makes sense of what the user typed.
@@ -189,7 +202,8 @@ public class Parser {
         String end = fromTo[1].trim();
 
         if (description.isEmpty() || start.isEmpty() || end.isEmpty()) {
-            throw new HermesException("An event needs a description, a /from time and a /to time, " + example);
+            throw new HermesException("An event needs a description, a /from time and a /to time, "
+                    + example);
         }
 
         LocalDateTime startDateTime = DateTimeFormat.parseTime(start);
