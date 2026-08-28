@@ -55,6 +55,7 @@ public class Parser {
             case EVENT -> new AddCommand(parseEvent(arguments));
             case DUE -> new DueCommand(parseDueCutoff(arguments));
             case SORT -> new SortCommand();
+            case FIND -> new FindCommand(parseFind(arguments));
             case UNKNOWN -> new UnknownCommand(parseCommandWord(input));
         };
     }
@@ -79,6 +80,29 @@ public class Parser {
     private String parseArguments(String input) {
         String[] parts = input.split("\\s+", 2);
         return parts.length < 2 ? "" : parts[1];
+    }
+
+    /**
+     * Checks to ensure that only one keyword is given for the find operation
+     *
+     * @param input what the user typed after the command keyword
+     * @return the keyword
+     * @throws HermesException too many keywords were provided by the user
+     */
+    private String parseFind(String input) throws HermesException {
+        String[] parts = input.split("\\s+");
+
+        if (parts.length > 1 ) {
+            throw new HermesException("Apologies, please enter only one keyword, for example: "
+                    + Keyword.FIND.getExample());
+        }
+
+        if (parts[0].isEmpty()) {
+            throw new HermesException("Apologies, please enter at lease one keyword, for example: "
+                    + Keyword.FIND.getExample());
+        }
+
+        return input.toLowerCase();
     }
 
     /**

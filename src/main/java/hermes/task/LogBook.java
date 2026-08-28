@@ -146,6 +146,24 @@ public class LogBook {
     }
 
     /**
+     * List out the tasks that contain the keyword in its description
+     */
+    public String findTask(String keyword) {
+        if (this.logBook.isEmpty()) {
+            return "There is nothing to search, your list is empty!";
+        }
+
+        String output = this.logBook.stream()
+                .filter(task -> task.message.toLowerCase().contains(keyword))
+                .map(Task::toString)
+                .collect(Collectors.joining("\n"));
+
+        String outputIfEmpty = "Apologies, no task match " + keyword + " :<";
+
+        return output.isEmpty() ? outputIfEmpty : output;
+    }
+
+    /**
      * Checks to ensure that the index inputted into the method is a valid one
      *
      * @param id index of task we are manipulating
