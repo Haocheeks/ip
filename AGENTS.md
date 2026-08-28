@@ -48,8 +48,23 @@ This is mandatory, not advisory.
 
 ## Git
 
+All commits and branches in this project MUST follow the SE-EDU Git
+conventions, as recorded in the `seedu-git-standard` skill. This is mandatory,
+not advisory.
+
+* Invoke the `seedu-git-standard` skill before writing or proposing any commit
+  message, and before naming a new branch.
+* Subject lines are imperative, capitalised, no trailing period, and 50
+  characters where possible and 72 at the very most.
+* Non-trivial commits need a body wrapped at 72 characters, following the
+  guide's structure: the present situation, why it must change, what is being
+  done, and why it is done that way.
+* Explain WHAT and WHY, not HOW. If a message grows too long to follow that
+  shape, split the commit rather than stretching the message.
+* Branch names use kebab-case keywords, or `issueNumber-keywords-from-title`
+  when tied to an issue.
+
 Use lightweight tags unless the user requests an annotated tag.
-When proposing or creating a commit message, include enough detail to explain the rationale for the change.
 Do not commit or push unless explicitly asked.
 
 ## Code Updates
