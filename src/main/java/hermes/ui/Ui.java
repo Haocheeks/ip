@@ -23,9 +23,7 @@ public class Ui {
             |_| |_|\\___|_|  |_| |_| |_|\\___||___/
             Greetings! I am Hermes.
             How may I assist you today?
-            ____________________________________________________________
-            
-            """;
+            ____________________________________________________________""";
 
     private final Scanner scanner = new Scanner(System.in);
 

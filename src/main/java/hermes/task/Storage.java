@@ -48,6 +48,7 @@ public class Storage {
      *
      * @return the tasks read from the file, in the order they were stored
      */
+    @SuppressWarnings("checkstyle:MissingSwitchDefault")
     public ArrayList<Task> load() {
         ArrayList<Task> tasks = new ArrayList<>();
         this.skippedLines = 0;
@@ -81,12 +82,14 @@ public class Storage {
                 boolean isCompleted = "1".equals(parts[1].trim());
 
                 try {
+                    // CHECKSTYLE.OFF: MissingSwitchDefault
                     switch (type) {
                         case "T" -> tasks.add(new ToDo(isCompleted, parts[2].trim()));
                         case "D" -> tasks.add(new Deadline(isCompleted, parts[2].trim(), parts[3].trim()));
                         case "E" -> tasks.add(
                                 new Event(isCompleted, parts[2].trim(), parts[3].trim(), parts[4].trim()));
                     }
+                    // CHECKSTYLE.ON: MissingSwitchDefault
                 } catch (DateTimeParseException e) {
                     this.skippedLines++;
                 }

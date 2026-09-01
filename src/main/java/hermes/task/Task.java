@@ -6,10 +6,11 @@ import java.time.format.DateTimeFormatter;
 /** One thing the user wants to keep track of. */
 public abstract class Task implements Comparable<Task> {
 
-    protected String message;
-    protected boolean isCompleted = false;
     protected static final DateTimeFormatter FORMATTER =
             DateTimeFormatter.ofPattern("dd MMM yyyy HHmm");
+
+    protected String message;
+    protected boolean isCompleted = false;
 
     /** Creates a task that is not yet completed. */
     public Task(String message) {
