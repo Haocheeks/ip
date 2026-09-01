@@ -3,7 +3,17 @@ package hermes.parser;
 import java.time.LocalDateTime;
 
 import hermes.HermesException;
-import hermes.command.*;
+import hermes.command.AddCommand;
+import hermes.command.ByeCommand;
+import hermes.command.Command;
+import hermes.command.DeleteCommand;
+import hermes.command.DueCommand;
+import hermes.command.FindCommand;
+import hermes.command.ListCommand;
+import hermes.command.MarkCommand;
+import hermes.command.SortCommand;
+import hermes.command.UnknownCommand;
+import hermes.command.UnmarkCommand;
 import hermes.task.Deadline;
 import hermes.task.Event;
 import hermes.task.Storage;
@@ -83,7 +93,7 @@ public class Parser {
     private String parseFind(String input) throws HermesException {
         String[] parts = input.split("\\s+");
 
-        if (parts.length > 1 ) {
+        if (parts.length > 1) {
             throw new HermesException("Apologies, please enter only one keyword, for example: "
                     + Keyword.FIND.getExample());
         }

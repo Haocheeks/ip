@@ -1,8 +1,8 @@
 package hermes.command;
 
+import hermes.HermesException;
 import hermes.task.LogBook;
 import hermes.ui.Ui;
-import hermes.HermesException;
 
 /**
  * One instruction from the user, parsed and ready to carry out.
