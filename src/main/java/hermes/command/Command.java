@@ -2,7 +2,6 @@ package hermes.command;
 
 import hermes.HermesException;
 import hermes.task.LogBook;
-import hermes.ui.Ui;
 
 /**
  * One instruction from the user, parsed and ready to carry out.
@@ -18,7 +17,6 @@ public abstract class Command {
      * Carries out this command and shows the result.
      *
      * @param logBook the tasks to act on
-     * @param ui where to show the outcome
      * @throws HermesException if the command could not be completed
      */
     public abstract String execute(LogBook logBook) throws HermesException;

@@ -2,7 +2,6 @@ package hermes.command;
 
 import hermes.HermesException;
 import hermes.task.LogBook;
-import hermes.ui.Ui;
 
 /** Marks one task as completed. */
 public class MarkCommand extends Command {

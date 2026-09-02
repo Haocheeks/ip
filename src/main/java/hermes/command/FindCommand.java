@@ -1,7 +1,6 @@
 package hermes.command;
 
 import hermes.task.LogBook;
-import hermes.ui.Ui;
 
 /** Finds tasks based on keyword */
 public class FindCommand extends Command {

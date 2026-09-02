@@ -51,11 +51,13 @@ public class MainWindow extends AnchorPane {
         String input = userInput.getText();
         String response = this.hermes.getResponse(input);
 
-        dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
-                DialogBox.getHermesDialog(response, hermesImage)
-        );
-        userInput.clear();
+        if (!input.isEmpty()) {
+            dialogContainer.getChildren().addAll(
+                    DialogBox.getUserDialog(input, userImage),
+                    DialogBox.getHermesDialog(response, hermesImage)
+            );
+            userInput.clear();
+        }
 
         if (input.equalsIgnoreCase("bye")) {
             PauseTransition pause = new PauseTransition(Duration.seconds(2));

@@ -1,7 +1,6 @@
 package hermes.command;
 
 import hermes.task.LogBook;
-import hermes.ui.Ui;
 
 /**
  * Reports that the user typed something Hermes does not recognise.

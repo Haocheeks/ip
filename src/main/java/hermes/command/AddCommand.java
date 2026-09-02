@@ -3,7 +3,6 @@ package hermes.command;
 import hermes.HermesException;
 import hermes.task.LogBook;
 import hermes.task.Task;
-import hermes.ui.Ui;
 
 /**
  * Adds a task to the list.
