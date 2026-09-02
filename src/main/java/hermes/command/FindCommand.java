@@ -16,7 +16,7 @@ public class FindCommand extends Command {
     }
 
     @Override
-    public void execute(LogBook logBook, Ui ui) {
-        ui.show(logBook.findTask(keyword));
+    public String execute(LogBook logBook) {
+        return logBook.findTask(keyword);
     }
 }

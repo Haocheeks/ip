@@ -17,7 +17,7 @@ public class DeleteCommand extends Command {
     }
 
     @Override
-    public void execute(LogBook logBook, Ui ui) throws HermesException {
-        ui.show(logBook.delete(this.index));
+    public String execute(LogBook logBook) throws HermesException {
+        return logBook.delete(this.index);
     }
 }

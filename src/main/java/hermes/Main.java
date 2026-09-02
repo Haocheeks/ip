@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 /** Opens the window Hermes is shown in. */
 public class Main extends Application {
 
+    private Hermes hermes = new Hermes("data/Hermes.txt");
+
     @Override
     public void start(Stage stage) {
         try {
@@ -20,6 +22,7 @@ public class Main extends Application {
             stage.setScene(scene);
             stage.setMinHeight(220);
             stage.setMinWidth(417);
+            fxmlLoader.<MainWindow>getController().setHermes(hermes);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

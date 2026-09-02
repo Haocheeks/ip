@@ -7,7 +7,7 @@ import hermes.ui.Ui;
 public class ListCommand extends Command {
 
     @Override
-    public void execute(LogBook logBook, Ui ui) {
-        ui.show(logBook.toString());
+    public String execute(LogBook logBook) {
+        return logBook.toString();
     }
 }

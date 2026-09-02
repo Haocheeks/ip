@@ -24,7 +24,7 @@ public class AddCommand extends Command {
     }
 
     @Override
-    public void execute(LogBook logBook, Ui ui) throws HermesException {
-        ui.show(logBook.log(this.task));
+    public String execute(LogBook logBook) throws HermesException {
+        return logBook.log(this.task);
     }
 }

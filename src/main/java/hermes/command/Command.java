@@ -21,7 +21,7 @@ public abstract class Command {
      * @param ui where to show the outcome
      * @throws HermesException if the command could not be completed
      */
-    public abstract void execute(LogBook logBook, Ui ui) throws HermesException;
+    public abstract String execute(LogBook logBook) throws HermesException;
 
     /**
      * Reports whether Hermes should stop after this command.

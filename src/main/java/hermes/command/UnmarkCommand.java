@@ -17,7 +17,7 @@ public class UnmarkCommand extends Command {
     }
 
     @Override
-    public void execute(LogBook logBook, Ui ui) throws HermesException {
-        ui.show(logBook.unmark(this.index));
+    public String execute(LogBook logBook) throws HermesException {
+        return logBook.unmark(this.index);
     }
 }

@@ -21,7 +21,7 @@ public class UnknownCommand extends Command {
     }
 
     @Override
-    public void execute(LogBook logBook, Ui ui) {
-        ui.showUnknownCommand(this.word);
+    public String execute(LogBook logBook) {
+        return String.format("Sorry, I am not familiar with the '%s' command.", this.word);
     }
 }

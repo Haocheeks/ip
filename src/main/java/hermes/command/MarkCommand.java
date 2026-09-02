@@ -17,7 +17,7 @@ public class MarkCommand extends Command {
     }
 
     @Override
-    public void execute(LogBook logBook, Ui ui) throws HermesException {
-        ui.show(logBook.mark(this.index));
+    public String execute(LogBook logBook) throws HermesException {
+        return logBook.mark(this.index);
     }
 }

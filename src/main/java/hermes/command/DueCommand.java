@@ -18,7 +18,7 @@ public class DueCommand extends Command {
     }
 
     @Override
-    public void execute(LogBook logBook, Ui ui) {
-        ui.show(logBook.listTaskDueBy(this.cutoff));
+    public String execute(LogBook logBook) {
+        return logBook.listTaskDueBy(this.cutoff);
     }
 }

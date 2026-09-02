@@ -7,8 +7,8 @@ import hermes.ui.Ui;
 public class ByeCommand extends Command {
 
     @Override
-    public void execute(LogBook logBook, Ui ui) {
-        ui.showGoodbye();
+    public String execute(LogBook logBook) {
+        return "Goodbye, thank you for contacting me!";
     }
 
     @Override

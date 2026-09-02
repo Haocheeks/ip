@@ -8,7 +8,7 @@ import hermes.ui.Ui;
 public class SortCommand extends Command {
 
     @Override
-    public void execute(LogBook logBook, Ui ui) throws HermesException {
-        ui.show(logBook.sort());
+    public String execute(LogBook logBook) throws HermesException {
+        return logBook.sort();
     }
 }
