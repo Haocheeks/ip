@@ -2,7 +2,6 @@ package hermes.command;
 
 import hermes.HermesException;
 import hermes.task.LogBook;
-import hermes.ui.Ui;
 
 /** Removes one task from the list. */
 public class DeleteCommand extends Command {
@@ -17,7 +16,7 @@ public class DeleteCommand extends Command {
     }
 
     @Override
-    public void execute(LogBook logBook, Ui ui) throws HermesException {
-        ui.show(logBook.delete(this.index));
+    public String execute(LogBook logBook) throws HermesException {
+        return logBook.delete(this.index);
     }
 }

@@ -1,7 +1,6 @@
 package hermes.command;
 
 import hermes.task.LogBook;
-import hermes.ui.Ui;
 
 /** Finds tasks based on keyword */
 public class FindCommand extends Command {
@@ -16,7 +15,7 @@ public class FindCommand extends Command {
     }
 
     @Override
-    public void execute(LogBook logBook, Ui ui) {
-        ui.show(logBook.findTask(keyword));
+    public String execute(LogBook logBook) {
+        return logBook.findTask(keyword);
     }
 }

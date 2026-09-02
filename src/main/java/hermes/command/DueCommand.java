@@ -3,7 +3,6 @@ package hermes.command;
 import java.time.LocalDateTime;
 
 import hermes.task.LogBook;
-import hermes.ui.Ui;
 
 /** Shows the outstanding tasks falling due on or before a given moment. */
 public class DueCommand extends Command {
@@ -18,7 +17,7 @@ public class DueCommand extends Command {
     }
 
     @Override
-    public void execute(LogBook logBook, Ui ui) {
-        ui.show(logBook.listTaskDueBy(this.cutoff));
+    public String execute(LogBook logBook) {
+        return logBook.listTaskDueBy(this.cutoff);
     }
 }

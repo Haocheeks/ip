@@ -2,7 +2,6 @@ package hermes.command;
 
 import hermes.HermesException;
 import hermes.task.LogBook;
-import hermes.ui.Ui;
 
 /** Marks one task as no longer completed. */
 public class UnmarkCommand extends Command {
@@ -17,7 +16,7 @@ public class UnmarkCommand extends Command {
     }
 
     @Override
-    public void execute(LogBook logBook, Ui ui) throws HermesException {
-        ui.show(logBook.unmark(this.index));
+    public String execute(LogBook logBook) throws HermesException {
+        return logBook.unmark(this.index);
     }
 }
