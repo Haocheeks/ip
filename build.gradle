@@ -57,7 +57,7 @@ test {
 }
 
 application {
-    mainClass = 'hermes.Hermes'
+    mainClass = 'hermes.Launcher'
 }
 
 jar {
