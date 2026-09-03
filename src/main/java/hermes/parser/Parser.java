@@ -130,6 +130,19 @@ public class Parser {
         }
     }
 
+    /**
+     * Reads the task numbers given to a command such as {@code delete 1 3}.
+     *
+     * <p>Repeats are dropped only after each number has been converted, so two
+     * spellings of the same number, such as 1 and 01, are recognised as one
+     * task. Dropping them while they are still text would let both through, and
+     * the second removal would then act on a position that no longer exists.
+     *
+     * @param arguments what the user typed after the command word
+     * @param instruction the command being run, used to quote a correct example
+     * @return each named task's index in the list, counting from zero
+     * @throws HermesException if no number is given or one is not a number
+     */
     private int[] parseTaskNumbers(String arguments, Keyword instruction) throws HermesException {
         if (arguments.isBlank()) {
             throw new HermesException(missingTaskNumberMessage(instruction));
@@ -137,10 +150,9 @@ public class Parser {
 
         try {
             return Arrays.stream(arguments.split("\\s+"))
-                    .map(String::trim)
-                    .distinct()
                     .mapToInt(Integer::parseInt)
                     .map(i -> i - 1)
+                    .distinct()
                     .toArray();
         } catch (NumberFormatException e) {
             throw new HermesException(String.format("'%s' is not a task number.", arguments));
