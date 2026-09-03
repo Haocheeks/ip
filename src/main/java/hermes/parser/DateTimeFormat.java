@@ -17,25 +17,25 @@ import hermes.HermesException;
  */
 public enum DateTimeFormat {
 
-    DateFormatA("yyyy-MM-dd", true),
-    DateFormatB("yyyy MM dd", true),
-    DateFormatC("d/M/yyyy", true),
-    DateFormatD("d MMM yyyy", true),
-    DateFormatE("MMM d yyyy", true),
-    DateTimeFormatA("yyyy-MM-dd HHmm", false),
-    DateTimeFormatB("yyyy-MM-dd HH:mm", false),
-    DateTimeFormatC("yyyy/MM/dd HHmm", false),
-    DateTimeFormatD("yyyy/MM/dd HH:mm", false),
-    DateTimeFormatE("d/M/yyyy HHmm", false),
-    DateTimeFormatF("d/M/yyyy HH:mm", false),
-    DateTimeFormatG("d/M/yyyy h:mma", false),
-    DateTimeFormatH("d-M-yyyy HHmm", false),
-    DateTimeFormatI("d-M-yyyy HH:mm", false),
-    DateTimeFormatJ("d MMM yyyy HHmm", false),
-    DateTimeFormatK("d MMM yyyy HH:mm", false),
-    DateTimeFormatL("d MMM yyyy h:mma", false),
-    DateTimeFormatM("MMM d yyyy HHmm", false),
-    DateTimeFormatN("MMM d yyyy HH:mm", false);
+    ISO_DATE("yyyy-MM-dd", true),
+    SPACED_ISO_DATE("yyyy MM dd", true),
+    SLASHED_DATE("d/M/yyyy", true),
+    NAMED_MONTH_DATE("d MMM yyyy", true),
+    MONTH_FIRST_DATE("MMM d yyyy", true),
+    ISO_DATE_TIME("yyyy-MM-dd HHmm", false),
+    ISO_DATE_TIME_WITH_COLON("yyyy-MM-dd HH:mm", false),
+    SLASHED_ISO_DATE_TIME("yyyy/MM/dd HHmm", false),
+    SLASHED_ISO_DATE_TIME_WITH_COLON("yyyy/MM/dd HH:mm", false),
+    SLASHED_DATE_TIME("d/M/yyyy HHmm", false),
+    SLASHED_DATE_TIME_WITH_COLON("d/M/yyyy HH:mm", false),
+    SLASHED_DATE_TIME_12_HOUR("d/M/yyyy h:mma", false),
+    DASHED_DATE_TIME("d-M-yyyy HHmm", false),
+    DASHED_DATE_TIME_WITH_COLON("d-M-yyyy HH:mm", false),
+    NAMED_MONTH_DATE_TIME("d MMM yyyy HHmm", false),
+    NAMED_MONTH_DATE_TIME_WITH_COLON("d MMM yyyy HH:mm", false),
+    NAMED_MONTH_DATE_TIME_12_HOUR("d MMM yyyy h:mma", false),
+    MONTH_FIRST_DATE_TIME("MMM d yyyy HHmm", false),
+    MONTH_FIRST_DATE_TIME_WITH_COLON("MMM d yyyy HH:mm", false);
 
     private final DateTimeFormatter formatter;
     private final boolean isDateOnly;
@@ -51,7 +51,7 @@ public enum DateTimeFormat {
      * @param dateTime String of the date (and time) inputted by the users
      * @return the appropriate DateTimeFormatter if present else returns null
      */
-    private static DateTimeFormat getFormat(String dateTime) {
+    private static DateTimeFormat findMatchingFormat(String dateTime) {
 
         for (DateTimeFormat format : DateTimeFormat.values()) {
             if (matchesFormat(dateTime, format.formatter, format.isDateOnly)) {
@@ -66,16 +66,16 @@ public enum DateTimeFormat {
      * from the user.
      *
      * @param dateTime String of the date (and time) the user inputted
-     * @param format A DateTimeFormatter that will be used to attempt to parse the dateTime
+     * @param formatter A DateTimeFormatter that will be used to attempt to parse the dateTime
      * @param isDateOnly Determines if LocalDate.parse or LocalDateTime.parse is used
      * @return true if format is able to parse the dateTime
      */
-    private static boolean matchesFormat(String dateTime, DateTimeFormatter format, boolean isDateOnly) {
+    private static boolean matchesFormat(String dateTime, DateTimeFormatter formatter, boolean isDateOnly) {
         try {
             if (isDateOnly) {
-                LocalDate.parse(dateTime, format);
+                LocalDate.parse(dateTime, formatter);
             } else {
-                LocalDateTime.parse(dateTime, format);
+                LocalDateTime.parse(dateTime, formatter);
             }
             return true;
         } catch (DateTimeParseException e) {
@@ -98,8 +98,8 @@ public enum DateTimeFormat {
      * @return The input parsed as a LocalDateTime.
      * @throws HermesException If the input is not in a recognised format.
      */
-    public static LocalDateTime parseTime(String dateTime) throws HermesException {
-        DateTimeFormat format = DateTimeFormat.getFormat(dateTime);
+    public static LocalDateTime parseDateTime(String dateTime) throws HermesException {
+        DateTimeFormat format = DateTimeFormat.findMatchingFormat(dateTime);
         if (format == null) {
             throw new HermesException(" The date-time format " + dateTime
                     + " is not recognised, try formatting it as dd MM yyyy HHmm instead.");

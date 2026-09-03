@@ -147,7 +147,7 @@ public class LogBook {
                 .sorted(Comparator.comparing(Task::dueDateTime))
                 .map(Task::toString)
                 .collect(Collectors.joining("\n"));
-        String outIfEmpty = "Nothing is due by " + deadline.format(Task.FORMATTER);
+        String outIfEmpty = "Nothing is due by " + deadline.format(Task.DISPLAY_FORMATTER);
         return output.isEmpty() ? outIfEmpty : output;
     }
 
@@ -184,7 +184,7 @@ public class LogBook {
         }
 
         String output = this.tasks.stream()
-                .filter(task -> task.getMessage().toLowerCase().contains(keyword))
+                .filter(task -> task.getDescription().toLowerCase().contains(keyword))
                 .map(Task::toString)
                 .collect(Collectors.joining("\n"));
 
