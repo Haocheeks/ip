@@ -48,7 +48,6 @@ public class Storage {
      *
      * @return the tasks read from the file, in the order they were stored
      */
-    @SuppressWarnings("checkstyle:MissingSwitchDefault")
     public ArrayList<Task> load() {
         ArrayList<Task> tasks = new ArrayList<>();
         this.skippedLines = 0;
@@ -58,8 +57,7 @@ public class Storage {
             return tasks;
         }
 
-        try {
-            Scanner scanner = new Scanner(this.file);
+        try (Scanner scanner = new Scanner(this.file)) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim();
                 String[] parts = line.split("\\|");
@@ -94,8 +92,9 @@ public class Storage {
                     this.skippedLines++;
                 }
             }
-            scanner.close();
         } catch (FileNotFoundException e) {
+            // Unreachable: the file was found to exist just above. Rethrowing
+            // unchecked keeps that assumption honest if it ever stops holding.
             throw new RuntimeException(e);
         }
 

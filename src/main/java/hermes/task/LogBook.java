@@ -143,7 +143,7 @@ public class LogBook {
      */
     public String listTaskDueBy(LocalDateTime deadline) {
         String output = this.tasks.stream()
-                .filter(task -> task.isDueBy(deadline) && !task.isCompleted)
+                .filter(task -> task.isDueBy(deadline) && !task.isCompleted())
                 .sorted(Comparator.comparing(Task::dueDateTime))
                 .map(Task::toString)
                 .collect(Collectors.joining("\n"));
@@ -184,7 +184,7 @@ public class LogBook {
         }
 
         String output = this.tasks.stream()
-                .filter(task -> task.message.toLowerCase().contains(keyword))
+                .filter(task -> task.getMessage().toLowerCase().contains(keyword))
                 .map(Task::toString)
                 .collect(Collectors.joining("\n"));
 

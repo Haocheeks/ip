@@ -100,7 +100,7 @@ public class Parser {
         }
 
         if (parts[0].isEmpty()) {
-            throw new HermesException("Apologies, please enter at lease one keyword, for example: "
+            throw new HermesException("Apologies, please enter at least one keyword, for example: "
                     + Keyword.FIND.getExample());
         }
 

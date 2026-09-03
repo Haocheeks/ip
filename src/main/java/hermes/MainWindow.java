@@ -14,6 +14,9 @@ import javafx.util.Duration;
 /** Main Window*/
 public class MainWindow extends AnchorPane {
 
+    private static final String OPENING_GREETING =
+            "Greetings! I am Hermes. How may I assist you today?";
+
     @FXML
     private ScrollPane scrollPane;
     @FXML
@@ -23,12 +26,12 @@ public class MainWindow extends AnchorPane {
     @FXML
     private VBox dialogContainer;
 
+    private final Image userImage =
+            new Image(this.getClass().getResourceAsStream("/images/userImage.png"));
+    private final Image hermesImage =
+            new Image(this.getClass().getResourceAsStream("/images/hermesImage.png"));
+
     private Hermes hermes;
-
-    private String openingGreeting = "Greetings! I am Hermes. How may I assist you today?";
-
-    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/userImage.png"));
-    private Image hermesImage = new Image(this.getClass().getResourceAsStream("/images/hermesImage.png"));
 
     /**
      * Prepares the window once FXML has supplied the controls it declares.
@@ -41,7 +44,7 @@ public class MainWindow extends AnchorPane {
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
         dialogContainer.getChildren().add(
-                DialogBox.getHermesDialog(this.openingGreeting, hermesImage));
+                DialogBox.getHermesDialog(OPENING_GREETING, hermesImage));
     }
 
     public void setHermes(Hermes hermes) {
