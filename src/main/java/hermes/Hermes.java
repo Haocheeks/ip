@@ -19,9 +19,8 @@ public class Hermes {
     /** Where tasks are kept between runs. */
     private static final String DATA_PATH = "data/Hermes.txt";
 
-    private Ui ui;
-    private Parser parser;
-    private LogBook logBook;
+    private final Parser parser;
+    private final LogBook logBook;
 
     /** Assembles the parts Hermes needs, keeping tasks in the usual place. */
     public Hermes() {
@@ -37,7 +36,6 @@ public class Hermes {
      * @param dataPath where tasks are read from and written back to
      */
     public Hermes(String dataPath) {
-        this.ui = new Ui();
         this.parser = new Parser();
         this.logBook = new LogBook(new Storage(dataPath));
     }
@@ -49,14 +47,20 @@ public class Hermes {
      */
     public static void main(String[] args) {
         Hermes hermes = new Hermes();
+        Ui ui = new Ui();
 
-        hermes.ui.showWelcome();
-        hermes.warnAboutSkippedLines();
+        ui.showWelcome();
+
+        String warning = hermes.warnAboutSkippedLines();
+
+        if (!warning.isEmpty()) {
+            ui.show(warning);
+        }
 
         boolean isRunning = true;
 
-        while (isRunning && hermes.ui.hasNextCommand()) {
-            String input = hermes.ui.readCommand();
+        while (isRunning && ui.hasNextCommand()) {
+            String input = ui.readCommand();
 
             if (input.isEmpty()) {
                 continue;
@@ -64,10 +68,10 @@ public class Hermes {
 
             try {
                 Command command = hermes.parser.parse(input);
-                hermes.ui.show(command.execute(hermes.logBook));
+                ui.show(command.execute(hermes.logBook));
                 isRunning = !command.isExit();
             } catch (HermesException e) {
-                hermes.ui.showError(e.getMessage());
+                ui.showError(e.getMessage());
             }
         }
     }
@@ -82,7 +86,7 @@ public class Hermes {
         int skipped = this.logBook.getSkippedLines();
 
         if (skipped > 0) {
-            return ui.showLoadingError(skipped, DATA_PATH);
+            return Ui.formatLoadingError(skipped, DATA_PATH);
         }
         return "";
     }

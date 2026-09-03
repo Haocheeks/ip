@@ -64,24 +64,28 @@ public class Ui {
     }
 
     /**
-     * Reports that some of the stored records could not be read.
+     * Builds the warning shown when some stored records could not be read.
      *
      * <p>Skipped lines are not held in memory, so the next save rewrites the
      * file without them. Saying so up front gives the user the chance to
      * repair the file before that happens.
      *
+     * <p>This only composes the warning and leaves showing it to the caller,
+     * because the window and the console show it in different places. It is
+     * static because the wording describes the situation rather than any one
+     * way of displaying it.
+     *
      * @param skippedLines how many lines were unreadable, always at least one
      * @param path where those records are stored, so the message can name it
+     * @return the warning to show the user
      */
-    public String showLoadingError(int skippedLines, String path) {
-        String output = String.format("""
+    public static String formatLoadingError(int skippedLines, String path) {
+        return String.format("""
                 Sorry, I could not read %d line%s in my records and have skipped %s.
                 Anything I cannot read is lost the next time I save, so please check
                 %s first if you need it.
                 """, skippedLines, skippedLines == 1 ? "" : "s",
                 skippedLines == 1 ? "it" : "them", path);
-        show(output);
-        return output;
     }
 
     /**
