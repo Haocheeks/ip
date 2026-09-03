@@ -141,7 +141,7 @@ public class LogBook {
      * @param deadline the moment tasks are measured against
      * @return the matching tasks, soonest first, or a notice if none match
      */
-    public String listTaskDueBy(LocalDateTime deadline) {
+    public String listTasksDueBy(LocalDateTime deadline) {
         String output = this.tasks.stream()
                 .filter(task -> task.isDueBy(deadline) && !task.isCompleted())
                 .sorted(Comparator.comparing(Task::dueDateTime))
@@ -178,7 +178,7 @@ public class LogBook {
      * @param keyword the text to look for, already in lower case
      * @return the matching tasks, or a notice if none match
      */
-    public String findTask(String keyword) {
+    public String findTasks(String keyword) {
         if (this.tasks.isEmpty()) {
             return "There is nothing to search, your list is empty!";
         }
