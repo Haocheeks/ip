@@ -55,18 +55,20 @@ public class MainWindow extends AnchorPane {
 
     @FXML
     private void handleUserInput() {
-        String input = userInput.getText();
-        String response = this.hermes.getResponse(input);
+        String input = userInput.getText().trim();
 
-        if (!input.isEmpty()) {
-            dialogContainer.getChildren().addAll(
-                    DialogBox.getUserDialog(input, userImage),
-                    DialogBox.getHermesDialog(response, hermesImage)
-            );
-            userInput.clear();
+        if (input.isEmpty()) {
+            return;
         }
 
-        if (input.equalsIgnoreCase("bye")) {
+        Response response = this.hermes.getResponse(input);
+        dialogContainer.getChildren().addAll(
+                DialogBox.getUserDialog(input, userImage),
+                DialogBox.getHermesDialog(response.text(), hermesImage)
+        );
+        userInput.clear();
+
+        if (response.isExit()) {
             PauseTransition pause = new PauseTransition(Duration.seconds(2));
             pause.setOnFinished(event -> Platform.exit());
             pause.play();
