@@ -64,10 +64,12 @@ public class LogBook {
     }
 
     /**
-     * Marks a task as completed
+     * Marks one task as completed.
      *
-     * @param id the task index in the array
-     * @return a response
+     * @param id the task's position in the list, counting from zero
+     * @return the message confirming the change
+     * @throws HermesException if the number names no task, or the change could
+     *     not be written to storage
      */
     public String mark(int id) throws HermesException {
         checkIndex(id);
@@ -77,10 +79,12 @@ public class LogBook {
     }
 
     /**
-     * Marks a task as incomplete
+     * Marks one task as no longer completed.
      *
-     * @param id the task index in the array
-     * @return a response
+     * @param id the task's position in the list, counting from zero
+     * @return the message confirming the change
+     * @throws HermesException if the number names no task, or the change could
+     *     not be written to storage
      */
     public String unmark(int id) throws HermesException {
         checkIndex(id);
@@ -90,12 +94,20 @@ public class LogBook {
     }
 
     /**
-     * Deletes a task from storage
+     * Removes every task named and reports how many are left.
      *
-     * @param ids the task index in the array
-     * @return a response
+     * <p>All the numbers are checked before any task is removed, so one bad
+     * number cancels the whole delete. Removing the tasks that could be
+     * understood and only then failing would leave the list half changed and,
+     * because the failure comes before the save, disagreeing with the file.
+     *
+     * @param ids the tasks' positions in the list, counting from zero, in any
+     *     order
+     * @return the message naming what was removed
+     * @throws HermesException if any number names no task, or the shortened
+     *     list could not be written to storage
      */
-    public String delete(int[] ids) throws HermesException {
+    public String delete(int... ids) throws HermesException {
         Arrays.sort(ids);
 
         for (int id : ids) {
@@ -124,10 +136,10 @@ public class LogBook {
     }
 
     /**
-     * List all tasks in the list due no later than a specific date and time
+     * Lists the outstanding tasks falling due no later than a given moment.
      *
-     * @param deadline filter condition
-     * @return all tasks due not later than the deadline
+     * @param deadline the moment tasks are measured against
+     * @return the matching tasks, soonest first, or a notice if none match
      */
     public String listTaskDueBy(LocalDateTime deadline) {
         String output = this.tasks.stream()
@@ -161,7 +173,10 @@ public class LogBook {
     }
 
     /**
-     * List out the tasks that contain the keyword in its description
+     * Lists the tasks whose description contains a given keyword.
+     *
+     * @param keyword the text to look for, already in lower case
+     * @return the matching tasks, or a notice if none match
      */
     public String findTask(String keyword) {
         if (this.tasks.isEmpty()) {
