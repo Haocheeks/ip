@@ -66,14 +66,14 @@ public class LogBook {
     /**
      * Marks one task as completed.
      *
-     * @param id the task's position in the list, counting from zero
+     * @param index the task's position in the list, counting from zero
      * @return the message confirming the change
      * @throws HermesException if the number names no task, or the change could
      *     not be written to storage
      */
-    public String mark(int id) throws HermesException {
-        checkIndex(id);
-        String output = this.tasks.get(id).mark();
+    public String mark(int index) throws HermesException {
+        checkIndex(index);
+        String output = this.tasks.get(index).mark();
         this.storage.save(this.tasks);
         return output;
     }
@@ -81,14 +81,14 @@ public class LogBook {
     /**
      * Marks one task as no longer completed.
      *
-     * @param id the task's position in the list, counting from zero
+     * @param index the task's position in the list, counting from zero
      * @return the message confirming the change
      * @throws HermesException if the number names no task, or the change could
      *     not be written to storage
      */
-    public String unmark(int id) throws HermesException {
-        checkIndex(id);
-        String output = this.tasks.get(id).unmark();
+    public String unmark(int index) throws HermesException {
+        checkIndex(index);
+        String output = this.tasks.get(index).unmark();
         this.storage.save(this.tasks);
         return output;
     }
@@ -101,24 +101,24 @@ public class LogBook {
      * understood and only then failing would leave the list half changed and,
      * because the failure comes before the save, disagreeing with the file.
      *
-     * @param ids the tasks' positions in the list, counting from zero, in any
-     *     order
+     * @param indexes the tasks' positions in the list, counting from zero, in
+     *     any order
      * @return the message naming what was removed
      * @throws HermesException if any number names no task, or the shortened
      *     list could not be written to storage
      */
-    public String delete(int... ids) throws HermesException {
-        Arrays.sort(ids);
+    public String delete(int... indexes) throws HermesException {
+        Arrays.sort(indexes);
 
-        for (int id : ids) {
-            checkIndex(id);
+        for (int index : indexes) {
+            checkIndex(index);
         }
 
         StringBuilder output = new StringBuilder();
         int numberOfTasksRemoved = 0;
 
-        for (int id : ids) {
-            Task removed = this.tasks.remove(id - numberOfTasksRemoved);
+        for (int index : indexes) {
+            Task removed = this.tasks.remove(index - numberOfTasksRemoved);
             numberOfTasksRemoved++;
             output.append(removed).append("\n  ");
         }
@@ -141,13 +141,13 @@ public class LogBook {
      * @param deadline the moment tasks are measured against
      * @return the matching tasks, soonest first, or a notice if none match
      */
-    public String listTaskDueBy(LocalDateTime deadline) {
+    public String listTasksDueBy(LocalDateTime deadline) {
         String output = this.tasks.stream()
                 .filter(task -> task.isDueBy(deadline) && !task.isCompleted())
                 .sorted(Comparator.comparing(Task::dueDateTime))
                 .map(Task::toString)
                 .collect(Collectors.joining("\n"));
-        String outIfEmpty = "Nothing is due by " + deadline.format(Task.FORMATTER);
+        String outIfEmpty = "Nothing is due by " + deadline.format(Task.DISPLAY_FORMATTER);
         return output.isEmpty() ? outIfEmpty : output;
     }
 
@@ -178,13 +178,13 @@ public class LogBook {
      * @param keyword the text to look for, already in lower case
      * @return the matching tasks, or a notice if none match
      */
-    public String findTask(String keyword) {
+    public String findTasks(String keyword) {
         if (this.tasks.isEmpty()) {
             return "There is nothing to search, your list is empty!";
         }
 
         String output = this.tasks.stream()
-                .filter(task -> task.getMessage().toLowerCase().contains(keyword))
+                .filter(task -> task.getDescription().toLowerCase().contains(keyword))
                 .map(Task::toString)
                 .collect(Collectors.joining("\n"));
 
@@ -196,12 +196,12 @@ public class LogBook {
     /**
      * Checks to ensure that the index inputted into the method is a valid one
      *
-     * @param id index of task we are manipulating
+     * @param index index of task we are manipulating
      * @throws HermesException error indicating index out of bounds exception
      */
-    private void checkIndex(int id) throws HermesException {
-        if (id < 0 || id >= this.tasks.size()) {
-            throw new HermesException("Sorry, I have no task numbered " + (id + 1) + ".");
+    private void checkIndex(int index) throws HermesException {
+        if (index < 0 || index >= this.tasks.size()) {
+            throw new HermesException("Sorry, I have no task numbered " + (index + 1) + ".");
         }
     }
 

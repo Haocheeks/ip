@@ -6,13 +6,13 @@ import java.time.LocalDateTime;
 public class ToDo extends Task {
 
     /** Creates a todo that is not yet completed. */
-    public ToDo(String message) {
-        super(message);
+    public ToDo(String description) {
+        super(description);
     }
 
     /** Creates a todo in a known state, used when loading from storage. */
-    public ToDo(boolean isCompleted, String message) {
-        super(isCompleted, message);
+    public ToDo(boolean isCompleted, String description) {
+        super(isCompleted, description);
     }
 
     @Override
@@ -22,7 +22,7 @@ public class ToDo extends Task {
 
     @Override
     public String fileContent() {
-        return String.format("T | %d | %s", this.isCompleted ? 1 : 0, this.message);
+        return String.format("T | %d | %s", this.isCompleted ? 1 : 0, this.description);
     }
 
     @Override

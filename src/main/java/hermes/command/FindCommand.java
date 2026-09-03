@@ -16,6 +16,6 @@ public class FindCommand extends Command {
 
     @Override
     public String execute(LogBook logBook) {
-        return logBook.findTask(keyword);
+        return logBook.findTasks(keyword);
     }
 }

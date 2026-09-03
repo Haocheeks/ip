@@ -57,7 +57,7 @@ public class Parser {
             case EVENT -> new AddCommand(parseEvent(arguments));
             case DUE -> new DueCommand(parseDueCutoff(arguments));
             case SORT -> new SortCommand();
-            case FIND -> new FindCommand(parseFind(arguments));
+            case FIND -> new FindCommand(parseFindKeyword(arguments));
             case UNKNOWN -> new UnknownCommand(parseCommandWord(input));
         };
     }
@@ -87,12 +87,12 @@ public class Parser {
     /**
      * Checks to ensure that only one keyword is given for the find operation
      *
-     * @param input what the user typed after the command keyword
+     * @param arguments what the user typed after the command word
      * @return the keyword
      * @throws HermesException too many keywords were provided by the user
      */
-    private String parseFind(String input) throws HermesException {
-        String[] parts = input.split("\\s+");
+    private String parseFindKeyword(String arguments) throws HermesException {
+        String[] parts = arguments.split("\\s+");
 
         if (parts.length > 1) {
             throw new HermesException("Apologies, please enter only one keyword, for example: "
@@ -104,7 +104,7 @@ public class Parser {
                     + Keyword.FIND.getExample());
         }
 
-        return input.toLowerCase();
+        return arguments.toLowerCase();
     }
 
     /**
@@ -114,13 +114,13 @@ public class Parser {
      * number is converted here rather than by every caller.
      *
      * @param arguments what the user typed after the command word
-     * @param instruction the command being run, used to quote a correct example
+     * @param keyword the command being run, used to quote a correct example
      * @return the task's index in the list, counting from zero
      * @throws HermesException if the number is missing or is not a number
      */
-    private int parseTaskNumber(String arguments, Keyword instruction) throws HermesException {
+    private int parseTaskNumber(String arguments, Keyword keyword) throws HermesException {
         if (arguments.isBlank()) {
-            throw new HermesException(missingTaskNumberMessage(instruction));
+            throw new HermesException(missingTaskNumberMessage(keyword));
         }
 
         try {
@@ -139,13 +139,13 @@ public class Parser {
      * the second removal would then act on a position that no longer exists.
      *
      * @param arguments what the user typed after the command word
-     * @param instruction the command being run, used to quote a correct example
+     * @param keyword the command being run, used to quote a correct example
      * @return each named task's index in the list, counting from zero
      * @throws HermesException if no number is given or one is not a number
      */
-    private int[] parseTaskNumbers(String arguments, Keyword instruction) throws HermesException {
+    private int[] parseTaskNumbers(String arguments, Keyword keyword) throws HermesException {
         if (arguments.isBlank()) {
-            throw new HermesException(missingTaskNumberMessage(instruction));
+            throw new HermesException(missingTaskNumberMessage(keyword));
         }
 
         try {
@@ -164,11 +164,11 @@ public class Parser {
      * given none. Deleting is worded differently from marking, so the wording
      * follows the command.
      */
-    private String missingTaskNumberMessage(Keyword instruction) {
-        String request = instruction == Keyword.DELETE
+    private String missingTaskNumberMessage(Keyword keyword) {
+        String request = keyword == Keyword.DELETE
                 ? "Please tell me which task you will like to delete, "
                 : "Please tell me which task, ";
-        return request + "for example: " + instruction.getExample();
+        return request + "for example: " + keyword.getExample();
     }
 
     /**
@@ -221,7 +221,7 @@ public class Parser {
 
         Storage.rejectSeparator(description, by);
 
-        return new Deadline(description, DateTimeFormat.parseTime(by));
+        return new Deadline(description, DateTimeFormat.parseDateTime(by));
     }
 
     /**
@@ -261,8 +261,8 @@ public class Parser {
                     + example);
         }
 
-        LocalDateTime startDateTime = DateTimeFormat.parseTime(start);
-        LocalDateTime endDateTime = DateTimeFormat.parseTime(end);
+        LocalDateTime startDateTime = DateTimeFormat.parseDateTime(start);
+        LocalDateTime endDateTime = DateTimeFormat.parseDateTime(end);
 
         Storage.rejectSeparator(description, start, end);
 
@@ -286,6 +286,6 @@ public class Parser {
                     + Keyword.DUE.getExample());
         }
 
-        return DateTimeFormat.parseTime(fields[1].trim());
+        return DateTimeFormat.parseDateTime(fields[1].trim());
     }
 }

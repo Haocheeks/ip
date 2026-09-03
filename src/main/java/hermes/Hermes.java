@@ -51,7 +51,7 @@ public class Hermes {
 
         ui.showWelcome();
 
-        String warning = hermes.warnAboutSkippedLines();
+        String warning = hermes.describeSkippedLines();
 
         if (!warning.isEmpty()) {
             ui.show(warning);
@@ -77,12 +77,12 @@ public class Hermes {
     }
 
     /**
-     * Tells the user if any lines of the data file could not be understood
-     * when Hermes started, and says nothing when they all loaded.
+     * Describes any lines of the data file that could not be understood when
+     * Hermes started, and says nothing when they all loaded.
      *
      * @return the warning to show, empty if every line loaded
      */
-    protected String warnAboutSkippedLines() {
+    protected String describeSkippedLines() {
         int skipped = this.logBook.getSkippedLines();
 
         if (skipped > 0) {

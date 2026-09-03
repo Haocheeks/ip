@@ -18,6 +18,6 @@ public class DueCommand extends Command {
 
     @Override
     public String execute(LogBook logBook) {
-        return logBook.listTaskDueBy(this.cutoff);
+        return logBook.listTasksDueBy(this.cutoff);
     }
 }

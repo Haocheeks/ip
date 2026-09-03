@@ -6,21 +6,21 @@ import java.time.format.DateTimeFormatter;
 /** One thing the user wants to keep track of. */
 public abstract class Task implements Comparable<Task> {
 
-    protected static final DateTimeFormatter FORMATTER =
+    protected static final DateTimeFormatter DISPLAY_FORMATTER =
             DateTimeFormatter.ofPattern("dd MMM yyyy HHmm");
 
-    protected String message;
+    protected String description;
     protected boolean isCompleted = false;
 
     /** Creates a task that is not yet completed. */
-    public Task(String message) {
-        this.message = message;
+    public Task(String description) {
+        this.description = description;
     }
 
     /** Creates a task in a known state, used when loading from storage. */
-    public Task(boolean isCompleted, String message) {
+    public Task(boolean isCompleted, String description) {
         this.isCompleted = isCompleted;
-        this.message = message;
+        this.description = description;
     }
 
     /** Marks the task as completed and returns the reply to show the user. */
@@ -55,8 +55,8 @@ public abstract class Task implements Comparable<Task> {
     }
 
     /** Returns the text the user gave to describe this task. */
-    public String getMessage() {
-        return this.message;
+    public String getDescription() {
+        return this.description;
     }
 
     /** Returns this task as one line of the data file. */
@@ -97,6 +97,6 @@ public abstract class Task implements Comparable<Task> {
         return String.format(
                 "[%c] %s",
                 isCompleted ? 'X' : ' ',
-                this.message);
+                this.description);
     }
 }

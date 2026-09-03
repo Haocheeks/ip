@@ -49,7 +49,7 @@ public class MainWindow extends AnchorPane {
 
     public void setHermes(Hermes hermes) {
         this.hermes = hermes;
-        String warning = this.hermes.warnAboutSkippedLines();
+        String warning = this.hermes.describeSkippedLines();
         if (!warning.isEmpty()) {
             dialogContainer.getChildren().add(
                     DialogBox.getHermesDialog(warning, hermesImage));
