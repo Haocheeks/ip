@@ -30,6 +30,13 @@ public class MainWindow extends AnchorPane {
     private Image userImage = new Image(this.getClass().getResourceAsStream("/images/userImage.png"));
     private Image hermesImage = new Image(this.getClass().getResourceAsStream("/images/hermesImage.png"));
 
+    /**
+     * Prepares the window once FXML has supplied the controls it declares.
+     *
+     * <p>The greeting is shown here rather than alongside the load warning
+     * because this runs before the back end is attached, and the greeting is
+     * the part that needs nothing from it.
+     */
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());

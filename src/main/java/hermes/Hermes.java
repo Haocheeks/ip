@@ -23,6 +23,11 @@ public class Hermes {
     private Parser parser;
     private LogBook logBook;
 
+    /**
+     * Assembles the parts Hermes needs to hold a conversation.
+     *
+     * @param dataPath where tasks are read from and written back to
+     */
     public Hermes(String dataPath) {
         this.ui = new Ui();
         this.parser = new Parser();
@@ -62,6 +67,8 @@ public class Hermes {
     /**
      * Tells the user if any lines of the data file could not be understood
      * when Hermes started, and says nothing when they all loaded.
+     *
+     * @return the warning to show, empty if every line loaded
      */
     protected String warnAboutSkippedLines() {
         int skipped = this.logBook.getSkippedLines();
@@ -72,6 +79,16 @@ public class Hermes {
         return "";
     }
 
+    /**
+     * Runs one line of input and returns what should be shown for it.
+     *
+     * <p>A problem comes back as its message rather than as an exception, so a
+     * caller with nowhere to report one, such as the window, can show a reply
+     * and a complaint the same way.
+     *
+     * @param input one full line of input
+     * @return the reply to show the user
+     */
     protected String getResponse(String input) {
         try {
             Command command = parser.parse(input);
