@@ -440,3 +440,119 @@ Sorry, I am not familiar with the 'dance' command.
 Sorry, a task cannot contain '|', as I use it to separate fields when saving your tasks.
 Goodbye, thank you for contacting me!
 ```
+
+---
+
+## TC-12 - Deleting several tasks at once
+
+**Aim:** `delete` accepts more than one task number, removes every task named,
+and reports them together.
+
+**Input:**
+
+```text
+todo alpha
+todo beta
+todo gamma
+delete 1 3
+list
+bye
+```
+
+**Expected output:**
+
+```text
+Got it. I've added this task:
+  [T][ ] alpha
+Now you have 1 task in the list.
+Got it. I've added this task:
+  [T][ ] beta
+Now you have 2 tasks in the list.
+Got it. I've added this task:
+  [T][ ] gamma
+Now you have 3 tasks in the list.
+Roger, I've removed these tasks:
+  [T][ ] alpha
+  [T][ ] gamma
+Now you have 1 task in the list.
+1. [T][ ] beta
+Goodbye, thank you for contacting me!
+```
+
+---
+
+## TC-13 - Task numbers in any order, repeats ignored
+
+**Aim:** The task numbers given to `delete` need not be in order, and naming
+the same task twice removes it once rather than failing. The second delete
+repeats a task number in a different spelling, which is the case that once
+ended the session with an IndexOutOfBoundsException.
+
+**Input:**
+
+```text
+todo alpha
+todo beta
+todo gamma
+delete 3 1
+list
+delete 1 01
+list
+bye
+```
+
+**Expected output:**
+
+```text
+Got it. I've added this task:
+  [T][ ] alpha
+Now you have 1 task in the list.
+Got it. I've added this task:
+  [T][ ] beta
+Now you have 2 tasks in the list.
+Got it. I've added this task:
+  [T][ ] gamma
+Now you have 3 tasks in the list.
+Roger, I've removed these tasks:
+  [T][ ] alpha
+  [T][ ] gamma
+Now you have 1 task in the list.
+1. [T][ ] beta
+Roger, I've removed this task:
+  [T][ ] beta
+Now you have 0 tasks in the list.
+Goodbye, thank you for contacting me!
+```
+
+---
+
+## TC-14 - One bad number cancels the whole delete
+
+**Aim:** When any of the numbers given to `delete` names no task, nothing is
+removed. A delete that went ahead with the numbers it understood would leave
+the list half changed and disagreeing with the data file.
+
+**Input:**
+
+```text
+todo alpha
+todo beta
+delete 1 99
+list
+bye
+```
+
+**Expected output:**
+
+```text
+Got it. I've added this task:
+  [T][ ] alpha
+Now you have 1 task in the list.
+Got it. I've added this task:
+  [T][ ] beta
+Now you have 2 tasks in the list.
+Sorry, I have no task numbered 99.
+1. [T][ ] alpha
+2. [T][ ] beta
+Goodbye, thank you for contacting me!
+```

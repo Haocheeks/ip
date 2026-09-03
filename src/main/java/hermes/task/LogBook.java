@@ -115,11 +115,11 @@ public class LogBook {
         this.storage.save(this.tasks);
 
         return String.format("""
-                Roger, I've removed the task%s:
+                Roger, I've removed %s:
                   %s
                 Now you have %d task%s in the list.
                 """,
-                numberOfTasksRemoved == 1 ? "" : "s",
+                numberOfTasksRemoved == 1 ? "this task" : "these tasks",
                 output.toString().trim(), remaining, (remaining == 1 ? "" : "s"));
     }
 
