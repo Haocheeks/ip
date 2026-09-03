@@ -23,8 +23,16 @@ public class Hermes {
     private Parser parser;
     private LogBook logBook;
 
+    /** Assembles the parts Hermes needs, keeping tasks in the usual place. */
+    public Hermes() {
+        this(DATA_PATH);
+    }
+
     /**
-     * Assembles the parts Hermes needs to hold a conversation.
+     * Assembles the parts Hermes needs, reading tasks from a given file.
+     *
+     * <p>Naming the file is what makes Hermes testable: a test can point it at
+     * a scratch file rather than the list the user is really keeping.
      *
      * @param dataPath where tasks are read from and written back to
      */
@@ -40,7 +48,7 @@ public class Hermes {
      * @param args Command line arguments, which Hermes does not use.
      */
     public static void main(String[] args) {
-        Hermes hermes = new Hermes("data/Hermes.txt");
+        Hermes hermes = new Hermes();
 
         hermes.ui.showWelcome();
         hermes.warnAboutSkippedLines();

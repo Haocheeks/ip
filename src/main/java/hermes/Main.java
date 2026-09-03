@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 /** Opens the window Hermes is shown in. */
 public class Main extends Application {
 
-    private Hermes hermes = new Hermes("data/Hermes.txt");
+    private final Hermes hermes = new Hermes();
 
     @Override
     public void start(Stage stage) {
