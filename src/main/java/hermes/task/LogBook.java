@@ -2,6 +2,7 @@ package hermes.task;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
@@ -91,21 +92,35 @@ public class LogBook {
     /**
      * Deletes a task from storage
      *
-     * @param id the task index in the array
+     * @param ids the task index in the array
      * @return a response
      */
-    public String delete(int id) throws HermesException {
-        checkIndex(id);
+    public String delete(int[] ids) throws HermesException {
+        Arrays.sort(ids);
 
-        Task removed = this.tasks.remove(id);
+        for (int id : ids) {
+            checkIndex(id);
+        }
+
+        StringBuilder output = new StringBuilder();
+        int numberOfTasksRemoved = 0;
+
+        for (int id : ids) {
+            Task removed = this.tasks.remove(id - numberOfTasksRemoved);
+            numberOfTasksRemoved++;
+            output.append(removed).append("\n  ");
+        }
+
         int remaining = this.tasks.size();
         this.storage.save(this.tasks);
 
         return String.format("""
-                Roger, I've removed this task:
+                Roger, I've removed the task%s:
                   %s
                 Now you have %d task%s in the list.
-                """, removed, remaining, (remaining == 1 ? "" : "s"));
+                """,
+                numberOfTasksRemoved == 1 ? "" : "s",
+                output.toString().trim(), remaining, (remaining == 1 ? "" : "s"));
     }
 
     /**

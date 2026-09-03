@@ -1,6 +1,7 @@
 package hermes.parser;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 import hermes.HermesException;
 import hermes.command.AddCommand;
@@ -50,7 +51,7 @@ public class Parser {
             case LIST -> new ListCommand();
             case MARK -> new MarkCommand(parseTaskNumber(arguments, keyword));
             case UNMARK -> new UnmarkCommand(parseTaskNumber(arguments, keyword));
-            case DELETE -> new DeleteCommand(parseTaskNumber(arguments, keyword));
+            case DELETE -> new DeleteCommand(parseTaskNumbers(arguments, keyword));
             case TODO -> new AddCommand(parseToDo(arguments));
             case DEADLINE -> new AddCommand(parseDeadline(arguments));
             case EVENT -> new AddCommand(parseEvent(arguments));
@@ -124,6 +125,23 @@ public class Parser {
 
         try {
             return Integer.parseInt(arguments.trim()) - 1;
+        } catch (NumberFormatException e) {
+            throw new HermesException(String.format("'%s' is not a task number.", arguments));
+        }
+    }
+
+    private int[] parseTaskNumbers(String arguments, Keyword instruction) throws HermesException {
+        if (arguments.isBlank()) {
+            throw new HermesException(missingTaskNumberMessage(instruction));
+        }
+
+        try {
+            return Arrays.stream(arguments.split("\\s+"))
+                    .map(String::trim)
+                    .distinct()
+                    .mapToInt(Integer::parseInt)
+                    .map(i -> i - 1)
+                    .toArray();
         } catch (NumberFormatException e) {
             throw new HermesException(String.format("'%s' is not a task number.", arguments));
         }
