@@ -87,6 +87,8 @@ public abstract class Task implements Comparable<Task> {
         }
         // Same rank, so only dated active tasks have anything left to separate them.
         if (this.sortRank() == 0) {
+            assert this.getDueDateTime() != null && otherTask.getDueDateTime() != null
+                    : "Rank 0 means dated, so neither due date can be null";
             return this.getDueDateTime().compareTo(otherTask.getDueDateTime());
         }
         return 0;

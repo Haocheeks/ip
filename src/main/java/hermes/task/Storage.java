@@ -77,6 +77,9 @@ public class Storage {
                     continue;
                 }
 
+                assert parts.length == expectedFields
+                        : "isWellFormed guarantees the field count the switch below indexes into";
+
                 boolean isCompleted = "1".equals(parts[1].trim());
 
                 try {

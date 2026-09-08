@@ -118,6 +118,9 @@ public class LogBook {
         int numberOfTasksRemoved = 0;
 
         for (int index : indexes) {
+            assert (index - numberOfTasksRemoved >= 0) && (index - numberOfTasksRemoved < this.tasks.size())
+                    : "Compensated index out of range, indexes must be sorted and distinct";
+
             Task removed = this.tasks.remove(index - numberOfTasksRemoved);
             numberOfTasksRemoved++;
             output.append(removed).append("\n  ");
