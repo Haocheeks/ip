@@ -26,7 +26,7 @@ public abstract class Task implements Comparable<Task> {
     /** Marks the task as completed and returns the reply to show the user. */
     public String mark() {
         if (isCompleted) {
-            return "this task is already marked as completed";
+            return "The task is already marked as completed.";
         }
 
         this.isCompleted = true;
@@ -72,17 +72,17 @@ public abstract class Task implements Comparable<Task> {
     }
 
     enum TaskOrder {
-        activeDated,
-        activeUndated,
-        completed
+        ACTIVE_DATED,
+        ACTIVE_UNDATED,
+        COMPLETED
     }
 
-    /** Groups tasks for sorting: 0 = active and dated, 1 = active undated, 2 = completed. */
+    /** Groups tasks for sorting; the constants are declared in the order they sort. */
     private TaskOrder getSortRank() {
         if (this.isCompleted) {
-            return TaskOrder.completed;
+            return TaskOrder.COMPLETED;
         }
-        return this.getDueDateTime() == null ? TaskOrder.activeUndated : TaskOrder.activeDated;
+        return this.getDueDateTime() == null ? TaskOrder.ACTIVE_UNDATED : TaskOrder.ACTIVE_DATED;
     }
 
     @Override
@@ -96,7 +96,7 @@ public abstract class Task implements Comparable<Task> {
         }
 
         // Same rank, so only dated active tasks have anything left to separate them.
-        if (this.getSortRank() == TaskOrder.activeDated) {
+        if (this.getSortRank() == TaskOrder.ACTIVE_DATED) {
             return this.getDueDateTime().compareTo(otherTask.getDueDateTime());
         }
 
