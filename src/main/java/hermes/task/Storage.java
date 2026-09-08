@@ -59,40 +59,12 @@ public class Storage {
 
         try (Scanner scanner = new Scanner(this.file)) {
             while (scanner.hasNextLine()) {
-                String line = scanner.nextLine().trim();
-                String[] parts = line.split("\\|");
-                String type = parts[0].trim();
+                Task task = parseStoredTask(scanner.nextLine().trim());
 
-                // How many fields a well-formed line of this type must have.
-                // A type letter we do not recognise expects none, so it is skipped.
-                int expectedFields = switch (type) {
-                    case "T" -> 3;
-                    case "D" -> 4;
-                    case "E" -> 5;
-                    default -> 0;
-                };
-
-                if (expectedFields == 0 || !isWellFormed(parts, expectedFields)) {
+                if (task == null) {
                     this.skippedLines++;
-                    continue;
-                }
-
-                assert parts.length == expectedFields
-                        : "isWellFormed guarantees the field count the switch below indexes into";
-
-                boolean isCompleted = "1".equals(parts[1].trim());
-
-                try {
-                    // CHECKSTYLE.OFF: MissingSwitchDefault
-                    switch (type) {
-                        case "T" -> tasks.add(new ToDo(isCompleted, parts[2].trim()));
-                        case "D" -> tasks.add(new Deadline(isCompleted, parts[2].trim(), parts[3].trim()));
-                        case "E" -> tasks.add(
-                                new Event(isCompleted, parts[2].trim(), parts[3].trim(), parts[4].trim()));
-                    }
-                    // CHECKSTYLE.ON: MissingSwitchDefault
-                } catch (DateTimeParseException e) {
-                    this.skippedLines++;
+                } else {
+                    tasks.add(task);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -105,6 +77,42 @@ public class Storage {
     }
 
     /**
+     * Takes in the task saved in storage as a string and builds a {@link Task} from it.
+     *
+     * <p>A line that cannot be read is reported by returning null rather than
+     * by throwing, so the caller can count it and carry on with the rest of
+     * the file.
+     *
+     * @param storedTask task saved in storage.
+     * @return {@link Task} built from the String saved in storage.
+     */
+    private Task parseStoredTask(String storedTask) {
+        String[] taskParts = storedTask.split("\\|");
+        TaskType taskType = TaskType.of(taskParts[0].trim());
+        int fieldCount = taskType.getStoredFieldCount();
+
+        if (taskType == null || !isWellFormed(taskParts, fieldCount)) {
+            return null;
+        }
+
+        assert taskParts.length == fieldCount
+                : "isWellFormed guarantees the field count the switch below indexes into";
+
+        boolean isCompleted = "1".equals(taskParts[1].trim());
+
+        try {
+            return switch (taskType) {
+                case TODO -> new ToDo(isCompleted, taskParts[2].trim());
+                case DEADLINE -> new Deadline(isCompleted, taskParts[2].trim(), taskParts[3].trim());
+                case EVENT -> new Event(isCompleted, taskParts[2].trim(),
+                        taskParts[3].trim(), taskParts[4].trim());
+            };
+        } catch (DateTimeParseException e) {
+            return null;
+        }
+    }
+
+    /**
      * Checks that a line read from the data file has the shape its type letter
      * promises, so the caller can index into it safely.
      *
@@ -113,11 +121,11 @@ public class Storage {
      * the '|' separator, which would silently truncate the task.
      *
      * @param parts the line split on '|'.
-     * @param expectedFields how many fields this type of task is stored with.
+     * @param fieldCount how many fields this type of task is stored with.
      * @return true if the line is safe to read.
      */
-    private boolean isWellFormed(String[] parts, int expectedFields) {
-        if (parts.length != expectedFields) {
+    private boolean isWellFormed(String[] parts, int fieldCount) {
+        if (parts.length != fieldCount) {
             return false;
         }
 

@@ -43,7 +43,8 @@ public class Parser {
      * @throws HermesException if the input names a command but cannot supply it
      */
     public Command parse(String input) throws HermesException {
-        Keyword keyword = Keyword.of(parseCommandWord(input));
+        String commandWord = parseCommandWord(input);
+        Keyword keyword = Keyword.of(commandWord);
         String arguments = parseArguments(input);
 
         return switch (keyword) {
@@ -57,13 +58,14 @@ public class Parser {
             case EVENT -> new AddCommand(parseEvent(arguments));
             case DUE -> new DueCommand(parseDueCutoff(arguments));
             case SORT -> new SortCommand();
-            case FIND -> new FindCommand(parseFindKeyword(arguments));
+            case FIND -> new FindCommand(parseFindOperation(arguments));
             case UNKNOWN -> new UnknownCommand(parseCommandWord(input));
+            // No default statement because UNKNOWN is logically equivalent to default
         };
     }
 
     /**
-     * Returns the first word of the input, so an unrecognised command can be
+     * Returns the first word of the input, so an unrecognized command can be
      * quoted back to the user.
      *
      * @param input one full line of input, already trimmed
@@ -80,8 +82,8 @@ public class Parser {
      * @return the arguments, or an empty string if the command stood alone
      */
     private String parseArguments(String input) {
-        String[] parts = input.split("\\s+", 2);
-        return parts.length < 2 ? "" : parts[1];
+        String[] argumentParts = input.split("\\s+", 2);
+        return argumentParts.length < 2 ? "" : argumentParts[1];
     }
 
     /**
@@ -91,15 +93,15 @@ public class Parser {
      * @return the keyword
      * @throws HermesException too many keywords were provided by the user
      */
-    private String parseFindKeyword(String arguments) throws HermesException {
-        String[] parts = arguments.split("\\s+");
+    private String parseFindOperation(String arguments) throws HermesException {
+        String[] argumentParts = arguments.split("\\s+");
 
-        if (parts.length > 1) {
+        if (argumentParts.length > 1) {
             throw new HermesException("Apologies, please enter only one keyword, for example: "
                     + Keyword.FIND.getExample());
         }
 
-        if (parts[0].isEmpty()) {
+        if (argumentParts[0].isEmpty()) {
             throw new HermesException("Apologies, please enter at least one keyword, for example: "
                     + Keyword.FIND.getExample());
         }
@@ -120,7 +122,7 @@ public class Parser {
      */
     private int parseTaskNumber(String arguments, Keyword keyword) throws HermesException {
         if (arguments.isBlank()) {
-            throw new HermesException(missingTaskNumberMessage(keyword));
+            throw new HermesException(craftMissingTaskNumberMessage(keyword));
         }
 
         try {
@@ -134,7 +136,7 @@ public class Parser {
      * Reads the task numbers given to a command such as {@code delete 1 3}.
      *
      * <p>Repeats are dropped only after each number has been converted, so two
-     * spellings of the same number, such as 1 and 01, are recognised as one
+     * spellings of the same number, such as 1 and 01, are recognized as one
      * task. Dropping them while they are still text would let both through, and
      * the second removal would then act on a position that no longer exists.
      *
@@ -145,7 +147,7 @@ public class Parser {
      */
     private int[] parseTaskNumbers(String arguments, Keyword keyword) throws HermesException {
         if (arguments.isBlank()) {
-            throw new HermesException(missingTaskNumberMessage(keyword));
+            throw new HermesException(craftMissingTaskNumberMessage(keyword));
         }
 
         try {
@@ -164,7 +166,7 @@ public class Parser {
      * given none. Deleting is worded differently from marking, so the wording
      * follows the command.
      */
-    private String missingTaskNumberMessage(Keyword keyword) {
+    private String craftMissingTaskNumberMessage(Keyword keyword) {
         String request = keyword == Keyword.DELETE
                 ? "Please tell me which task you will like to delete, "
                 : "Please tell me which task, ";
@@ -176,11 +178,11 @@ public class Parser {
      *
      * @param arguments what the user typed after the command word.
      * @return the task the user described.
-     * @throws HermesException if the description is missing or cannot be stored.
+     * @throws HermesException if the taskDescription is missing or cannot be stored.
      */
     private Task parseToDo(String arguments) throws HermesException {
         if (arguments.isBlank()) {
-            throw new HermesException("A todo needs a description, for example: "
+            throw new HermesException("A todo needs a taskDescription, for example: "
                     + Keyword.TODO.getExample());
         }
 
@@ -196,32 +198,32 @@ public class Parser {
      *
      * @param arguments what the user typed after the command word.
      * @return the task the user described.
-     * @throws HermesException if the description or date is missing, cannot be
+     * @throws HermesException if the taskDescription or date is missing, cannot be
      *     stored, or is not a date Hermes recognises.
      */
     private Task parseDeadline(String arguments) throws HermesException {
         String example = "for example: " + Keyword.DEADLINE.getExample();
 
         if (arguments.isBlank()) {
-            throw new HermesException("A deadline needs a description, " + example);
+            throw new HermesException("A deadline needs a taskDescription, " + example);
         }
 
-        String[] fields = arguments.split("\\s*/by\\s*", 2);
+        String[] taskDescriptionAndDueDate = arguments.split("\\s*/by\\s*", 2);
 
-        if (fields.length < 2) {
+        if (taskDescriptionAndDueDate.length < 2) {
             throw new HermesException("A deadline needs a /by date, " + example);
         }
 
-        String description = fields[0].trim();
-        String by = fields[1].trim();
+        String taskDescription = taskDescriptionAndDueDate[0].trim();
+        String dueDate = taskDescriptionAndDueDate[1].trim();
 
-        if (description.isEmpty() || by.isEmpty()) {
-            throw new HermesException("A deadline needs both a description and a /by date, " + example);
+        if (taskDescription.isEmpty() || dueDate.isEmpty()) {
+            throw new HermesException("A deadline needs both a taskDescription and a /by date, " + example);
         }
 
-        Storage.rejectSeparator(description, by);
+        Storage.rejectSeparator(taskDescription, dueDate);
 
-        return new Deadline(description, DateTimeFormat.parseDateTime(by));
+        return new Deadline(taskDescription, DateTimeFormat.parseDateTime(dueDate));
     }
 
     /**
@@ -237,36 +239,36 @@ public class Parser {
         String example = "for example: " + Keyword.EVENT.getExample();
 
         if (arguments.isBlank()) {
-            throw new HermesException("An event needs a description, " + example);
+            throw new HermesException("An event needs a taskDescription, " + example);
         }
 
-        String[] afterFrom = arguments.split("\\s*/from\\s*", 2);
+        String[] taskDescriptionAndEventStart = arguments.split("\\s*/from\\s*", 2);
 
-        if (afterFrom.length < 2) {
+        if (taskDescriptionAndEventStart.length < 2) {
             throw new HermesException("An event needs a /from time, " + example);
         }
 
-        String[] fromTo = afterFrom[1].split("\\s*/to\\s*", 2);
+        String[] eventStartAndEventEnd = taskDescriptionAndEventStart[1].split("\\s*/to\\s*", 2);
 
-        if (fromTo.length < 2) {
+        if (eventStartAndEventEnd.length < 2) {
             throw new HermesException("An event needs a /to time, " + example);
         }
 
-        String description = afterFrom[0].trim();
-        String start = fromTo[0].trim();
-        String end = fromTo[1].trim();
+        String taskDescription = taskDescriptionAndEventStart[0].trim();
+        String eventStart = eventStartAndEventEnd[0].trim();
+        String eventEnd = eventStartAndEventEnd[1].trim();
 
-        if (description.isEmpty() || start.isEmpty() || end.isEmpty()) {
-            throw new HermesException("An event needs a description, a /from time and a /to time, "
+        if (taskDescription.isEmpty() || eventStart.isEmpty() || eventEnd.isEmpty()) {
+            throw new HermesException("An event needs a taskDescription, a /from time and a /to time, "
                     + example);
         }
 
-        LocalDateTime startDateTime = DateTimeFormat.parseDateTime(start);
-        LocalDateTime endDateTime = DateTimeFormat.parseDateTime(end);
+        LocalDateTime startDateTime = DateTimeFormat.parseDateTime(eventStart);
+        LocalDateTime endDateTime = DateTimeFormat.parseDateTime(eventEnd);
 
-        Storage.rejectSeparator(description, start, end);
+        Storage.rejectSeparator(taskDescription, eventStart, eventEnd);
 
-        return new Event(description, startDateTime, endDateTime);
+        return new Event(taskDescription, startDateTime, endDateTime);
     }
 
     /**
@@ -275,8 +277,7 @@ public class Parser {
      *
      * @param arguments what the user typed after the command word.
      * @return the moment tasks are being measured against.
-     * @throws HermesException if the date is missing or is not one Hermes
-     *     recognises.
+     * @throws HermesException if the date is missing or is not one Hermes recognizes.
      */
     private LocalDateTime parseDueCutoff(String arguments) throws HermesException {
         String[] fields = arguments.split("\\s*/by\\s*", 2);

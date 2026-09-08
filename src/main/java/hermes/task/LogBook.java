@@ -9,8 +9,7 @@ import java.util.stream.Collectors;
 import hermes.HermesException;
 
 /**
- * Holds the tasks Hermes is keeping track of and the operations that change
- * them.
+ * Holds the tasks Hermes is keeping track of and the operations that change them.
  *
  * <p>The list in memory is the single source of truth. Every change is handed
  * to {@link Storage} straight away, so the file always matches the list.
@@ -176,7 +175,7 @@ public class LogBook {
     }
 
     /**
-     * Lists the tasks whose description contains a given keyword.
+     * Lists the tasks whose taskDescription contains a given keyword.
      *
      * @param keyword the text to look for, already in lower case.
      * @return the matching tasks, or a notice if none match.
@@ -187,7 +186,7 @@ public class LogBook {
         }
 
         String output = this.tasks.stream()
-                .filter(task -> task.getDescription().toLowerCase().contains(keyword))
+                .filter(task -> task.getTaskDescription().toLowerCase().contains(keyword))
                 .map(Task::toString)
                 .collect(Collectors.joining("\n"));
 

@@ -9,15 +9,15 @@ public class Event extends Task {
     protected LocalDateTime end;
 
     /** Creates an event that is not yet completed. */
-    public Event(String description, LocalDateTime start, LocalDateTime end) {
-        super(description);
+    public Event(String taskDescription, LocalDateTime start, LocalDateTime end) {
+        super(taskDescription);
         this.start = start;
         this.end = end;
     }
 
     /** Creates an event in a known state from its stored ISO-8601 dates. */
-    public Event(boolean isCompleted, String description, String start, String end) {
-        super(isCompleted, description);
+    public Event(boolean isCompleted, String taskDescription, String start, String end) {
+        super(isCompleted, taskDescription);
         this.start = LocalDateTime.parse(start);
         this.end = LocalDateTime.parse(end);
     }
@@ -29,9 +29,10 @@ public class Event extends Task {
 
     @Override
     public String getFileContent() {
-        return String.format("E | %d | %s | %s | %s",
+        return String.format("%s | %d | %s | %s | %s",
+                TaskType.EVENT.getSymbol(),
                 this.isCompleted ? 1 : 0,
-                this.description,
+                this.taskDescription,
                 this.start,
                 this.end);
     }

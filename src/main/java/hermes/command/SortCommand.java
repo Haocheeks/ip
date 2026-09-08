@@ -3,7 +3,7 @@ package hermes.command;
 import hermes.HermesException;
 import hermes.task.LogBook;
 
-/** Reorders the tasks by deadline and keeps that order. */
+/** Reorders tasks by their due date and stored the updated order. */
 public class SortCommand extends Command {
 
     @Override

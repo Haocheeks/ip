@@ -3,9 +3,9 @@ package hermes.command;
 import hermes.task.LogBook;
 
 /**
- * Reports that the user typed something Hermes does not recognise.
+ * Reports that the user typed something Hermes does not recognize.
  *
- * <p>Not recognising a command is an ordinary outcome rather than an error, so
+ * <p>Not recognizing a command is an ordinary outcome rather than an error, so
  * it is a Command like any other and the main loop needs no special case.
  */
 public class UnknownCommand extends Command {

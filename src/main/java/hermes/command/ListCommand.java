@@ -2,7 +2,7 @@ package hermes.command;
 
 import hermes.task.LogBook;
 
-/** Shows every task, numbered as the user refers to them. */
+/** Shows every task, numbered. */
 public class ListCommand extends Command {
 
     @Override

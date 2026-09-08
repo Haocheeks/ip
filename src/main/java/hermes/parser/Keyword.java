@@ -26,12 +26,16 @@ public enum Keyword {
     SORT("sort", "sort"),
     FIND("find", "find book"),
 
-    /** Anything the user typed that is not a recognised command. */
+    /** Anything the user typed that is not a recognized command. */
     UNKNOWN("", "");
 
     private final String keyword;
     private final String example;
 
+    /**
+     * @param keyword commands (user input) recognized by the system.
+     * @param example recommended input for the keyword if the user messes up.
+     */
     Keyword(String keyword, String example) {
         this.keyword = keyword;
         this.example = example;
