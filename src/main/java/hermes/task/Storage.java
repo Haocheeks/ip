@@ -146,12 +146,9 @@ public class Storage {
      * @throws HermesException if the data file could not be written.
      */
     public void save(List<Task> tasks) throws HermesException {
-        List<String> lines = new ArrayList<>();
-
-        for (Task task : tasks) {
-            lines.add(task.getFileContent());
-        }
-
+        List<String> lines = tasks.stream()
+                .map(Task::getFileContent)
+                .toList();
         try {
             Files.write(this.file.toPath(), lines);
         } catch (IOException e) {
