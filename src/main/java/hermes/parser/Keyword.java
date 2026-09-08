@@ -40,7 +40,7 @@ public enum Keyword {
     /**
      * Returns an example of how this command is used, for error messages.
      *
-     * @return the example usage
+     * @return the example usage.
      */
     public String getExample() {
         return this.example;
@@ -49,8 +49,8 @@ public enum Keyword {
     /**
      * Finds the keyword matching what the user typed.
      *
-     * @param input the first word of what the user typed
-     * @return the matching keyword, or {@link #UNKNOWN} if there is none
+     * @param input the first word of what the user typed.
+     * @return the matching keyword, or {@link #UNKNOWN} if there is none.
      */
     public static Keyword of(String input) {
         for (Keyword candidate : values()) {

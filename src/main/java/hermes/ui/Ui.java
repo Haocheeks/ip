@@ -35,7 +35,7 @@ public class Ui {
     /**
      * Reports whether the user has typed anything more.
      *
-     * @return false once input has run out, so the caller can stop reading
+     * @return false once input has run out, so the caller can stop reading.
      */
     public boolean hasNextCommand() {
         return scanner.hasNextLine();
@@ -44,7 +44,7 @@ public class Ui {
     /**
      * Reads one line of input.
      *
-     * @return the line with surrounding whitespace removed
+     * @return the line with surrounding whitespace removed.
      */
     public String readCommand() {
         return scanner.nextLine().trim();
@@ -54,7 +54,7 @@ public class Ui {
      * Prints a single message wrapped in divider lines, so every reply from
      * Hermes has the same shape.
      *
-     * @param message the text to show to the user
+     * @param message the text to show to the user.
      */
     public void show(String message) {
         System.out.println(DIVIDER);
@@ -75,9 +75,9 @@ public class Ui {
      * static because the wording describes the situation rather than any one
      * way of displaying it.
      *
-     * @param skippedLines how many lines were unreadable, always at least one
-     * @param path where those records are stored, so the message can name it
-     * @return the warning to show the user
+     * @param skippedLines how many lines were unreadable, always at least one.
+     * @param path where those records are stored, so the message can name it.
+     * @return the warning to show the user.
      */
     public static String formatLoadingError(int skippedLines, String path) {
         return String.format("""
@@ -94,7 +94,7 @@ public class Ui {
      * <p>Errors are framed exactly like any other reply; this exists so callers
      * can say which of the two they mean.
      *
-     * @param message the explanation to show to the user
+     * @param message the explanation to show to the user.
      */
     public void showError(String message) {
         show(message);

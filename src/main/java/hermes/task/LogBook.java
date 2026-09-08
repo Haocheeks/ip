@@ -22,7 +22,7 @@ public class LogBook {
     /**
      * Starts from whatever the given storage already holds.
      *
-     * @param storage where tasks are read from and written back to
+     * @param storage where tasks are read from and written back to.
      */
     public LogBook(Storage storage) {
         this.storage = storage;
@@ -37,7 +37,7 @@ public class LogBook {
      * exists so a caller can ask the task list whether it holds everything that
      * was saved, without needing a reference to storage of its own.
      *
-     * @return the number of skipped records, zero if everything loaded
+     * @return the number of skipped records, zero if everything loaded.
      */
     public int getSkippedLines() {
         return this.storage.getSkippedLines();
@@ -49,9 +49,9 @@ public class LogBook {
      * <p>The caller decides which kind of {@link Task} to create, so this
      * method works unchanged for todos, deadlines and events.
      *
-     * @param task the task to store
-     * @return the message confirming the task was added
-     * @throws HermesException if the task could not be written to storage
+     * @param task the task to store.
+     * @return the message confirming the task was added.
+     * @throws HermesException if the task could not be written to storage.
      */
     public String log(Task task) throws HermesException {
         this.tasks.add(task);
@@ -66,10 +66,10 @@ public class LogBook {
     /**
      * Marks one task as completed.
      *
-     * @param index the task's position in the list, counting from zero
-     * @return the message confirming the change
+     * @param index the task's position in the list, counting from zero.
+     * @return the message confirming the change.
      * @throws HermesException if the number names no task, or the change could
-     *     not be written to storage
+     *     not be written to storage.
      */
     public String mark(int index) throws HermesException {
         checkIndex(index);
@@ -81,10 +81,10 @@ public class LogBook {
     /**
      * Marks one task as no longer completed.
      *
-     * @param index the task's position in the list, counting from zero
-     * @return the message confirming the change
+     * @param index the task's position in the list, counting from zero.
+     * @return the message confirming the change.
      * @throws HermesException if the number names no task, or the change could
-     *     not be written to storage
+     *     not be written to storage.
      */
     public String unmark(int index) throws HermesException {
         checkIndex(index);
@@ -102,10 +102,10 @@ public class LogBook {
      * because the failure comes before the save, disagreeing with the file.
      *
      * @param indexes the tasks' positions in the list, counting from zero, in
-     *     any order
-     * @return the message naming what was removed
+     *     any order.
+     * @return the message naming what was removed.
      * @throws HermesException if any number names no task, or the shortened
-     *     list could not be written to storage
+     *     list could not be written to storage.
      */
     public String delete(int... indexes) throws HermesException {
         Arrays.sort(indexes);
@@ -138,8 +138,8 @@ public class LogBook {
     /**
      * Lists the outstanding tasks falling due no later than a given moment.
      *
-     * @param deadline the moment tasks are measured against
-     * @return the matching tasks, soonest first, or a notice if none match
+     * @param deadline the moment tasks are measured against.
+     * @return the matching tasks, soonest first, or a notice if none match.
      */
     public String listTasksDueBy(LocalDateTime deadline) {
         String output = this.tasks.stream()
@@ -156,8 +156,8 @@ public class LogBook {
      * the dated ones, and completed tasks come last. The new order is written to
      * storage, so it is still in place the next time Hermes starts.
      *
-     * @return the reordered tasks, numbered exactly as the list command shows them
-     * @throws HermesException if the reordered tasks could not be written to storage
+     * @return the reordered tasks, numbered exactly as the list command shows them.
+     * @throws HermesException if the reordered tasks could not be written to storage.
      */
     public String sort() throws HermesException {
         if (this.tasks.isEmpty()) {
@@ -175,8 +175,8 @@ public class LogBook {
     /**
      * Lists the tasks whose description contains a given keyword.
      *
-     * @param keyword the text to look for, already in lower case
-     * @return the matching tasks, or a notice if none match
+     * @param keyword the text to look for, already in lower case.
+     * @return the matching tasks, or a notice if none match.
      */
     public String findTasks(String keyword) {
         if (this.tasks.isEmpty()) {
@@ -196,8 +196,8 @@ public class LogBook {
     /**
      * Checks to ensure that the index inputted into the method is a valid one
      *
-     * @param index index of task we are manipulating
-     * @throws HermesException error indicating index out of bounds exception
+     * @param index index of task we are manipulating.
+     * @throws HermesException error indicating index out of bounds exception.
      */
     private void checkIndex(int index) throws HermesException {
         if (index < 0 || index >= this.tasks.size()) {

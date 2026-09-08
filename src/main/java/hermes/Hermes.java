@@ -33,7 +33,7 @@ public class Hermes {
      * <p>Naming the file is what makes Hermes testable: a test can point it at
      * a scratch file rather than the list the user is really keeping.
      *
-     * @param dataPath where tasks are read from and written back to
+     * @param dataPath where tasks are read from and written back to.
      */
     public Hermes(String dataPath) {
         this.parser = new Parser();
@@ -80,7 +80,7 @@ public class Hermes {
      * Describes any lines of the data file that could not be understood when
      * Hermes started, and says nothing when they all loaded.
      *
-     * @return the warning to show, empty if every line loaded
+     * @return the warning to show, empty if every line loaded.
      */
     protected String describeSkippedLines() {
         int skipped = this.logBook.getSkippedLines();
@@ -98,8 +98,8 @@ public class Hermes {
      * caller with nowhere to report one, such as the window, can show a reply
      * and a complaint the same way.
      *
-     * @param input one full line of input
-     * @return the reply to show, and whether to stop after showing it
+     * @param input one full line of input.
+     * @return the reply to show, and whether to stop after showing it.
      */
     protected Response getResponse(String input) {
         try {

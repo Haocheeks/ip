@@ -8,8 +8,8 @@ package hermes;
  * word for itself would put a second copy of the command vocabulary outside
  * the parser, so the decision is carried back with the text instead.
  *
- * @param text what to show the user
- * @param isExit whether Hermes should stop after this reply
+ * @param text what to show the user.
+ * @param isExit whether Hermes should stop after this reply.
  */
 public record Response(String text, boolean isExit) {
 }

@@ -113,10 +113,10 @@ public class Parser {
      * <p>The user counts from one and the list is indexed from zero, so the
      * number is converted here rather than by every caller.
      *
-     * @param arguments what the user typed after the command word
-     * @param keyword the command being run, used to quote a correct example
-     * @return the task's index in the list, counting from zero
-     * @throws HermesException if the number is missing or is not a number
+     * @param arguments what the user typed after the command word.
+     * @param keyword the command being run, used to quote a correct example.
+     * @return the task's index in the list, counting from zero.
+     * @throws HermesException if the number is missing or is not a number.
      */
     private int parseTaskNumber(String arguments, Keyword keyword) throws HermesException {
         if (arguments.isBlank()) {
@@ -138,10 +138,10 @@ public class Parser {
      * task. Dropping them while they are still text would let both through, and
      * the second removal would then act on a position that no longer exists.
      *
-     * @param arguments what the user typed after the command word
-     * @param keyword the command being run, used to quote a correct example
-     * @return each named task's index in the list, counting from zero
-     * @throws HermesException if no number is given or one is not a number
+     * @param arguments what the user typed after the command word.
+     * @param keyword the command being run, used to quote a correct example.
+     * @return each named task's index in the list, counting from zero.
+     * @throws HermesException if no number is given or one is not a number.
      */
     private int[] parseTaskNumbers(String arguments, Keyword keyword) throws HermesException {
         if (arguments.isBlank()) {
@@ -174,9 +174,9 @@ public class Parser {
     /**
      * Builds a {@link ToDo} from a command such as {@code todo borrow book}.
      *
-     * @param arguments what the user typed after the command word
-     * @return the task the user described
-     * @throws HermesException if the description is missing or cannot be stored
+     * @param arguments what the user typed after the command word.
+     * @return the task the user described.
+     * @throws HermesException if the description is missing or cannot be stored.
      */
     private Task parseToDo(String arguments) throws HermesException {
         if (arguments.isBlank()) {
@@ -194,10 +194,10 @@ public class Parser {
      * Builds a {@link Deadline} from a command such as
      * {@code deadline return book /by 27 Aug 2026 1500}.
      *
-     * @param arguments what the user typed after the command word
-     * @return the task the user described
+     * @param arguments what the user typed after the command word.
+     * @return the task the user described.
      * @throws HermesException if the description or date is missing, cannot be
-     *     stored, or is not a date Hermes recognises
+     *     stored, or is not a date Hermes recognises.
      */
     private Task parseDeadline(String arguments) throws HermesException {
         String example = "for example: " + Keyword.DEADLINE.getExample();
@@ -228,10 +228,10 @@ public class Parser {
      * Builds an {@link Event} from a command such as
      * {@code event project meeting /from 27 Aug 2026 1500 /to 27 Aug 2026 1630}.
      *
-     * @param arguments what the user typed after the command word
-     * @return the task the user described
+     * @param arguments what the user typed after the command word.
+     * @return the task the user described.
      * @throws HermesException if any part is missing, cannot be stored, or is
-     *     not a date Hermes recognises
+     *     not a date Hermes recognises.
      */
     private Task parseEvent(String arguments) throws HermesException {
         String example = "for example: " + Keyword.EVENT.getExample();
@@ -273,10 +273,10 @@ public class Parser {
      * Reads the cutoff given to a command such as
      * {@code due /by 28 Aug 2026 1600}.
      *
-     * @param arguments what the user typed after the command word
-     * @return the moment tasks are being measured against
+     * @param arguments what the user typed after the command word.
+     * @return the moment tasks are being measured against.
      * @throws HermesException if the date is missing or is not one Hermes
-     *     recognises
+     *     recognises.
      */
     private LocalDateTime parseDueCutoff(String arguments) throws HermesException {
         String[] fields = arguments.split("\\s*/by\\s*", 2);

@@ -13,7 +13,7 @@ public class UnknownCommand extends Command {
     private final String word;
 
     /**
-     * @param word what the user typed in place of a command
+     * @param word what the user typed in place of a command.
      */
     public UnknownCommand(String word) {
         this.word = word;

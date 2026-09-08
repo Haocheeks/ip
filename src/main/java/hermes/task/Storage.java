@@ -46,7 +46,7 @@ public class Storage {
      * allowed to stop the load, so one damaged line does not cost the user
      * every other task. Ask {@link #getSkippedLines()} how many were lost.
      *
-     * @return the tasks read from the file, in the order they were stored
+     * @return the tasks read from the file, in the order they were stored.
      */
     public ArrayList<Task> load() {
         ArrayList<Task> tasks = new ArrayList<>();
@@ -109,9 +109,9 @@ public class Storage {
      * {@code ArrayIndexOutOfBoundsException}; too many means a field contained
      * the '|' separator, which would silently truncate the task.
      *
-     * @param parts the line split on '|'
-     * @param expectedFields how many fields this type of task is stored with
-     * @return true if the line is safe to read
+     * @param parts the line split on '|'.
+     * @param expectedFields how many fields this type of task is stored with.
+     * @return true if the line is safe to read.
      */
     private boolean isWellFormed(String[] parts, int expectedFields) {
         if (parts.length != expectedFields) {
@@ -142,8 +142,8 @@ public class Storage {
      * memory, so the session can carry on and the user is told it will not
      * survive being closed.
      *
-     * @param tasks the tasks to write, in the order they should be stored
-     * @throws HermesException if the data file could not be written
+     * @param tasks the tasks to write, in the order they should be stored.
+     * @throws HermesException if the data file could not be written.
      */
     public void save(List<Task> tasks) throws HermesException {
         List<String> lines = new ArrayList<>();
@@ -175,8 +175,8 @@ public class Storage {
      * than any particular file, so a caller can check text without holding a
      * Storage of its own.
      *
-     * @param fields the parts of the task that will be written to file
-     * @throws HermesException if any field contains the separator
+     * @param fields the parts of the task that will be written to file.
+     * @throws HermesException if any field contains the separator.
      */
     public static void rejectSeparator(String... fields) throws HermesException {
         for (String field : fields) {
@@ -192,7 +192,7 @@ public class Storage {
      * Returns how many lines of the data file could not be understood on the
      * most recent load.
      *
-     * @return the number of skipped lines, zero if the file was read in full
+     * @return the number of skipped lines, zero if the file was read in full.
      */
     public int getSkippedLines() {
         return this.skippedLines;

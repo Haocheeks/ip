@@ -9,7 +9,7 @@ public class MarkCommand extends Command {
     private final int index;
 
     /**
-     * @param index the task's position in the list, counting from zero
+     * @param index the task's position in the list, counting from zero.
      */
     public MarkCommand(int index) {
         this.index = index;

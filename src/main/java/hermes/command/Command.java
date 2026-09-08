@@ -16,15 +16,15 @@ public abstract class Command {
     /**
      * Carries out this command and shows the result.
      *
-     * @param logBook the tasks to act on
-     * @throws HermesException if the command could not be completed
+     * @param logBook the tasks to act on.
+     * @throws HermesException if the command could not be completed.
      */
     public abstract String execute(LogBook logBook) throws HermesException;
 
     /**
      * Reports whether Hermes should stop after this command.
      *
-     * @return false for every command but {@link ByeCommand}
+     * @return false for every command but {@link ByeCommand}.
      */
     public boolean isExit() {
         return false;

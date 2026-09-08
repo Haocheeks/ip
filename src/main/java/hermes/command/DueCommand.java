@@ -10,7 +10,7 @@ public class DueCommand extends Command {
     private final LocalDateTime cutoff;
 
     /**
-     * @param cutoff the moment tasks are measured against
+     * @param cutoff the moment tasks are measured against.
      */
     public DueCommand(LocalDateTime cutoff) {
         this.cutoff = cutoff;

@@ -8,7 +8,7 @@ public class FindCommand extends Command {
     private final String keyword;
 
     /**
-     * @param keyword used to find tasks whose description contains the keyword
+     * @param keyword used to find tasks whose description contains the keyword.
      */
     public FindCommand(String keyword) {
         this.keyword = keyword;

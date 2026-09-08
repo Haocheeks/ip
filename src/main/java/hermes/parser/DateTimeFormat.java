@@ -65,10 +65,10 @@ public enum DateTimeFormat {
      * Helper function to check if the formatter is able to parse the date (and time) String input
      * from the user.
      *
-     * @param dateTime String of the date (and time) the user inputted
-     * @param formatter A DateTimeFormatter that will be used to attempt to parse the dateTime
-     * @param isDateOnly Determines if LocalDate.parse or LocalDateTime.parse is used
-     * @return true if format is able to parse the dateTime
+     * @param dateTime String of the date (and time) the user inputted.
+     * @param formatter A DateTimeFormatter that will be used to attempt to parse the dateTime.
+     * @param isDateOnly Determines if LocalDate.parse or LocalDateTime.parse is used.
+     * @return true if format is able to parse the dateTime.
      */
     private static boolean matchesFormat(String dateTime, DateTimeFormatter formatter, boolean isDateOnly) {
         try {
