@@ -117,11 +117,11 @@ public class Storage {
      * the '|' separator, which would silently truncate the task.
      *
      * @param parts the line split on '|'.
-     * @param expectedFields how many fields this type of task is stored with.
+     * @param fieldCount how many fields this type of task is stored with.
      * @return true if the line is safe to read.
      */
-    private boolean isWellFormed(String[] parts, int expectedFields) {
-        if (parts.length != expectedFields) {
+    private boolean isWellFormed(String[] parts, int fieldCount) {
+        if (parts.length != fieldCount) {
             return false;
         }
 
