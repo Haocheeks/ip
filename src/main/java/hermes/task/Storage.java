@@ -89,10 +89,14 @@ public class Storage {
     private Task parseStoredTask(String storedTask) {
         String[] taskParts = storedTask.split("\\|");
         TaskType taskType = TaskType.of(taskParts[0].trim());
+        int fieldCount = taskType.getStoredFieldCount();
 
-        if (taskType == null || !isWellFormed(taskParts, taskType.getStoredFieldCount())) {
+        if (taskType == null || !isWellFormed(taskParts, fieldCount)) {
             return null;
         }
+
+        assert taskParts.length == fieldCount
+                : "isWellFormed guarantees the field count the switch below indexes into";
 
         boolean isCompleted = "1".equals(taskParts[1].trim());
 
