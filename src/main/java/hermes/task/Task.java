@@ -9,44 +9,44 @@ public abstract class Task implements Comparable<Task> {
     protected static final DateTimeFormatter DISPLAY_FORMATTER =
             DateTimeFormatter.ofPattern("dd MMM yyyy HHmm");
 
-    protected String description;
+    protected String taskDescription;
     protected boolean isCompleted = false;
 
     /** Creates a task that is not yet completed. */
-    public Task(String description) {
-        this.description = description;
+    public Task(String taskDescription) {
+        this.taskDescription = taskDescription;
     }
 
     /** Creates a task in a known state, used when loading from storage. */
-    public Task(boolean isCompleted, String description) {
+    public Task(boolean isCompleted, String taskDescription) {
         this.isCompleted = isCompleted;
-        this.description = description;
+        this.taskDescription = taskDescription;
     }
 
     /** Marks the task as completed and returns the reply to show the user. */
     public String mark() {
-        if (!this.isCompleted) {
-            this.isCompleted = true;
-            return String.format("""
-                    Roger, I will mark this task as completed:
-                      %s
-                    """, this);
-        } else {
-            return "The task is already marked as completed.";
+        if (isCompleted) {
+            return "this task is already marked as completed";
         }
+
+        this.isCompleted = true;
+        return String.format("""
+                Roger, I will mark this task as completed:
+                  %s
+                """, this);
     }
 
     /** Marks the task as not completed and returns the reply to show the user. */
     public String unmark() {
-        if (this.isCompleted) {
-            this.isCompleted = false;
-            return String.format("""
-                    Alright, I will mark this task as incomplete:
-                      %s
-                    """, this);
-        } else {
+        if (!this.isCompleted) {
             return "The task is already marked as incomplete.";
         }
+
+        this.isCompleted = false;
+        return String.format("""
+                Alright, I will mark this task as incomplete:
+                  %s
+                """, this);
     }
 
     /** Returns true if this task has been completed. */
@@ -55,8 +55,8 @@ public abstract class Task implements Comparable<Task> {
     }
 
     /** Returns the text the user gave to describe this task. */
-    public String getDescription() {
-        return this.description;
+    public String getTaskDescription() {
+        return this.taskDescription;
     }
 
     /** Returns this task as one line of the data file. */
@@ -67,28 +67,39 @@ public abstract class Task implements Comparable<Task> {
 
     /** Returns true if this task has a date falling no later than the given moment. */
     public boolean isDueBy(LocalDateTime deadline) {
-        LocalDateTime due = getDueDateTime();
-        return due != null && !due.isAfter(deadline);
+        LocalDateTime dueDateTime = getDueDateTime();
+        return dueDateTime != null && !dueDateTime.isAfter(deadline);
+    }
+
+    enum TaskOrder {
+        activeDated,
+        activeUndated,
+        completed
     }
 
     /** Groups tasks for sorting: 0 = active and dated, 1 = active undated, 2 = completed. */
-    private int sortRank() {
+    private TaskOrder getSortRank() {
         if (this.isCompleted) {
-            return 2;
+            return TaskOrder.completed;
         }
-        return this.getDueDateTime() == null ? 1 : 0;
+        return this.getDueDateTime() == null ? TaskOrder.activeUndated : TaskOrder.activeDated;
     }
 
     @Override
     public int compareTo(Task otherTask) {
-        int rankDifference = Integer.compare(this.sortRank(), otherTask.sortRank());
+        TaskOrder thisSortRank = getSortRank();
+        TaskOrder otherSortRank = otherTask.getSortRank();
+        int rankDifference = thisSortRank.compareTo(otherSortRank);
+
         if (rankDifference != 0) {
             return rankDifference;
         }
+
         // Same rank, so only dated active tasks have anything left to separate them.
-        if (this.sortRank() == 0) {
+        if (this.getSortRank() == TaskOrder.activeDated) {
             return this.getDueDateTime().compareTo(otherTask.getDueDateTime());
         }
+
         return 0;
     }
 
@@ -97,6 +108,6 @@ public abstract class Task implements Comparable<Task> {
         return String.format(
                 "[%c] %s",
                 isCompleted ? 'X' : ' ',
-                this.description);
+                this.taskDescription);
     }
 }

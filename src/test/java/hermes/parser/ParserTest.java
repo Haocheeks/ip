@@ -16,7 +16,7 @@ public class ParserTest {
         HermesException exception = assertThrows(
                 HermesException.class, () -> parser.parse("todo"));
 
-        assertEquals("A todo needs a description, for example: " + Keyword.TODO.getExample(),
+        assertEquals("A todo needs a taskDescription, for example: " + Keyword.TODO.getExample(),
                 exception.getMessage());
     }
 
@@ -25,7 +25,7 @@ public class ParserTest {
         HermesException exception = assertThrows(
                 HermesException.class, () -> parser.parse("deadline"));
 
-        assertEquals("A deadline needs a description, for example: " + Keyword.DEADLINE.getExample(),
+        assertEquals("A deadline needs a taskDescription, for example: " + Keyword.DEADLINE.getExample(),
                 exception.getMessage());
     }
 
@@ -43,7 +43,7 @@ public class ParserTest {
         HermesException exception = assertThrows(
                 HermesException.class, () -> parser.parse("event"));
 
-        assertEquals("An event needs a description, for example: " + Keyword.EVENT.getExample(),
+        assertEquals("An event needs a taskDescription, for example: " + Keyword.EVENT.getExample(),
                 exception.getMessage());
     }
 

@@ -8,14 +8,14 @@ public class Deadline extends Task {
     protected LocalDateTime dueDateTime;
 
     /** Creates a deadline that is not yet completed. */
-    public Deadline(String description, LocalDateTime dueDateTime) {
-        super(description);
+    public Deadline(String taskDescription, LocalDateTime dueDateTime) {
+        super(taskDescription);
         this.dueDateTime = dueDateTime;
     }
 
     /** Creates a deadline in a known state from its stored ISO-8601 date. */
-    public Deadline(boolean isCompleted, String description, String deadline) {
-        super(isCompleted, description);
+    public Deadline(boolean isCompleted, String taskDescription, String deadline) {
+        super(isCompleted, taskDescription);
         this.dueDateTime = LocalDateTime.parse(deadline);
     }
 
@@ -28,7 +28,7 @@ public class Deadline extends Task {
     public String getFileContent() {
         return String.format("D | %d | %s | %s",
                 this.isCompleted ? 1 : 0,
-                this.description,
+                this.taskDescription,
                 this.dueDateTime);
     }
 

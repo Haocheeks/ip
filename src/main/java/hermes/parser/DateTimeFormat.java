@@ -40,6 +40,14 @@ public enum DateTimeFormat {
     private final DateTimeFormatter formatter;
     private final boolean isDateOnly;
 
+    /**
+     * Converts the date (time) {@link String} into a {@link DateTimeFormatter}
+     * and stores a boolean value isDateOnly to determine what kind of method
+     * to use to parse a potential date (time) string.
+     *
+     * @param format date (time) format as a String.
+     * @param isDateOnly whether format string contains any time value.
+     */
     DateTimeFormat(String format, boolean isDateOnly) {
         this.formatter = DateTimeFormatter.ofPattern(format);
         this.isDateOnly = isDateOnly;
@@ -52,7 +60,6 @@ public enum DateTimeFormat {
      * @return the appropriate DateTimeFormatter if present else returns null
      */
     private static DateTimeFormat findMatchingFormat(String dateTime) {
-
         for (DateTimeFormat format : DateTimeFormat.values()) {
             if (matchesFormat(dateTime, format.formatter, format.isDateOnly)) {
                 return format;
@@ -87,10 +94,6 @@ public enum DateTimeFormat {
         return formatter;
     }
 
-    public boolean isDateOnly() {
-        return isDateOnly;
-    }
-
     /**
      * Parses the date (and time) the user typed and converts it into a LocalDateTime.
      *
@@ -100,15 +103,16 @@ public enum DateTimeFormat {
      */
     public static LocalDateTime parseDateTime(String dateTime) throws HermesException {
         DateTimeFormat format = DateTimeFormat.findMatchingFormat(dateTime);
+
         if (format == null) {
             throw new HermesException(" The date-time format " + dateTime
                     + " is not recognised, try formatting it as dd MM yyyy HHmm instead.");
         }
+
         DateTimeFormatter formatter = format.getFormatter();
+
         return format.isDateOnly
                 ? LocalDate.parse(dateTime, formatter).atStartOfDay()
                 : LocalDateTime.parse(dateTime, formatter);
     }
-
-
 }

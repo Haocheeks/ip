@@ -22,7 +22,7 @@ public class ToDo extends Task {
 
     @Override
     public String getFileContent() {
-        return String.format("T | %d | %s", this.isCompleted ? 1 : 0, this.description);
+        return String.format("T | %d | %s", this.isCompleted ? 1 : 0, this.taskDescription);
     }
 
     @Override

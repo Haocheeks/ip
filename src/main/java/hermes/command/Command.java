@@ -22,9 +22,9 @@ public abstract class Command {
     public abstract String execute(LogBook logBook) throws HermesException;
 
     /**
-     * Reports whether Hermes should stop after this command.
+     * Reports whether Hermes should terminate after this command.
      *
-     * @return false for every command but {@link ByeCommand}.
+     * @return false for every command except {@link ByeCommand}.
      */
     public boolean isExit() {
         return false;
