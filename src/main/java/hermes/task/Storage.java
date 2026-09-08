@@ -59,37 +59,12 @@ public class Storage {
 
         try (Scanner scanner = new Scanner(this.file)) {
             while (scanner.hasNextLine()) {
-                String line = scanner.nextLine().trim();
-                String[] parts = line.split("\\|");
-                String type = parts[0].trim();
+                Task task = parseStoredTask(scanner.nextLine().trim());
 
-                // How many fields a well-formed line of this type must have.
-                // A type letter we do not recognise expects none, so it is skipped.
-                int expectedFields = switch (type) {
-                    case "T" -> 3;
-                    case "D" -> 4;
-                    case "E" -> 5;
-                    default -> 0;
-                };
-
-                if (expectedFields == 0 || !isWellFormed(parts, expectedFields)) {
+                if (task == null) {
                     this.skippedLines++;
-                    continue;
-                }
-
-                boolean isCompleted = "1".equals(parts[1].trim());
-
-                try {
-                    // CHECKSTYLE.OFF: MissingSwitchDefault
-                    switch (type) {
-                        case "T" -> tasks.add(new ToDo(isCompleted, parts[2].trim()));
-                        case "D" -> tasks.add(new Deadline(isCompleted, parts[2].trim(), parts[3].trim()));
-                        case "E" -> tasks.add(
-                                new Event(isCompleted, parts[2].trim(), parts[3].trim(), parts[4].trim()));
-                    }
-                    // CHECKSTYLE.ON: MissingSwitchDefault
-                } catch (DateTimeParseException e) {
-                    this.skippedLines++;
+                } else {
+                    tasks.add(task);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -99,6 +74,46 @@ public class Storage {
         }
 
         return tasks;
+    }
+
+    /**
+     * Takes in the task saved in storage as a string and builds a {@link Task} from it.
+     *
+     * <p>A line that cannot be read is reported by returning null rather than
+     * by throwing, so the caller can count it and carry on with the rest of
+     * the file.
+     *
+     * @param storedTask task saved in storage.
+     * @return {@link Task} built from the String saved in storage.
+     */
+    private Task parseStoredTask(String storedTask) {
+        String[] taskParts = storedTask.split("\\|");
+        String taskSymbol = taskParts[0].trim();
+
+        int numberOfExpectedFields = switch (taskSymbol) {
+            case "T" -> 3;
+            case "D" -> 4;
+            case "E" -> 5;
+            default -> 0;
+        };
+
+        if (numberOfExpectedFields == 0 || !isWellFormed(taskParts, numberOfExpectedFields)) {
+            return null;
+        }
+
+        boolean isCompleted = "1".equals(taskParts[1].trim());
+
+        try {
+            return switch (taskSymbol) {
+                case "T" -> new ToDo(isCompleted, taskParts[2].trim());
+                case "D" -> new Deadline(isCompleted, taskParts[2].trim(), taskParts[3].trim());
+                case "E" -> new Event(isCompleted, taskParts[2].trim(),
+                        taskParts[3].trim(), taskParts[4].trim());
+                default -> null;
+            };
+        } catch (DateTimeParseException e) {
+            return null;
+        }
     }
 
     /**
