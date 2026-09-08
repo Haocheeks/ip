@@ -144,7 +144,7 @@ public class LogBook {
     public String listTasksDueBy(LocalDateTime deadline) {
         String output = this.tasks.stream()
                 .filter(task -> task.isDueBy(deadline) && !task.isCompleted())
-                .sorted(Comparator.comparing(Task::dueDateTime))
+                .sorted(Comparator.comparing(Task::getDueDateTime))
                 .map(Task::toString)
                 .collect(Collectors.joining("\n"));
         String outIfEmpty = "Nothing is due by " + deadline.format(Task.DISPLAY_FORMATTER);

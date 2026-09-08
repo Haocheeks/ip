@@ -20,12 +20,12 @@ public class Deadline extends Task {
     }
 
     @Override
-    public LocalDateTime dueDateTime() {
+    public LocalDateTime getDueDateTime() {
         return this.dueDateTime;
     }
 
     @Override
-    public String fileContent() {
+    public String getFileContent() {
         return String.format("D | %d | %s | %s",
                 this.isCompleted ? 1 : 0,
                 this.description,

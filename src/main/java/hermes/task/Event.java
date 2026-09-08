@@ -23,12 +23,12 @@ public class Event extends Task {
     }
 
     @Override
-    public LocalDateTime dueDateTime() {
+    public LocalDateTime getDueDateTime() {
         return this.start;
     }
 
     @Override
-    public String fileContent() {
+    public String getFileContent() {
         return String.format("E | %d | %s | %s | %s",
                 this.isCompleted ? 1 : 0,
                 this.description,

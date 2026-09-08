@@ -60,14 +60,14 @@ public abstract class Task implements Comparable<Task> {
     }
 
     /** Returns this task as one line of the data file. */
-    public abstract String fileContent();
+    public abstract String getFileContent();
 
     /** Returns the moment this task is measured against, or null if it has none. */
-    public abstract LocalDateTime dueDateTime();
+    public abstract LocalDateTime getDueDateTime();
 
     /** Returns true if this task has a date falling no later than the given moment. */
     public boolean isDueBy(LocalDateTime deadline) {
-        LocalDateTime due = dueDateTime();
+        LocalDateTime due = getDueDateTime();
         return due != null && !due.isAfter(deadline);
     }
 
@@ -76,7 +76,7 @@ public abstract class Task implements Comparable<Task> {
         if (this.isCompleted) {
             return 2;
         }
-        return this.dueDateTime() == null ? 1 : 0;
+        return this.getDueDateTime() == null ? 1 : 0;
     }
 
     @Override
@@ -87,7 +87,7 @@ public abstract class Task implements Comparable<Task> {
         }
         // Same rank, so only dated active tasks have anything left to separate them.
         if (this.sortRank() == 0) {
-            return this.dueDateTime().compareTo(otherTask.dueDateTime());
+            return this.getDueDateTime().compareTo(otherTask.getDueDateTime());
         }
         return 0;
     }
