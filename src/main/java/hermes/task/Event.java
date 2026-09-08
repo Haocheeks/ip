@@ -16,7 +16,7 @@ public class Event extends Task {
     }
 
     /** Creates an event in a known state from its stored ISO-8601 dates. */
-    public Event(Boolean isCompleted, String description, String start, String end) {
+    public Event(boolean isCompleted, String description, String start, String end) {
         super(isCompleted, description);
         this.start = LocalDateTime.parse(start);
         this.end = LocalDateTime.parse(end);

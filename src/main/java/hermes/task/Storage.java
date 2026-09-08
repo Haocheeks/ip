@@ -149,7 +149,7 @@ public class Storage {
         List<String> lines = new ArrayList<>();
 
         for (Task task : tasks) {
-            lines.add(task.fileContent());
+            lines.add(task.getFileContent());
         }
 
         try {

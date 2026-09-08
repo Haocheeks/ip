@@ -11,7 +11,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
-/** Main Window*/
+/**
+ * Main Window
+ */
 public class MainWindow extends AnchorPane {
 
     private static final String OPENING_GREETING =

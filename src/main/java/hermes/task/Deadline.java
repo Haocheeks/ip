@@ -14,7 +14,7 @@ public class Deadline extends Task {
     }
 
     /** Creates a deadline in a known state from its stored ISO-8601 date. */
-    public Deadline(Boolean isCompleted, String description, String deadline) {
+    public Deadline(boolean isCompleted, String description, String deadline) {
         super(isCompleted, description);
         this.dueDateTime = LocalDateTime.parse(deadline);
     }
