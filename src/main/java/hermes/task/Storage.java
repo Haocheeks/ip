@@ -88,28 +88,20 @@ public class Storage {
      */
     private Task parseStoredTask(String storedTask) {
         String[] taskParts = storedTask.split("\\|");
-        String taskSymbol = taskParts[0].trim();
+        TaskType taskType = TaskType.of(taskParts[0].trim());
 
-        int numberOfExpectedFields = switch (taskSymbol) {
-            case "T" -> 3;
-            case "D" -> 4;
-            case "E" -> 5;
-            default -> 0;
-        };
-
-        if (numberOfExpectedFields == 0 || !isWellFormed(taskParts, numberOfExpectedFields)) {
+        if (taskType == null || !isWellFormed(taskParts, taskType.getStoredFieldCount())) {
             return null;
         }
 
         boolean isCompleted = "1".equals(taskParts[1].trim());
 
         try {
-            return switch (taskSymbol) {
-                case "T" -> new ToDo(isCompleted, taskParts[2].trim());
-                case "D" -> new Deadline(isCompleted, taskParts[2].trim(), taskParts[3].trim());
-                case "E" -> new Event(isCompleted, taskParts[2].trim(),
+            return switch (taskType) {
+                case TODO -> new ToDo(isCompleted, taskParts[2].trim());
+                case DEADLINE -> new Deadline(isCompleted, taskParts[2].trim(), taskParts[3].trim());
+                case EVENT -> new Event(isCompleted, taskParts[2].trim(),
                         taskParts[3].trim(), taskParts[4].trim());
-                default -> null;
             };
         } catch (DateTimeParseException e) {
             return null;

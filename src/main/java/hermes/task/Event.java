@@ -29,7 +29,8 @@ public class Event extends Task {
 
     @Override
     public String getFileContent() {
-        return String.format("E | %d | %s | %s | %s",
+        return String.format("%s | %d | %s | %s | %s",
+                TaskType.EVENT.getSymbol(),
                 this.isCompleted ? 1 : 0,
                 this.taskDescription,
                 this.start,

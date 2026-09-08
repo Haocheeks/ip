@@ -26,7 +26,8 @@ public class Deadline extends Task {
 
     @Override
     public String getFileContent() {
-        return String.format("D | %d | %s | %s",
+        return String.format("%s | %d | %s | %s",
+                TaskType.DEADLINE.getSymbol(),
                 this.isCompleted ? 1 : 0,
                 this.taskDescription,
                 this.dueDateTime);
