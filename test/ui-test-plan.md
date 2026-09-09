@@ -131,10 +131,10 @@ bye
 Got it. I've added this task:
   [T][ ] read book
 Now you have 1 task in the list.
-Roger, I will mark this task as completed:
+Alright, I will mark the following task as completed:
   [T][X] read book
 1. [T][X] read book
-Alright, I will mark this task as incomplete:
+Alright, I will mark the following task as incomplete:
   [T][ ] read book
 1. [T][ ] read book
 Goodbye, thank you for contacting me!
@@ -554,5 +554,160 @@ Now you have 2 tasks in the list.
 Sorry, I have no task numbered 99.
 1. [T][ ] alpha
 2. [T][ ] beta
+Goodbye, thank you for contacting me!
+```
+
+---
+
+## TC-15 - Marking and unmarking several tasks at once
+
+**Aim:** `mark` and `unmark` accept more than one task number, change every task
+named, and report them together. Tasks not named are left alone.
+
+**Input:**
+
+```text
+todo alpha
+todo beta
+todo gamma
+mark 1 3
+list
+unmark 1 3
+list
+bye
+```
+
+**Expected output:**
+
+```text
+Got it. I've added this task:
+  [T][ ] alpha
+Now you have 1 task in the list.
+Got it. I've added this task:
+  [T][ ] beta
+Now you have 2 tasks in the list.
+Got it. I've added this task:
+  [T][ ] gamma
+Now you have 3 tasks in the list.
+Alright, I will mark the following tasks as completed:
+  [T][X] alpha
+  [T][X] gamma
+1. [T][X] alpha
+2. [T][ ] beta
+3. [T][X] gamma
+Alright, I will mark the following tasks as incomplete:
+  [T][ ] alpha
+  [T][ ] gamma
+1. [T][ ] alpha
+2. [T][ ] beta
+3. [T][ ] gamma
+Goodbye, thank you for contacting me!
+```
+
+---
+
+## TC-16 - Tasks already in the requested state are reported apart
+
+**Aim:** A task already in the state asked for is named under a separate
+heading rather than counted as changed, so the user can tell which of the
+numbers they gave did something.
+
+**Input:**
+
+```text
+todo alpha
+todo beta
+mark 1
+mark 1 2
+mark 1 2
+bye
+```
+
+**Expected output:**
+
+```text
+Got it. I've added this task:
+  [T][ ] alpha
+Now you have 1 task in the list.
+Got it. I've added this task:
+  [T][ ] beta
+Now you have 2 tasks in the list.
+Alright, I will mark the following task as completed:
+  [T][X] alpha
+Alright, I will mark the following task as completed:
+  [T][X] beta
+The following task was already marked as completed:
+  [T][X] alpha
+The following tasks were already marked as completed:
+  [T][X] alpha
+  [T][X] beta
+Goodbye, thank you for contacting me!
+```
+
+---
+
+## TC-17 - One bad number cancels the whole mark
+
+**Aim:** When any number given to `mark` names no task, no task is marked. A
+mark that went ahead with the numbers it understood would change the list in
+memory while the save is skipped, leaving the list and the data file
+disagreeing until some later command wrote the file.
+
+**Input:**
+
+```text
+todo alpha
+todo beta
+mark 1 99
+list
+bye
+```
+
+**Expected output:**
+
+```text
+Got it. I've added this task:
+  [T][ ] alpha
+Now you have 1 task in the list.
+Got it. I've added this task:
+  [T][ ] beta
+Now you have 2 tasks in the list.
+Sorry, I have no task numbered 99.
+1. [T][ ] alpha
+2. [T][ ] beta
+Goodbye, thank you for contacting me!
+```
+
+---
+
+## TC-18 - A task number repeated in one command counts once
+
+**Aim:** Naming the same task twice in one `mark` reports it once rather than
+twice, including when the two spellings differ, because the numbers are made
+distinct after being read rather than as text.
+
+**Input:**
+
+```text
+todo alpha
+todo beta
+mark 2 02
+list
+bye
+```
+
+**Expected output:**
+
+```text
+Got it. I've added this task:
+  [T][ ] alpha
+Now you have 1 task in the list.
+Got it. I've added this task:
+  [T][ ] beta
+Now you have 2 tasks in the list.
+Alright, I will mark the following task as completed:
+  [T][X] beta
+1. [T][ ] alpha
+2. [T][X] beta
 Goodbye, thank you for contacting me!
 ```

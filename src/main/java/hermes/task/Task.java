@@ -24,29 +24,23 @@ public abstract class Task implements Comparable<Task> {
     }
 
     /** Marks the task as completed and returns the reply to show the user. */
-    public String mark() {
+    public boolean mark() {
         if (isCompleted) {
-            return "The task is already marked as completed.";
+            return false;
         }
 
         this.isCompleted = true;
-        return String.format("""
-                Roger, I will mark this task as completed:
-                  %s
-                """, this);
+        return true;
     }
 
     /** Marks the task as not completed and returns the reply to show the user. */
-    public String unmark() {
+    public boolean unmark() {
         if (!this.isCompleted) {
-            return "The task is already marked as incomplete.";
+            return false;
         }
 
         this.isCompleted = false;
-        return String.format("""
-                Alright, I will mark this task as incomplete:
-                  %s
-                """, this);
+        return true;
     }
 
     /** Returns true if this task has been completed. */

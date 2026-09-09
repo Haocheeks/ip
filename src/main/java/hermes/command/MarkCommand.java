@@ -3,20 +3,20 @@ package hermes.command;
 import hermes.HermesException;
 import hermes.task.LogBook;
 
-/** Marks one task as completed. */
+/** Marks task(s) as completed. */
 public class MarkCommand extends Command {
 
-    private final int index;
+    private final int[] indexes;
 
     /**
-     * @param index the task's position in the list, counting from zero.
+     * @param indexes the task's position in the list, counting from zero.
      */
-    public MarkCommand(int index) {
-        this.index = index;
+    public MarkCommand(int... indexes) {
+        this.indexes = indexes;
     }
 
     @Override
     public String execute(LogBook logBook) throws HermesException {
-        return logBook.mark(this.index);
+        return logBook.mark(this.indexes);
     }
 }

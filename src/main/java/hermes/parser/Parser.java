@@ -50,8 +50,8 @@ public class Parser {
         return switch (keyword) {
             case BYE -> new ByeCommand();
             case LIST -> new ListCommand();
-            case MARK -> new MarkCommand(parseTaskNumber(arguments, keyword));
-            case UNMARK -> new UnmarkCommand(parseTaskNumber(arguments, keyword));
+            case MARK -> new MarkCommand(parseTaskNumbers(arguments, keyword));
+            case UNMARK -> new UnmarkCommand(parseTaskNumbers(arguments, keyword));
             case DELETE -> new DeleteCommand(parseTaskNumbers(arguments, keyword));
             case TODO -> new AddCommand(parseToDo(arguments));
             case DEADLINE -> new AddCommand(parseDeadline(arguments));
@@ -107,29 +107,6 @@ public class Parser {
         }
 
         return arguments.toLowerCase();
-    }
-
-    /**
-     * Reads the task number given to a command such as {@code mark 1}.
-     *
-     * <p>The user counts from one and the list is indexed from zero, so the
-     * number is converted here rather than by every caller.
-     *
-     * @param arguments what the user typed after the command word.
-     * @param keyword the command being run, used to quote a correct example.
-     * @return the task's index in the list, counting from zero.
-     * @throws HermesException if the number is missing or is not a number.
-     */
-    private int parseTaskNumber(String arguments, Keyword keyword) throws HermesException {
-        if (arguments.isBlank()) {
-            throw new HermesException(craftMissingTaskNumberMessage(keyword));
-        }
-
-        try {
-            return Integer.parseInt(arguments.trim()) - 1;
-        } catch (NumberFormatException e) {
-            throw new HermesException(String.format("'%s' is not a task number.", arguments));
-        }
     }
 
     /**

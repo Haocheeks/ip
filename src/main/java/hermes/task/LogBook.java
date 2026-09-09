@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import hermes.HermesException;
@@ -63,33 +64,127 @@ public class LogBook {
     }
 
     /**
-     * Marks one task as completed.
+     * Marks every tasks listed as completed.
      *
-     * @param index the task's position in the list, counting from zero.
+     * @param indexes the task's position in the list, counting from zero.
      * @return the message confirming the change.
      * @throws HermesException if the number names no task, or the change could
-     *     not be written to storage.
+     *                         not be written to storage.
      */
-    public String mark(int index) throws HermesException {
-        checkIndex(index);
-        String output = this.tasks.get(index).mark();
+    public String mark(int... indexes) throws HermesException {
+        // Every index is checked first before any tasks is marked,
+        // checking as each task goes will leave the list half changed
+        for (int index : indexes) {
+            checkIndex(index);
+        }
+
+        List<Task> marked = new ArrayList<>();
+        List<Task> alreadyMarked = new ArrayList<>();
+
+        for (int index : indexes) {
+            Task taskToBeMarked = this.tasks.get(index);
+            boolean isMarkedSuccessfully = taskToBeMarked.mark();
+
+            if (isMarkedSuccessfully) {
+                marked.add(taskToBeMarked);
+            } else {
+                alreadyMarked.add(taskToBeMarked);
+            }
+        }
+
+        int numberMarked = marked.size();
+        int numberAlreadyMarked = alreadyMarked.size();
+
+        String markedMessage = numberMarked == 0
+                ? ""
+                : String.format("""
+                Alright, I will mark the following task%s as completed:
+                  %s
+                """,
+                numberMarked == 1 ? "" : "s",
+                marked.stream().map(Task::toString).collect(Collectors.joining("\n  ")));
+
+        String alreadyMarkedMessage = numberAlreadyMarked == 0
+                ? ""
+                : String.format("""
+                The following task%s %s already marked as completed:
+                  %s
+                """,
+                numberAlreadyMarked == 1 ? "" : "s",
+                numberAlreadyMarked == 1 ? "was" : "were",
+                alreadyMarked.stream().map(Task::toString).collect(Collectors.joining("\n  ")));
+
         this.storage.save(this.tasks);
-        return output;
+
+        if (numberMarked > 0 && numberAlreadyMarked > 0) {
+            return markedMessage + "\n" + alreadyMarkedMessage;
+        } else if (numberMarked > 0) {
+            return markedMessage;
+        } else {
+            return alreadyMarkedMessage;
+        }
     }
 
     /**
      * Marks one task as no longer completed.
      *
-     * @param index the task's position in the list, counting from zero.
+     * @param indexes the task's position in the list, counting from zero.
      * @return the message confirming the change.
      * @throws HermesException if the number names no task, or the change could
      *     not be written to storage.
      */
-    public String unmark(int index) throws HermesException {
-        checkIndex(index);
-        String output = this.tasks.get(index).unmark();
+    public String unmark(int... indexes) throws HermesException {
+        // Every index is checked first before any tasks is unmarked,
+        // checking as each task goes will leave the list half changed
+        for (int index : indexes) {
+            checkIndex(index);
+        }
+
+        List<Task> unmarked = new ArrayList<>();
+        List<Task> alreadyUnmarked = new ArrayList<>();
+
+        for (int index : indexes) {
+            Task taskToBeUnmarked = this.tasks.get(index);
+            boolean isUnmarkedSuccessfully = taskToBeUnmarked.unmark();
+
+            if (isUnmarkedSuccessfully) {
+                unmarked.add(taskToBeUnmarked);
+            } else {
+                alreadyUnmarked.add(taskToBeUnmarked);
+            }
+        }
+
+        int numberUnmarked = unmarked.size();
+        int numberAlreadyUnmarked = alreadyUnmarked.size();
+
+        String unmarkedMessage = numberUnmarked == 0
+                ? ""
+                : String.format("""
+                Alright, I will mark the following task%s as incomplete:
+                  %s
+                """,
+                numberUnmarked == 1 ? "" : "s",
+                unmarked.stream().map(Task::toString).collect(Collectors.joining("\n  ")));
+
+        String alreadyUnmarkedMessage = numberAlreadyUnmarked == 0
+                ? ""
+                : String.format("""
+                The following task%s %s already marked as incomplete:
+                  %s
+                """,
+                numberAlreadyUnmarked == 1 ? "" : "s",
+                numberAlreadyUnmarked == 1 ? "was" : "were",
+                alreadyUnmarked.stream().map(Task::toString).collect(Collectors.joining("\n  ")));
+
         this.storage.save(this.tasks);
-        return output;
+
+        if (numberUnmarked > 0 && numberAlreadyUnmarked > 0) {
+            return unmarkedMessage + "\n" + alreadyUnmarkedMessage;
+        } else if (numberUnmarked > 0) {
+            return unmarkedMessage;
+        } else {
+            return alreadyUnmarkedMessage;
+        }
     }
 
     /**
@@ -109,6 +204,8 @@ public class LogBook {
     public String delete(int... indexes) throws HermesException {
         Arrays.sort(indexes);
 
+        // Every index is checked first before any tasks is unmarked,
+        // checking as each task goes will leave the list half changed
         for (int index : indexes) {
             checkIndex(index);
         }

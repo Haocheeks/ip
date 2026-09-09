@@ -3,20 +3,20 @@ package hermes.command;
 import hermes.HermesException;
 import hermes.task.LogBook;
 
-/** Marks one task as no longer completed. */
+/** Marks task(s) as no longer completed. */
 public class UnmarkCommand extends Command {
 
-    private final int index;
+    private final int[] indexes;
 
     /**
-     * @param index the task's position in the list, counting from zero.
+     * @param indexes the task's position in the list, counting from zero.
      */
-    public UnmarkCommand(int index) {
-        this.index = index;
+    public UnmarkCommand(int... indexes) {
+        this.indexes = indexes;
     }
 
     @Override
     public String execute(LogBook logBook) throws HermesException {
-        return logBook.unmark(this.index);
+        return logBook.unmark(this.indexes);
     }
 }
