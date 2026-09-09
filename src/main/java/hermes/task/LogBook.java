@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 import hermes.HermesException;
@@ -16,8 +17,9 @@ import hermes.HermesException;
  * to {@link Storage} straight away, so the file always matches the list.
  */
 public class LogBook {
-    private final ArrayList<Task> tasks;
     private final Storage storage;
+    private ArrayList<Task> tasks;
+    private Stack<ArrayList<Task>> cachedTasks;
 
     /**
      * Starts from whatever the given storage already holds.
@@ -27,6 +29,7 @@ public class LogBook {
     public LogBook(Storage storage) {
         this.storage = storage;
         this.tasks = storage.load();
+        this.cachedTasks = new Stack<>();
     }
 
     /**
@@ -54,6 +57,7 @@ public class LogBook {
      * @throws HermesException if the task could not be written to storage.
      */
     public String log(Task task) throws HermesException {
+        cache();
         this.tasks.add(task);
         this.storage.save(this.tasks);
         return String.format("""
@@ -77,6 +81,8 @@ public class LogBook {
         for (int index : indexes) {
             checkIndex(index);
         }
+
+        cache();
 
         List<Task> marked = new ArrayList<>();
         List<Task> alreadyMarked = new ArrayList<>();
@@ -139,6 +145,8 @@ public class LogBook {
         for (int index : indexes) {
             checkIndex(index);
         }
+
+        cache();
 
         List<Task> unmarked = new ArrayList<>();
         List<Task> alreadyUnmarked = new ArrayList<>();
@@ -210,6 +218,8 @@ public class LogBook {
             checkIndex(index);
         }
 
+        cache();
+
         StringBuilder output = new StringBuilder();
         int numberOfTasksRemoved = 0;
 
@@ -263,6 +273,8 @@ public class LogBook {
             return "There is nothing to sort, your list is empty!";
         }
 
+        cache();
+
         // Comparator.naturalOrder() routes through Task.compareTo, which already
         // defines this ordering, rather than restating it here.
         this.tasks.sort(Comparator.naturalOrder());
@@ -290,6 +302,36 @@ public class LogBook {
         String outputIfEmpty = "Apologies, no task match " + keyword + " :<";
 
         return output.isEmpty() ? outputIfEmpty : output;
+    }
+
+    /**
+     * Reverts the list to its previous state by one step.
+     *
+     * @return the updated tasks after the undo action was performed
+     * @throws HermesException if the previous tasks could not be written to storage.
+     */
+    public String undo() throws HermesException {
+        if (this.cachedTasks.isEmpty()) {
+            return "There is nothing to undo, you are at the most recent state for this session already.";
+        }
+
+        this.tasks = cachedTasks.pop();
+        this.storage.save(this.tasks);
+        return String.format("I have undone the most recent action, here is the current list: %n%s", this);
+    }
+
+    /**
+     * Saves the current state of the task list before making any updates,
+     * enables easy undo action.
+     */
+    private void cache() {
+        ArrayList<Task> tasksToSave = new ArrayList<>();
+
+        for (Task task : this.tasks) {
+            tasksToSave.add(task.copy());
+        }
+
+        cachedTasks.push(tasksToSave);
     }
 
     /**

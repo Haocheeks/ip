@@ -23,6 +23,11 @@ public class Event extends Task {
     }
 
     @Override
+    public Event copy() {
+        return new Event(this.isCompleted, this.taskDescription, this.start.toString(), this.end.toString());
+    }
+
+    @Override
     public LocalDateTime getDueDateTime() {
         return this.start;
     }

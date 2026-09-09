@@ -59,6 +59,9 @@ public abstract class Task implements Comparable<Task> {
     /** Returns the moment this task is measured against, or null if it has none. */
     public abstract LocalDateTime getDueDateTime();
 
+    /** Returns an independent copy of this task. */
+    public abstract Task copy();
+
     /** Returns true if this task has a date falling no later than the given moment. */
     public boolean isDueBy(LocalDateTime deadline) {
         LocalDateTime dueDateTime = getDueDateTime();

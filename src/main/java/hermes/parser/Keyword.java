@@ -25,6 +25,7 @@ public enum Keyword {
     DUE("due", "due /by 28 Aug 2026 1600"),
     SORT("sort", "sort"),
     FIND("find", "find book"),
+    UNDO("undo", "undo"),
 
     /** Anything the user typed that is not a recognized command. */
     UNKNOWN("", "");

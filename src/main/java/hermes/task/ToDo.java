@@ -6,13 +6,18 @@ import java.time.LocalDateTime;
 public class ToDo extends Task {
 
     /** Creates a todo that is not yet completed. */
-    public ToDo(String description) {
-        super(description);
+    public ToDo(String taskDescription) {
+        super(taskDescription);
     }
 
     /** Creates a todo in a known state, used when loading from storage. */
-    public ToDo(boolean isCompleted, String description) {
-        super(isCompleted, description);
+    public ToDo(boolean isCompleted, String taskDescription) {
+        super(isCompleted, taskDescription);
+    }
+
+    @Override
+    public ToDo copy() {
+        return new ToDo(this.isCompleted, this.taskDescription);
     }
 
     @Override

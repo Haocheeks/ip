@@ -20,6 +20,11 @@ public class Deadline extends Task {
     }
 
     @Override
+    public Deadline copy() {
+        return new Deadline(this.isCompleted, this.taskDescription, this.dueDateTime.toString());
+    }
+
+    @Override
     public LocalDateTime getDueDateTime() {
         return this.dueDateTime;
     }

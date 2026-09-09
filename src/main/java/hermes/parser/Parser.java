@@ -13,6 +13,7 @@ import hermes.command.FindCommand;
 import hermes.command.ListCommand;
 import hermes.command.MarkCommand;
 import hermes.command.SortCommand;
+import hermes.command.UndoCommand;
 import hermes.command.UnknownCommand;
 import hermes.command.UnmarkCommand;
 import hermes.task.Deadline;
@@ -59,6 +60,7 @@ public class Parser {
             case DUE -> new DueCommand(parseDueCutoff(arguments));
             case SORT -> new SortCommand();
             case FIND -> new FindCommand(parseFindOperation(arguments));
+            case UNDO -> new UndoCommand();
             case UNKNOWN -> new UnknownCommand(parseCommandWord(input));
             // No default statement because UNKNOWN is logically equivalent to default
         };
