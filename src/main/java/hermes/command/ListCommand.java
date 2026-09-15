@@ -7,6 +7,6 @@ public class ListCommand extends Command {
 
     @Override
     public String execute(LogBook logBook) {
-        return logBook.toString();
+        return logBook.listTasks();
     }
 }

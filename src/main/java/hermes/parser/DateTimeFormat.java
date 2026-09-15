@@ -105,8 +105,8 @@ public enum DateTimeFormat {
         DateTimeFormat format = DateTimeFormat.findMatchingFormat(dateTime);
 
         if (format == null) {
-            throw new HermesException(" The date-time format " + dateTime
-                    + " is not recognised, try formatting it as dd MM yyyy HHmm instead.");
+            throw new HermesException("The date-time format " + dateTime
+                    + " is not recognised, try writing it like 27 Aug 2026 1500 instead.");
         }
 
         DateTimeFormatter formatter = format.getFormatter();

@@ -346,6 +346,25 @@ public class LogBook {
         }
     }
 
+    /**
+     * Returns every task, numbered as the user refers to them.
+     *
+     * <p>An empty list gets a hint on how to add a task instead, since a blank
+     * reply gives a new user no clue what to do next. The example is written out
+     * here rather than taken from the parser's keywords, which would make this
+     * package depend on the parser that already depends on it.
+     *
+     * @return the numbered tasks, or how to add the first one.
+     */
+    public String listTasks() {
+        if (this.tasks.isEmpty()) {
+            return "Your list is empty. Start it by adding a todo, deadline or event, "
+                    + "for example: todo borrow book";
+        }
+
+        return this.toString();
+    }
+
     @Override
     public String toString() {
         StringBuilder output = new StringBuilder();
