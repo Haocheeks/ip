@@ -7,7 +7,7 @@ public class ByeCommand extends Command {
 
     @Override
     public String execute(LogBook logBook) {
-        return "Goodbye, thank you for contacting me!";
+        return "Fare thee well. Shouldst thou have need of me, call, and I shall come swifter than the wind.";
     }
 
     @Override
