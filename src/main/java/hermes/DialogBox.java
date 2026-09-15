@@ -11,18 +11,19 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 
 /**
- * Represents a dialog box consisting of an ImageView to represent the speaker's face
+ * Represents a dialog box consisting of a circular picture of the speaker
  * and a label containing text from the speaker.
  */
 public class DialogBox extends HBox {
     @FXML
     private Label dialog;
     @FXML
-    private ImageView displayPicture;
+    private Circle displayPicture;
 
     private DialogBox(String text, Image image) {
         try {
@@ -35,11 +36,29 @@ public class DialogBox extends HBox {
         }
 
         dialog.setText(text);
-        displayPicture.setImage(image);
+        displayPicture.setFill(createCroppedPattern(image));
     }
 
     /**
-     * Flips the dialog box such that the ImageView is on the left and text on the right.
+     * Returns a fill that shows the middle of an image, cropping whichever side is longer.
+     *
+     * <p>An image pattern stretches to the bounds of the shape it fills, so a
+     * landscape photo placed in a circle as is would be squashed. Sizing the
+     * pattern to the image's own proportions and centering it keeps the photo
+     * undistorted, and the circle trims the overhang.
+     *
+     * @param image the picture to show.
+     * @return a pattern that covers a circle without distorting the image.
+     */
+    private static ImagePattern createCroppedPattern(Image image) {
+        double aspectRatio = image.getWidth() / image.getHeight();
+        double width = Math.max(aspectRatio, 1);
+        double height = Math.max(1 / aspectRatio, 1);
+        return new ImagePattern(image, (1 - width) / 2, (1 - height) / 2, width, height, true);
+    }
+
+    /**
+     * Flips the dialog box such that the picture is on the left and text on the right.
      */
     private void flip() {
         ObservableList<Node> reversedChildren = FXCollections.observableArrayList(this.getChildren());
@@ -56,6 +75,19 @@ public class DialogBox extends HBox {
     public static DialogBox getHermesDialog(String text, Image image) {
         DialogBox dialogBox = new DialogBox(text, image);
         dialogBox.flip();
+        return dialogBox;
+    }
+
+    /**
+     * Returns a reply from Hermes styled to stand out as a problem report.
+     *
+     * @param text the explanation of what went wrong.
+     * @param image Hermes's picture.
+     * @return a dialog box laid out like any other reply but highlighted in red.
+     */
+    public static DialogBox getErrorDialog(String text, Image image) {
+        DialogBox dialogBox = getHermesDialog(text, image);
+        dialogBox.dialog.getStyleClass().add("error-label");
         return dialogBox;
     }
 }

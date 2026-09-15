@@ -99,14 +99,15 @@ public class Hermes {
      * and a complaint the same way.
      *
      * @param input one full line of input.
-     * @return the reply to show, and whether to stop after showing it.
+     * @return the reply to show, whether to stop after showing it, and whether
+     *     it reports a problem.
      */
     protected Response getResponse(String input) {
         try {
             Command command = parser.parse(input);
-            return new Response(command.execute(logBook), command.isExit());
+            return new Response(command.execute(logBook), command.isExit(), false);
         } catch (HermesException e) {
-            return new Response(e.getMessage(), false);
+            return new Response(e.getMessage(), false, true);
         }
     }
 }
