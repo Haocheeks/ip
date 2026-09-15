@@ -67,9 +67,13 @@ public class MainWindow extends AnchorPane {
         }
 
         Response response = this.hermes.getResponse(input);
+        DialogBox reply = response.isError()
+                ? DialogBox.getErrorDialog(response.text(), hermesImage)
+                : DialogBox.getHermesDialog(response.text(), hermesImage);
+
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getHermesDialog(response.text(), hermesImage)
+                reply
         );
         userInput.clear();
 

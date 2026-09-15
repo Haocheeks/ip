@@ -20,6 +20,12 @@
     -fx-border-radius: 12px 12px 12px 3px;
 }
 
+/* Must follow .reply-label: an error bubble carries both classes, and the
+   later rule decides the colour when two selectors are equally specific. */
+.error-label {
+    -fx-background-color: #FF6961;
+}
+
 #displayPicture {
     /* Grey ring around the circular picture. */
     -fx-stroke: #c4c9cf;

@@ -77,4 +77,17 @@ public class DialogBox extends HBox {
         dialogBox.flip();
         return dialogBox;
     }
+
+    /**
+     * Returns a reply from Hermes styled to stand out as a problem report.
+     *
+     * @param text the explanation of what went wrong.
+     * @param image Hermes's picture.
+     * @return a dialog box laid out like any other reply but highlighted in red.
+     */
+    public static DialogBox getErrorDialog(String text, Image image) {
+        DialogBox dialogBox = getHermesDialog(text, image);
+        dialogBox.dialog.getStyleClass().add("error-label");
+        return dialogBox;
+    }
 }
