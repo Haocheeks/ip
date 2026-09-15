@@ -11,25 +11,35 @@ import java.util.Scanner;
  */
 public class Ui {
 
+    /**
+     * The greeting that opens every conversation.
+     *
+     * <p>The console and the window both show it, so it is kept here once rather
+     * than written out in each, where the two copies could drift apart.
+     */
+    public static final String GREETING = """
+            Hail, traveller! I am Hermes, herald of Olympus.
+            What errand wouldst thou have me run?""";
+
     private static final String DIVIDER =
             "____________________________________________________________";
 
-    private static final String WELCOME = """
-            ____________________________________________________________
+    /** The Hermes wordmark printed above the greeting when the console starts. */
+    private static final String LOGO = """
              _   _
             | | | | ___ _ __ _ __ ___   ___  ___
             | |_| |/ _ \\ '__| '_ ` _ \\ / _ \\/ __|
             |  _  |  __/ |  | | | | | |  __/\\__ \\
-            |_| |_|\\___|_|  |_| |_| |_|\\___||___/
-            Greetings! I am Hermes.
-            How may I assist you today?
-            ____________________________________________________________""";
+            |_| |_|\\___|_|  |_| |_| |_|\\___||___/""";
 
     private final Scanner scanner = new Scanner(System.in);
 
     /** Prints the banner and greeting shown once when Hermes starts. */
     public void showWelcome() {
-        System.out.println(WELCOME);
+        System.out.println(DIVIDER);
+        System.out.println(LOGO);
+        System.out.println(GREETING);
+        System.out.println(DIVIDER);
     }
 
     /**
@@ -81,9 +91,9 @@ public class Ui {
      */
     public static String formatLoadingError(int skippedLines, String path) {
         return String.format("""
-                Sorry, I could not read %d line%s in my records and have skipped %s.
-                Anything I cannot read is lost the next time I save, so please check
-                %s first if you need it.
+                Alas, I could not read %d line%s in my records, and have set %s aside.
+                Whatever I cannot read shall be lost when next I save, so look to
+                %s first, shouldst thou need it.
                 """, skippedLines, skippedLines == 1 ? "" : "s",
                 skippedLines == 1 ? "it" : "them", path);
     }

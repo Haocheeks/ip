@@ -99,12 +99,12 @@ public class Parser {
         String[] argumentParts = arguments.split("\\s+");
 
         if (argumentParts.length > 1) {
-            throw new HermesException("Apologies, please enter only one keyword, for example: "
+            throw new HermesException("Pardon me, but I seek only one word at a time, for instance: "
                     + Keyword.FIND.getExample());
         }
 
         if (argumentParts[0].isEmpty()) {
-            throw new HermesException("Apologies, please enter at least one keyword, for example: "
+            throw new HermesException("Pardon me, but I cannot seek what thou hast not named, for instance: "
                     + Keyword.FIND.getExample());
         }
 
@@ -136,7 +136,8 @@ public class Parser {
                     .distinct()
                     .toArray();
         } catch (NumberFormatException e) {
-            throw new HermesException(String.format("'%s' is not a task number.", arguments));
+            throw new HermesException(String.format(
+                    "'%s' is not a task number. I carry messages, not riddles.", arguments));
         }
     }
 
@@ -147,9 +148,9 @@ public class Parser {
      */
     private String craftMissingTaskNumberMessage(Keyword keyword) {
         String request = keyword == Keyword.DELETE
-                ? "Please tell me which task you will like to delete, "
-                : "Please tell me which task, ";
-        return request + "for example: " + keyword.getExample();
+                ? "Please name which task thou wouldst have removed, "
+                : "Please name which task, ";
+        return request + "for instance: " + keyword.getExample();
     }
 
     /**
@@ -157,11 +158,11 @@ public class Parser {
      *
      * @param arguments what the user typed after the command word.
      * @return the task the user described.
-     * @throws HermesException if the taskDescription is missing or cannot be stored.
+     * @throws HermesException if the description is missing or cannot be stored.
      */
     private Task parseToDo(String arguments) throws HermesException {
         if (arguments.isBlank()) {
-            throw new HermesException("A todo needs a taskDescription, for example: "
+            throw new HermesException("A todo must have a description, for instance: "
                     + Keyword.TODO.getExample());
         }
 
@@ -177,27 +178,27 @@ public class Parser {
      *
      * @param arguments what the user typed after the command word.
      * @return the task the user described.
-     * @throws HermesException if the taskDescription or date is missing, cannot be
+     * @throws HermesException if the description or date is missing, cannot be
      *     stored, or is not a date Hermes recognises.
      */
     private Task parseDeadline(String arguments) throws HermesException {
-        String example = "for example: " + Keyword.DEADLINE.getExample();
+        String example = "for instance: " + Keyword.DEADLINE.getExample();
 
         if (arguments.isBlank()) {
-            throw new HermesException("A deadline needs a taskDescription, " + example);
+            throw new HermesException("A deadline must have a description, " + example);
         }
 
         String[] taskDescriptionAndDueDate = arguments.split("\\s*/by\\s*", 2);
 
         if (taskDescriptionAndDueDate.length < 2) {
-            throw new HermesException("A deadline needs a /by date, " + example);
+            throw new HermesException("Every deadline needs its /by date, lest it be forgotten, " + example);
         }
 
         String taskDescription = taskDescriptionAndDueDate[0].trim();
         String dueDate = taskDescriptionAndDueDate[1].trim();
 
         if (taskDescription.isEmpty() || dueDate.isEmpty()) {
-            throw new HermesException("A deadline needs both a taskDescription and a /by date, " + example);
+            throw new HermesException("A deadline must have both a description and a /by date, " + example);
         }
 
         Storage.rejectSeparator(taskDescription, dueDate);
@@ -215,22 +216,22 @@ public class Parser {
      *     not a date Hermes recognises.
      */
     private Task parseEvent(String arguments) throws HermesException {
-        String example = "for example: " + Keyword.EVENT.getExample();
+        String example = "for instance: " + Keyword.EVENT.getExample();
 
         if (arguments.isBlank()) {
-            throw new HermesException("An event needs a taskDescription, " + example);
+            throw new HermesException("An event must have a description, " + example);
         }
 
         String[] taskDescriptionAndEventStart = arguments.split("\\s*/from\\s*", 2);
 
         if (taskDescriptionAndEventStart.length < 2) {
-            throw new HermesException("An event needs a /from time, " + example);
+            throw new HermesException("An event must have a /from time, " + example);
         }
 
         String[] eventStartAndEventEnd = taskDescriptionAndEventStart[1].split("\\s*/to\\s*", 2);
 
         if (eventStartAndEventEnd.length < 2) {
-            throw new HermesException("An event needs a /to time, " + example);
+            throw new HermesException("Every road must end somewhere; give thy event a /to time, " + example);
         }
 
         String taskDescription = taskDescriptionAndEventStart[0].trim();
@@ -238,7 +239,7 @@ public class Parser {
         String eventEnd = eventStartAndEventEnd[1].trim();
 
         if (taskDescription.isEmpty() || eventStart.isEmpty() || eventEnd.isEmpty()) {
-            throw new HermesException("An event needs a taskDescription, a /from time and a /to time, "
+            throw new HermesException("An event must have a description, a /from time and a /to time, "
                     + example);
         }
 
@@ -262,7 +263,7 @@ public class Parser {
         String[] fields = arguments.split("\\s*/by\\s*", 2);
 
         if (fields.length < 2 || fields[1].isBlank()) {
-            throw new HermesException("A due needs a /by date, for example: "
+            throw new HermesException("Name the hour to reckon by with /by, for instance: "
                     + Keyword.DUE.getExample());
         }
 

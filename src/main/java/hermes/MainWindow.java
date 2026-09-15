@@ -1,5 +1,6 @@
 package hermes;
 
+import hermes.ui.Ui;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -15,9 +16,6 @@ import javafx.util.Duration;
  * Main Window
  */
 public class MainWindow extends AnchorPane {
-
-    private static final String OPENING_GREETING =
-            "Greetings! I am Hermes. How may I assist you today?";
 
     @FXML
     private ScrollPane scrollPane;
@@ -46,7 +44,7 @@ public class MainWindow extends AnchorPane {
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
         dialogContainer.getChildren().add(
-                DialogBox.getHermesDialog(OPENING_GREETING, hermesImage));
+                DialogBox.getHermesDialog(Ui.GREETING, hermesImage));
     }
 
     public void setHermes(Hermes hermes) {

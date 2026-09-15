@@ -61,9 +61,9 @@ public class LogBook {
         this.tasks.add(task);
         this.storage.save(this.tasks);
         return String.format("""
-                Got it. I've added this task:
+                It is recorded. I have set down this task:
                   %s
-                Now you have %d task%s in the list.
+                Thy scroll now holds %d task%s.
                 """, task, this.tasks.size(), (this.tasks.size() == 1 ? "" : "s"));
     }
 
@@ -104,7 +104,7 @@ public class LogBook {
         String markedMessage = numberMarked == 0
                 ? ""
                 : String.format("""
-                Alright, I will mark the following task%s as completed:
+                Well done. I declare the following task%s as fulfilled:
                   %s
                 """,
                 numberMarked == 1 ? "" : "s",
@@ -113,7 +113,7 @@ public class LogBook {
         String alreadyMarkedMessage = numberAlreadyMarked == 0
                 ? ""
                 : String.format("""
-                The following task%s %s already marked as completed:
+                The following task%s %s already fulfilled:
                   %s
                 """,
                 numberAlreadyMarked == 1 ? "" : "s",
@@ -168,7 +168,7 @@ public class LogBook {
         String unmarkedMessage = numberUnmarked == 0
                 ? ""
                 : String.format("""
-                Alright, I will mark the following task%s as incomplete:
+                As thou wishest. I declare the following task%s as unfulfilled:
                   %s
                 """,
                 numberUnmarked == 1 ? "" : "s",
@@ -177,7 +177,7 @@ public class LogBook {
         String alreadyUnmarkedMessage = numberAlreadyUnmarked == 0
                 ? ""
                 : String.format("""
-                The following task%s %s already marked as incomplete:
+                The following task%s %s already unfulfilled:
                   %s
                 """,
                 numberAlreadyUnmarked == 1 ? "" : "s",
@@ -236,9 +236,9 @@ public class LogBook {
         this.storage.save(this.tasks);
 
         return String.format("""
-                Roger, I've removed %s:
+                It is done. I have guided %s down to the Underworld:
                   %s
-                Now you have %d task%s in the list.
+                Thy scroll now holds %d task%s.
                 """,
                 numberOfTasksRemoved == 1 ? "this task" : "these tasks",
                 output.toString().trim(), remaining, (remaining == 1 ? "" : "s"));
@@ -256,7 +256,7 @@ public class LogBook {
                 .sorted(Comparator.comparing(Task::getDueDateTime))
                 .map(Task::toString)
                 .collect(Collectors.joining("\n"));
-        String outIfEmpty = "Nothing is due by " + deadline.format(Task.DISPLAY_FORMATTER);
+        String outIfEmpty = "Nothing is due by " + deadline.format(Task.DISPLAY_FORMATTER) + ".";
         return output.isEmpty() ? outIfEmpty : output;
     }
 
@@ -270,7 +270,7 @@ public class LogBook {
      */
     public String sort() throws HermesException {
         if (this.tasks.isEmpty()) {
-            return "There is nothing to sort, your list is empty!";
+            return "There is naught to set in order; thy scroll is empty.";
         }
 
         cache();
@@ -280,7 +280,8 @@ public class LogBook {
         this.tasks.sort(Comparator.naturalOrder());
         this.storage.save(this.tasks);
 
-        return String.format("I have sorted your tasks by deadline:%n%s", this);
+        return String.format("Swift as my winged sandals, I have ordered thy tasks, soonest first:%n%s",
+                this);
     }
 
     /**
@@ -291,7 +292,7 @@ public class LogBook {
      */
     public String findTasks(String keyword) {
         if (this.tasks.isEmpty()) {
-            return "There is nothing to search, your list is empty!";
+            return "There is naught to search; thy scroll is empty.";
         }
 
         String output = this.tasks.stream()
@@ -299,7 +300,8 @@ public class LogBook {
                 .map(Task::toString)
                 .collect(Collectors.joining("\n"));
 
-        String outputIfEmpty = "Apologies, no task match " + keyword + " :<";
+        String outputIfEmpty = "I have searched from Olympus to the Underworld, yet no task speaks of '"
+                + keyword + "'.";
 
         return output.isEmpty() ? outputIfEmpty : output;
     }
@@ -312,12 +314,13 @@ public class LogBook {
      */
     public String undo() throws HermesException {
         if (this.cachedTasks.isEmpty()) {
-            return "There is nothing to undo, you are at the most recent state for this session already.";
+            return "There is naught to undo.";
         }
 
         this.tasks = cachedTasks.pop();
         this.storage.save(this.tasks);
-        return String.format("I have undone the most recent action, here is the current list: %n%s", this);
+        return String.format("Fast like myself, I have reversed thy last deed. "
+                + "The scroll stands as such:%n%s", this);
     }
 
     /**
@@ -342,8 +345,27 @@ public class LogBook {
      */
     private void checkIndex(int index) throws HermesException {
         if (index < 0 || index >= this.tasks.size()) {
-            throw new HermesException("Sorry, I have no task numbered " + (index + 1) + ".");
+            throw new HermesException("Alas, no task numbered " + (index + 1) + " is to be found.");
         }
+    }
+
+    /**
+     * Returns every task, numbered as the user refers to them.
+     *
+     * <p>An empty list gets a hint on how to add a task instead, since a blank
+     * reply gives a new user no clue what to do next. The example is written out
+     * here rather than taken from the parser's keywords, which would make this
+     * package depend on the parser that already depends on it.
+     *
+     * @return the numbered tasks, or how to add the first one.
+     */
+    public String listTasks() {
+        if (this.tasks.isEmpty()) {
+            return "Thy scroll is blank. Begin it with a todo, deadline or event, "
+                    + "for instance: todo borrow book";
+        }
+
+        return this.toString();
     }
 
     @Override
