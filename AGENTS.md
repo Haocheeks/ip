@@ -72,5 +72,5 @@ Do not commit or push unless explicitly asked.
 After changing code that affects what the program prints, ensure that:
 
 1. the code follows the `seedu-java-coding-standard` skill,
-2. the `test/ui-test-plan.md` is updated (if needed), and,
-3. the `test-ui` skill is invoked.
+2. JUnit tests covering the changed behaviour are added or updated, and,
+3. `./gradlew check` passes.
