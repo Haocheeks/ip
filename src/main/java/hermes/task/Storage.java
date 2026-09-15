@@ -163,9 +163,9 @@ public class Storage {
             Files.write(this.file.toPath(), lines);
         } catch (IOException e) {
             throw new HermesException(String.format("""
-                    Sorry, I could not save to %s.
-                    Your change applies to this session, but I will not remember it
-                    once I close.
+                    Alas, I could not write to %s.
+                    Thy change holds for now, but it shall be lost
+                    when I depart.
                     """, this.file));
         }
     }
@@ -189,8 +189,8 @@ public class Storage {
         for (String field : fields) {
             if (field.contains(SEPARATOR)) {
                 throw new HermesException(String.format(
-                        "Sorry, a task cannot contain '%s', as I use it to separate "
-                                + "fields when saving your tasks.", SEPARATOR));
+                        "Forgive me, but a task may not contain '%s', for I use that mark to divide "
+                                + "the fields of thy scroll when I save it.", SEPARATOR));
             }
         }
     }

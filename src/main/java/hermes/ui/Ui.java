@@ -18,8 +18,8 @@ public class Ui {
      * than written out in each, where the two copies could drift apart.
      */
     public static final String GREETING = """
-            Greetings! I am Hermes.
-            How may I assist you today?""";
+            Hail, traveller! I am Hermes, herald of Olympus.
+            What errand wouldst thou have me run?""";
 
     private static final String DIVIDER =
             "____________________________________________________________";
@@ -91,9 +91,9 @@ public class Ui {
      */
     public static String formatLoadingError(int skippedLines, String path) {
         return String.format("""
-                Sorry, I could not read %d line%s in my records and have skipped %s.
-                Anything I cannot read is lost the next time I save, so please check
-                %s first if you need it.
+                Alas, I could not read %d line%s in my records, and have set %s aside.
+                Whatever I cannot read shall be lost when next I save, so look to
+                %s first, shouldst thou need it.
                 """, skippedLines, skippedLines == 1 ? "" : "s",
                 skippedLines == 1 ? "it" : "them", path);
     }
