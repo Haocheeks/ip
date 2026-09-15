@@ -14,7 +14,7 @@
          <padding>
             <Insets bottom="2.0" left="5.0" right="5.0" top="2.0" />
          </padding></Label>
-        <Circle fx:id="displayPicture" radius="49.5" />
+        <Circle fx:id="displayPicture" radius="20.0" />
     </children>
     <padding>
         <Insets bottom="15.0" left="5.0" right="5.0" top="15.0" />
