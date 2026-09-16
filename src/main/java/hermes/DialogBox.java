@@ -50,7 +50,7 @@ public class DialogBox extends HBox {
      * @param image the picture to show.
      * @return a pattern that covers a circle without distorting the image.
      */
-    private static ImagePattern createCroppedPattern(Image image) {
+    static ImagePattern createCroppedPattern(Image image) {
         double aspectRatio = image.getWidth() / image.getHeight();
         double width = Math.max(aspectRatio, 1);
         double height = Math.max(1 / aspectRatio, 1);

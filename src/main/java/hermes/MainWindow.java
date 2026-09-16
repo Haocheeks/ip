@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
 /**
@@ -28,6 +29,8 @@ public class MainWindow extends AnchorPane {
     private Button sendButton;
     @FXML
     private VBox dialogContainer;
+    @FXML
+    private Circle headerPicture;
 
     private final Image userImage =
             new Image(this.getClass().getResourceAsStream("/images/userImage.png"));
@@ -50,6 +53,7 @@ public class MainWindow extends AnchorPane {
         // number that never reaches the visible range. Setting it on each
         // change keeps the newest message in view and the wheel working.
         dialogContainer.heightProperty().addListener(observable -> scrollPane.setVvalue(1.0));
+        headerPicture.setFill(DialogBox.createCroppedPattern(hermesImage));
         dialogContainer.getChildren().add(
                 DialogBox.getHermesDialog(Ui.GREETING, hermesImage));
     }
