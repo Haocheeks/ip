@@ -6,8 +6,16 @@ import java.time.format.DateTimeFormatter;
 /** One thing the user wants to keep track of. */
 public abstract class Task implements Comparable<Task> {
 
+    /**
+     * How a date is shown to the user.
+     *
+     * <p>Written in the same numeric form the user is asked to type, so a date
+     * read off the list can be typed straight back in. A month written as a
+     * name would depend on the locale of the machine: on one, September reads
+     * "Sept" and "Sep" is refused, and elsewhere the reverse.
+     */
     protected static final DateTimeFormatter DISPLAY_FORMATTER =
-            DateTimeFormatter.ofPattern("dd MMM yyyy HHmm");
+            DateTimeFormatter.ofPattern("dd/MM/uuuu HHmm");
 
     protected String taskDescription;
     protected boolean isCompleted = false;

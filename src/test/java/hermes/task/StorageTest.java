@@ -97,7 +97,7 @@ public class StorageTest {
         assertEquals(7, storage.getSkippedLines());
         assertEquals(2, tasks.size());
         assertEquals("[T][ ] first good", tasks.get(0).toString());
-        assertEquals("[E][X] last good (from: 27 Aug 2026 1500 to: 27 Aug 2026 1630)",
+        assertEquals("[E][X] last good (from: 27/08/2026 1500 to: 27/08/2026 1630)",
                 tasks.get(1).toString());
     }
 

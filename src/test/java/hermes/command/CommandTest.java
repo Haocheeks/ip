@@ -104,7 +104,7 @@ public class CommandTest {
     public void execute_due_listsTasksDueByTheCutoff() throws HermesException {
         logBook.log(new Deadline("essay", LocalDateTime.of(2026, 8, 27, 15, 0)));
 
-        assertEquals("[D][ ] essay (by: 27 Aug 2026 1500)",
+        assertEquals("[D][ ] essay (by: 27/08/2026 1500)",
                 new DueCommand(LocalDateTime.of(2026, 8, 28, 0, 0)).execute(logBook));
     }
 
@@ -118,11 +118,11 @@ public class CommandTest {
         logBook.log(new Deadline("essay", LocalDateTime.of(2026, 8, 27, 15, 0)));
 
         new SortCommand().execute(logBook);
-        assertEquals("1. [D][ ] essay (by: 27 Aug 2026 1500)\n2. [T][ ] read\n3. [T][ ] write\n",
+        assertEquals("1. [D][ ] essay (by: 27/08/2026 1500)\n2. [T][ ] read\n3. [T][ ] write\n",
                 logBook.listTasks());
 
         new UndoCommand().execute(logBook);
-        assertEquals("1. [T][ ] read\n2. [T][ ] write\n3. [D][ ] essay (by: 27 Aug 2026 1500)\n",
+        assertEquals("1. [T][ ] read\n2. [T][ ] write\n3. [D][ ] essay (by: 27/08/2026 1500)\n",
                 logBook.listTasks());
     }
 }

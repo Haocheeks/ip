@@ -170,7 +170,7 @@ public class ParserTest {
     public void parse_deadline_addsDescriptionAndDate() throws HermesException {
         run("deadline essay   /by   27 Aug 2026 1500");
 
-        assertEquals("1. [D][ ] essay (by: 27 Aug 2026 1500)\n", logBook.listTasks());
+        assertEquals("1. [D][ ] essay (by: 27/08/2026 1500)\n", logBook.listTasks());
     }
 
     @Test
@@ -218,7 +218,7 @@ public class ParserTest {
     public void parse_event_addsDescriptionStartAndEnd() throws HermesException {
         run("event talk /from 27 Aug 2026 1500 /to 27 Aug 2026 1630");
 
-        assertEquals("1. [E][ ] talk (from: 27 Aug 2026 1500 to: 27 Aug 2026 1630)\n", logBook.listTasks());
+        assertEquals("1. [E][ ] talk (from: 27/08/2026 1500 to: 27/08/2026 1630)\n", logBook.listTasks());
     }
 
     @Test
@@ -286,7 +286,7 @@ public class ParserTest {
     public void parse_eventEndingAfterItBegins_accepted() throws HermesException {
         run("event talk /from 27 Aug 2026 1500 /to 27 Aug 2026 1501");
 
-        assertEquals("1. [E][ ] talk (from: 27 Aug 2026 1500 to: 27 Aug 2026 1501)\n",
+        assertEquals("1. [E][ ] talk (from: 27/08/2026 1500 to: 27/08/2026 1501)\n",
                 logBook.listTasks());
     }
 
@@ -301,7 +301,7 @@ public class ParserTest {
     public void parse_due_measuresAgainstTheGivenDate() throws HermesException {
         run("deadline essay /by 26 Aug 2026 0900", "deadline later /by 28 Aug 2026 0900");
 
-        assertEquals("[D][ ] essay (by: 26 Aug 2026 0900)", run("due /by 27 Aug 2026 1500"));
+        assertEquals("[D][ ] essay (by: 26/08/2026 0900)", run("due /by 27 Aug 2026 1500"));
     }
 
     @Test

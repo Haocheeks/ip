@@ -113,7 +113,7 @@ public class LogBookTest {
 
         assertEquals("""
                 It is recorded. I have set down this task:
-                  [D][ ] essay (by: 28 Aug 2026 1500)
+                  [D][ ] essay (by: 28/08/2026 1500)
                 Thy scroll now holds 2 tasks.
                 """, logBook.log(new Deadline("essay", LocalDateTime.of(2026, 8, 28, 15, 0))));
     }
@@ -339,14 +339,14 @@ public class LogBookTest {
     public void listTasksDueBy_taskDueBeforeCutoff_taskListed() throws HermesException {
         logBook.log(new Deadline("essay", LocalDateTime.of(2026, 8, 29, 9, 0)));
 
-        assertEquals("[D][ ] essay (by: 29 Aug 2026 0900)", logBook.listTasksDueBy(CUTOFF));
+        assertEquals("[D][ ] essay (by: 29/08/2026 0900)", logBook.listTasksDueBy(CUTOFF));
     }
 
     @Test
     public void listTasksDueBy_taskDueAfterCutoff_taskExcluded() throws HermesException {
         logBook.log(new Deadline("far future", LocalDateTime.of(2026, 12, 25, 9, 0)));
 
-        assertEquals("Nothing is due by 30 Aug 2026 1200.", logBook.listTasksDueBy(CUTOFF));
+        assertEquals("Nothing is due by 30/08/2026 1200.", logBook.listTasksDueBy(CUTOFF));
     }
 
     @Test
@@ -354,7 +354,7 @@ public class LogBookTest {
         // The cutoff is inclusive: a task due at the very moment asked about counts.
         logBook.log(new Deadline("on the dot", CUTOFF));
 
-        assertEquals("[D][ ] on the dot (by: 30 Aug 2026 1200)", logBook.listTasksDueBy(CUTOFF));
+        assertEquals("[D][ ] on the dot (by: 30/08/2026 1200)", logBook.listTasksDueBy(CUTOFF));
     }
 
     @Test
@@ -362,7 +362,7 @@ public class LogBookTest {
         logBook.log(new Deadline("already done", LocalDateTime.of(2026, 8, 26, 9, 0)));
         logBook.mark(0);
 
-        assertEquals("Nothing is due by 30 Aug 2026 1200.", logBook.listTasksDueBy(CUTOFF));
+        assertEquals("Nothing is due by 30/08/2026 1200.", logBook.listTasksDueBy(CUTOFF));
     }
 
     @Test
@@ -370,7 +370,7 @@ public class LogBookTest {
         // A todo has no date, so it can never be due by anything.
         logBook.log(new ToDo("borrow book"));
 
-        assertEquals("Nothing is due by 30 Aug 2026 1200.", logBook.listTasksDueBy(CUTOFF));
+        assertEquals("Nothing is due by 30/08/2026 1200.", logBook.listTasksDueBy(CUTOFF));
     }
 
     @Test
@@ -382,15 +382,15 @@ public class LogBookTest {
                 LocalDateTime.of(2026, 8, 26, 10, 0), LocalDateTime.of(2026, 8, 26, 11, 0)));
 
         assertEquals("""
-                [D][ ] old (by: 25 Aug 2026 0800)
-                [E][ ] meeting (from: 26 Aug 2026 1000 to: 26 Aug 2026 1100)
-                [D][ ] essay (by: 29 Aug 2026 0900)""",
+                [D][ ] old (by: 25/08/2026 0800)
+                [E][ ] meeting (from: 26/08/2026 1000 to: 26/08/2026 1100)
+                [D][ ] essay (by: 29/08/2026 0900)""",
                 logBook.listTasksDueBy(CUTOFF));
     }
 
     @Test
     public void listTasksDueBy_emptyLogBook_noticeReturned() {
-        assertEquals("Nothing is due by 30 Aug 2026 1200.", logBook.listTasksDueBy(CUTOFF));
+        assertEquals("Nothing is due by 30/08/2026 1200.", logBook.listTasksDueBy(CUTOFF));
     }
 
     @Test
@@ -403,8 +403,8 @@ public class LogBookTest {
         // The query sorts inside its stream, so the numbering shown by list is
         // still insertion order afterwards.
         assertEquals("""
-                1. [D][ ] essay (by: 29 Aug 2026 0900)
-                2. [D][ ] old (by: 25 Aug 2026 0800)
+                1. [D][ ] essay (by: 29/08/2026 0900)
+                2. [D][ ] old (by: 25/08/2026 0800)
                 """, logBook.toString());
     }
 
@@ -424,10 +424,10 @@ public class LogBookTest {
                 LocalDateTime.of(2026, 8, 26, 10, 0), LocalDateTime.of(2026, 8, 26, 11, 0)));
 
         String sortedList = """
-                1. [E][ ] meeting (from: 26 Aug 2026 1000 to: 26 Aug 2026 1100)
-                2. [D][ ] essay (by: 29 Aug 2026 0900)
+                1. [E][ ] meeting (from: 26/08/2026 1000 to: 26/08/2026 1100)
+                2. [D][ ] essay (by: 29/08/2026 0900)
                 3. [T][ ] read
-                4. [D][X] handed in (by: 01 Aug 2026 0900)
+                4. [D][X] handed in (by: 01/08/2026 0900)
                 """;
         assertEquals("Swift as my winged sandals, I have ordered thy tasks, soonest first:"
                 + LINE_BREAK + sortedList, logBook.sort());
@@ -503,8 +503,8 @@ public class LogBookTest {
         logBook.undo();
 
         assertEquals("""
-                1. [D][ ] later (by: 29 Aug 2026 0900)
-                2. [D][ ] sooner (by: 25 Aug 2026 0900)
+                1. [D][ ] later (by: 29/08/2026 0900)
+                2. [D][ ] sooner (by: 25/08/2026 0900)
                 """, logBook.listTasks());
     }
 

@@ -63,8 +63,8 @@ public class TaskTest {
     public void toString_eachTaskType_showsTypeStatusAndDates() {
         assertEquals("[T][ ] read", new ToDo("read").toString());
         assertEquals("[T][X] read", new ToDo(true, "read").toString());
-        assertEquals("[D][ ] essay (by: 27 Aug 2026 1500)", new Deadline("essay", START).toString());
-        assertEquals("[E][X] meeting (from: 27 Aug 2026 1500 to: 27 Aug 2026 1630)",
+        assertEquals("[D][ ] essay (by: 27/08/2026 1500)", new Deadline("essay", START).toString());
+        assertEquals("[E][X] meeting (from: 27/08/2026 1500 to: 27/08/2026 1630)",
                 new Event(true, "meeting", START.toString(), END.toString()).toString());
     }
 
