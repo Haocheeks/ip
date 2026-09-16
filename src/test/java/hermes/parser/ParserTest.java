@@ -195,6 +195,13 @@ public class ParserTest {
     }
 
     @Test
+    public void parse_deadlineWithByTwice_saysWhichParameterIsRepeated() {
+        assertEquals("I see /by more than once. Name it but once, for instance: "
+                + Keyword.DEADLINE.getExample(),
+                errorFrom("deadline essay /by 27 Aug 2026 1500 /by 28 Aug 2026 1500"));
+    }
+
+    @Test
     public void parse_deadlineWithUnreadableDate_quotesTheDate() {
         assertEquals("'next week' is no date I can read. Write it thus, for instance: 27 Aug 2026 1500",
                 errorFrom("deadline essay /by next week"));
@@ -243,6 +250,19 @@ public class ParserTest {
     }
 
     @Test
+    public void parse_eventWithFromOrToTwice_saysWhichParameterIsRepeated() {
+        String from = "I see /from more than once. Name it but once, for instance: "
+                + Keyword.EVENT.getExample();
+        String to = "I see /to more than once. Name it but once, for instance: "
+                + Keyword.EVENT.getExample();
+
+        assertEquals(from, errorFrom("event talk /from 27 Aug 2026 1500 /from 27 Aug 2026 1600 "
+                + "/to 27 Aug 2026 1700"));
+        assertEquals(to, errorFrom("event talk /from 27 Aug 2026 1500 /to 27 Aug 2026 1600 "
+                + "/to 27 Aug 2026 1700"));
+    }
+
+    @Test
     public void parse_eventWithUnreadableEnd_quotesTheDate() {
         assertEquals("'soon' is no date I can read. Write it thus, for instance: 27 Aug 2026 1500",
                 errorFrom("event talk /from 27 Aug 2026 1500 /to soon"));
@@ -268,6 +288,13 @@ public class ParserTest {
 
         assertEquals(expected, errorFrom("due"));
         assertEquals(expected, errorFrom("due /by"));
+    }
+
+    @Test
+    public void parse_dueWithByTwice_saysWhichParameterIsRepeated() {
+        assertEquals("I see /by more than once. Name it but once, for instance: "
+                + Keyword.DUE.getExample(),
+                errorFrom("due /by 27 Aug 2026 1500 /by 28 Aug 2026 1500"));
     }
 
     @Test
