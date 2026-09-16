@@ -23,6 +23,17 @@ public class Storage {
     /** The character used to separate fields in a stored line. */
     private static final String SEPARATOR = "|";
 
+    /** Where each field sits in a stored line, in the order they are written. */
+    private static final int TYPE_FIELD = 0;
+    private static final int COMPLETION_FIELD = 1;
+    private static final int DESCRIPTION_FIELD = 2;
+    private static final int FIRST_DATE_FIELD = 3;
+    private static final int SECOND_DATE_FIELD = 4;
+
+    /** How a completed and an outstanding task are marked in the completion field. */
+    private static final String COMPLETED_FLAG = "1";
+    private static final String OUTSTANDING_FLAG = "0";
+
     private final File file;
 
     /** How many lines the most recent {@link #load()} could not understand. */
@@ -88,7 +99,7 @@ public class Storage {
      */
     private Task parseStoredTask(String storedTask) {
         String[] taskParts = storedTask.split("\\|");
-        TaskType taskType = TaskType.of(taskParts[0].trim());
+        TaskType taskType = TaskType.of(taskParts[TYPE_FIELD].trim());
 
         if (taskType == null || !isWellFormed(taskParts, taskType.getStoredFieldCount())) {
             return null;
@@ -97,14 +108,15 @@ public class Storage {
         assert taskParts.length == taskType.getStoredFieldCount()
                 : "isWellFormed guarantees the field count the switch below indexes into";
 
-        boolean isCompleted = "1".equals(taskParts[1].trim());
+        boolean isCompleted = COMPLETED_FLAG.equals(taskParts[COMPLETION_FIELD].trim());
 
         try {
             return switch (taskType) {
-                case TODO -> new ToDo(isCompleted, taskParts[2].trim());
-                case DEADLINE -> new Deadline(isCompleted, taskParts[2].trim(), taskParts[3].trim());
-                case EVENT -> new Event(isCompleted, taskParts[2].trim(),
-                        taskParts[3].trim(), taskParts[4].trim());
+                case TODO -> new ToDo(isCompleted, taskParts[DESCRIPTION_FIELD].trim());
+                case DEADLINE -> new Deadline(isCompleted, taskParts[DESCRIPTION_FIELD].trim(),
+                        taskParts[FIRST_DATE_FIELD].trim());
+                case EVENT -> new Event(isCompleted, taskParts[DESCRIPTION_FIELD].trim(),
+                        taskParts[FIRST_DATE_FIELD].trim(), taskParts[SECOND_DATE_FIELD].trim());
             };
         } catch (DateTimeParseException e) {
             return null;
@@ -136,8 +148,8 @@ public class Storage {
             }
         }
 
-        String flag = parts[1].trim();
-        return flag.equals("0") || flag.equals("1");
+        String flag = parts[COMPLETION_FIELD].trim();
+        return flag.equals(OUTSTANDING_FLAG) || flag.equals(COMPLETED_FLAG);
     }
 
     /**

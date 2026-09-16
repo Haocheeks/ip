@@ -11,6 +11,10 @@ import javafx.stage.Stage;
 /** Opens the window Hermes is shown in. */
 public class Main extends Application {
 
+    /** The smallest the window may be dragged, in pixels. */
+    private static final int MIN_HEIGHT = 220;
+    private static final int MIN_WIDTH = 417;
+
     private final Hermes hermes = new Hermes();
 
     @Override
@@ -20,8 +24,8 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
-            stage.setMinHeight(220);
-            stage.setMinWidth(417);
+            stage.setMinHeight(MIN_HEIGHT);
+            stage.setMinWidth(MIN_WIDTH);
             fxmlLoader.<MainWindow>getController().setHermes(hermes);
             stage.show();
         } catch (IOException e) {
