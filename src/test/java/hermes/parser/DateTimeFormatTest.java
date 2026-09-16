@@ -64,6 +64,28 @@ public class DateTimeFormatTest {
     }
 
     @Test
+    public void parseDateTime_dateThatDoesNotExist_refusedRatherThanAdjusted() {
+        // Resolving leniently would quietly turn 30 February into 28 February,
+        // storing a day the user never typed.
+        for (String input : new String[] {"2026-02-30", "30/2/2026", "30 Feb 2026", "31/4/2026 1500"}) {
+            HermesException exception = assertThrows(
+                    HermesException.class, () -> DateTimeFormat.parseDateTime(input), input);
+
+            assertEquals("'" + input + "' is no date I can read. "
+                    + "Write it thus, for instance: 27 Aug 2026 1500", exception.getMessage());
+        }
+    }
+
+    @Test
+    public void parseDateTime_lastDayOfEachMonthLength_stillAccepted() throws HermesException {
+        // Strict resolving must refuse only the days that do not exist.
+        assertEquals(LocalDateTime.of(2026, 2, 28, 0, 0), DateTimeFormat.parseDateTime("2026-02-28"));
+        assertEquals(LocalDateTime.of(2024, 2, 29, 0, 0), DateTimeFormat.parseDateTime("2024-02-29"));
+        assertEquals(LocalDateTime.of(2026, 4, 30, 0, 0), DateTimeFormat.parseDateTime("2026-04-30"));
+        assertEquals(LocalDateTime.of(2026, 12, 31, 0, 0), DateTimeFormat.parseDateTime("2026-12-31"));
+    }
+
+    @Test
     public void parseDateTime_formatSuggestedInError_isAccepted() throws HermesException {
         // The error message tells the user to write a date this way, so it must work.
         assertEquals(AFTERNOON, DateTimeFormat.parseDateTime("27 Aug 2026 1500"));

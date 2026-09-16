@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 
 import hermes.HermesException;
 
@@ -17,25 +18,25 @@ import hermes.HermesException;
  */
 public enum DateTimeFormat {
 
-    ISO_DATE("yyyy-MM-dd", true),
-    SPACED_ISO_DATE("yyyy MM dd", true),
-    SLASHED_DATE("d/M/yyyy", true),
-    NAMED_MONTH_DATE("d MMM yyyy", true),
-    MONTH_FIRST_DATE("MMM d yyyy", true),
-    ISO_DATE_TIME("yyyy-MM-dd HHmm", false),
-    ISO_DATE_TIME_WITH_COLON("yyyy-MM-dd HH:mm", false),
-    SLASHED_ISO_DATE_TIME("yyyy/MM/dd HHmm", false),
-    SLASHED_ISO_DATE_TIME_WITH_COLON("yyyy/MM/dd HH:mm", false),
-    SLASHED_DATE_TIME("d/M/yyyy HHmm", false),
-    SLASHED_DATE_TIME_WITH_COLON("d/M/yyyy HH:mm", false),
-    SLASHED_DATE_TIME_12_HOUR("d/M/yyyy h:mma", false),
-    DASHED_DATE_TIME("d-M-yyyy HHmm", false),
-    DASHED_DATE_TIME_WITH_COLON("d-M-yyyy HH:mm", false),
-    NAMED_MONTH_DATE_TIME("d MMM yyyy HHmm", false),
-    NAMED_MONTH_DATE_TIME_WITH_COLON("d MMM yyyy HH:mm", false),
-    NAMED_MONTH_DATE_TIME_12_HOUR("d MMM yyyy h:mma", false),
-    MONTH_FIRST_DATE_TIME("MMM d yyyy HHmm", false),
-    MONTH_FIRST_DATE_TIME_WITH_COLON("MMM d yyyy HH:mm", false);
+    ISO_DATE("uuuu-MM-dd", true),
+    SPACED_ISO_DATE("uuuu MM dd", true),
+    SLASHED_DATE("d/M/uuuu", true),
+    NAMED_MONTH_DATE("d MMM uuuu", true),
+    MONTH_FIRST_DATE("MMM d uuuu", true),
+    ISO_DATE_TIME("uuuu-MM-dd HHmm", false),
+    ISO_DATE_TIME_WITH_COLON("uuuu-MM-dd HH:mm", false),
+    SLASHED_ISO_DATE_TIME("uuuu/MM/dd HHmm", false),
+    SLASHED_ISO_DATE_TIME_WITH_COLON("uuuu/MM/dd HH:mm", false),
+    SLASHED_DATE_TIME("d/M/uuuu HHmm", false),
+    SLASHED_DATE_TIME_WITH_COLON("d/M/uuuu HH:mm", false),
+    SLASHED_DATE_TIME_12_HOUR("d/M/uuuu h:mma", false),
+    DASHED_DATE_TIME("d-M-uuuu HHmm", false),
+    DASHED_DATE_TIME_WITH_COLON("d-M-uuuu HH:mm", false),
+    NAMED_MONTH_DATE_TIME("d MMM uuuu HHmm", false),
+    NAMED_MONTH_DATE_TIME_WITH_COLON("d MMM uuuu HH:mm", false),
+    NAMED_MONTH_DATE_TIME_12_HOUR("d MMM uuuu h:mma", false),
+    MONTH_FIRST_DATE_TIME("MMM d uuuu HHmm", false),
+    MONTH_FIRST_DATE_TIME_WITH_COLON("MMM d uuuu HH:mm", false);
 
     private final DateTimeFormatter formatter;
     private final boolean isDateOnly;
@@ -49,7 +50,12 @@ public enum DateTimeFormat {
      * @param isDateOnly whether format string contains any time value.
      */
     DateTimeFormat(String format, boolean isDateOnly) {
-        this.formatter = DateTimeFormatter.ofPattern(format);
+        // Resolving strictly refuses a date that does not exist, such as 30
+        // February. The default would quietly adjust it to the nearest real
+        // date instead, storing a day the user never typed. Strict resolving
+        // needs uuuu rather than yyyy: yyyy is the year within an era, which
+        // strict mode will not accept without being told the era as well.
+        this.formatter = DateTimeFormatter.ofPattern(format).withResolverStyle(ResolverStyle.STRICT);
         this.isDateOnly = isDateOnly;
     }
 
