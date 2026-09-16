@@ -269,6 +269,28 @@ public class ParserTest {
     }
 
     @Test
+    public void parse_eventEndingBeforeItBegins_refusedQuotingBothTimes() {
+        assertEquals("An event must end after it begins, yet thou hast set its end "
+                + "to '27 Aug 2026 1500' and its start to '27 Aug 2026 1600'.",
+                errorFrom("event talk /from 27 Aug 2026 1600 /to 27 Aug 2026 1500"));
+    }
+
+    @Test
+    public void parse_eventEndingWhenItBegins_refused() {
+        assertEquals("An event must end after it begins, yet thou hast set its end "
+                + "to '27 Aug 2026 1500' and its start to '27 Aug 2026 1500'.",
+                errorFrom("event talk /from 27 Aug 2026 1500 /to 27 Aug 2026 1500"));
+    }
+
+    @Test
+    public void parse_eventEndingAfterItBegins_accepted() throws HermesException {
+        run("event talk /from 27 Aug 2026 1500 /to 27 Aug 2026 1501");
+
+        assertEquals("1. [E][ ] talk (from: 27 Aug 2026 1500 to: 27 Aug 2026 1501)\n",
+                logBook.listTasks());
+    }
+
+    @Test
     public void parse_eventWithSeparator_exceptionThrown() {
         assertEquals(SEPARATOR_MESSAGE, errorFrom("event a|b /from 27 Aug 2026 1500 /to 27 Aug 2026 1630"));
     }

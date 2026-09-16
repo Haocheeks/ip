@@ -273,6 +273,13 @@ public class Parser {
         LocalDateTime startDateTime = DateTimeFormat.parseDateTime(eventStart);
         LocalDateTime endDateTime = DateTimeFormat.parseDateTime(eventEnd);
 
+        // An end at the same moment as the start is refused too: an event of no
+        // length is far more likely a mistyped time than something the user means.
+        if (!endDateTime.isAfter(startDateTime)) {
+            throw new HermesException("An event must end after it begins, yet thou hast set its end "
+                    + "to '" + eventEnd + "' and its start to '" + eventStart + "'.");
+        }
+
         Storage.rejectSeparator(taskDescription, eventStart, eventEnd);
 
         return new Event(taskDescription, startDateTime, endDateTime);
