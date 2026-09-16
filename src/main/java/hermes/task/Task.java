@@ -48,6 +48,32 @@ public abstract class Task implements Comparable<Task> {
         return this.isCompleted;
     }
 
+    /**
+     * Returns true if the other task records the same errand as this one.
+     *
+     * <p>Two tasks are alike when they are of the same kind and hold the same
+     * description and the same dates. Whether either is completed is left out:
+     * an unfinished copy of a task already done is still the same errand.
+     *
+     * @param other the task to compare against.
+     * @return true if both describe the same errand.
+     */
+    public boolean hasSameDetails(Task other) {
+        return detailsOf(this).equals(detailsOf(other));
+    }
+
+    /**
+     * Returns a task's stored line without its completion flag.
+     *
+     * <p>The stored line already holds the kind, description and dates, so
+     * comparing it cannot miss a field the way naming each one would.
+     */
+    private static String detailsOf(Task task) {
+        String[] fields = task.getFileContent().split("\\|", -1);
+        fields[1] = "";
+        return String.join("|", fields);
+    }
+
     /** Returns the text the user gave to describe this task. */
     public String getTaskDescription() {
         return this.taskDescription;

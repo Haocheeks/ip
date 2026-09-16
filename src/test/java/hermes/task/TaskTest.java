@@ -134,6 +134,25 @@ public class TaskTest {
     }
 
     @Test
+    public void hasSameDetails_sameErrand_trueWhateverTheirStatus() {
+        assertTrue(new ToDo("read").hasSameDetails(new ToDo("read")));
+        // Completing one copy does not make it a different errand.
+        assertTrue(new ToDo(true, "read").hasSameDetails(new ToDo("read")));
+        assertTrue(new Deadline("essay", START).hasSameDetails(new Deadline(false, "essay", START.toString())));
+        assertTrue(new Event("meeting", START, END)
+                .hasSameDetails(new Event(true, "meeting", START.toString(), END.toString())));
+    }
+
+    @Test
+    public void hasSameDetails_differentKindDescriptionOrDate_false() {
+        assertFalse(new ToDo("read").hasSameDetails(new ToDo("write")));
+        assertFalse(new ToDo("essay").hasSameDetails(new Deadline("essay", START)));
+        assertFalse(new Deadline("essay", START).hasSameDetails(new Deadline("essay", END)));
+        assertFalse(new Event("meeting", START, END)
+                .hasSameDetails(new Event("meeting", START, END.plusHours(1))));
+    }
+
+    @Test
     public void compareTo_differentRanks_datedThenUndatedThenCompleted() {
         Task dated = new Deadline("essay", START);
         Task undated = new ToDo("read");

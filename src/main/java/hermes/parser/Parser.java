@@ -154,6 +154,28 @@ public class Parser {
     }
 
     /**
+     * Refuses arguments that name the same parameter more than once.
+     *
+     * <p>Only the first occurrence is treated as a separator, so a second one
+     * would become part of the value beside it and be reported as an unreadable
+     * date. Naming the repeated parameter points the user at what they typed.
+     *
+     * @param arguments what the user typed after the command word.
+     * @param parameter the parameter to count, such as /by.
+     * @param example how the whole command should be written.
+     * @throws HermesException if the parameter appears more than once.
+     */
+    private void rejectRepeatedParameter(String arguments, String parameter, String example)
+            throws HermesException {
+        int occurrences = arguments.split("\\s*" + parameter + "\\s*", -1).length - 1;
+
+        if (occurrences > 1) {
+            throw new HermesException("I see " + parameter + " more than once. Name it but once, "
+                    + example);
+        }
+    }
+
+    /**
      * Builds a {@link ToDo} from a command such as {@code todo borrow book}.
      *
      * @param arguments what the user typed after the command word.
@@ -187,6 +209,8 @@ public class Parser {
         if (arguments.isBlank()) {
             throw new HermesException("A deadline must have a description, " + example);
         }
+
+        rejectRepeatedParameter(arguments, "/by", example);
 
         String[] taskDescriptionAndDueDate = arguments.split("\\s*/by\\s*", 2);
 
@@ -222,6 +246,9 @@ public class Parser {
             throw new HermesException("An event must have a description, " + example);
         }
 
+        rejectRepeatedParameter(arguments, "/from", example);
+        rejectRepeatedParameter(arguments, "/to", example);
+
         String[] taskDescriptionAndEventStart = arguments.split("\\s*/from\\s*", 2);
 
         if (taskDescriptionAndEventStart.length < 2) {
@@ -246,6 +273,13 @@ public class Parser {
         LocalDateTime startDateTime = DateTimeFormat.parseDateTime(eventStart);
         LocalDateTime endDateTime = DateTimeFormat.parseDateTime(eventEnd);
 
+        // An end at the same moment as the start is refused too: an event of no
+        // length is far more likely a mistyped time than something the user means.
+        if (!endDateTime.isAfter(startDateTime)) {
+            throw new HermesException("An event must end after it begins, yet thou hast set its end "
+                    + "to '" + eventEnd + "' and its start to '" + eventStart + "'.");
+        }
+
         Storage.rejectSeparator(taskDescription, eventStart, eventEnd);
 
         return new Event(taskDescription, startDateTime, endDateTime);
@@ -260,6 +294,8 @@ public class Parser {
      * @throws HermesException if the date is missing or is not one Hermes recognizes.
      */
     private LocalDateTime parseDueCutoff(String arguments) throws HermesException {
+        rejectRepeatedParameter(arguments, "/by", "for instance: " + Keyword.DUE.getExample());
+
         String[] fields = arguments.split("\\s*/by\\s*", 2);
 
         if (fields.length < 2 || fields[1].isBlank()) {
