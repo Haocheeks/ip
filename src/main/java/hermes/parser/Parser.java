@@ -196,7 +196,7 @@ public class Parser {
 
     /**
      * Builds a {@link Deadline} from a command such as
-     * {@code deadline return book /by 27 Aug 2026 1500}.
+     * {@code deadline return book /by 17/08/2026 1500}.
      *
      * @param arguments what the user typed after the command word.
      * @return the task the user described.
@@ -232,7 +232,7 @@ public class Parser {
 
     /**
      * Builds an {@link Event} from a command such as
-     * {@code event project meeting /from 27 Aug 2026 1500 /to 27 Aug 2026 1630}.
+     * {@code event project meeting /from 17/08/2026 1500 /to 17/08/2026 1630}.
      *
      * @param arguments what the user typed after the command word.
      * @return the task the user described.
@@ -287,7 +287,7 @@ public class Parser {
 
     /**
      * Reads the cutoff given to a command such as
-     * {@code due /by 28 Aug 2026 1600}.
+     * {@code due /by 18/08/2026 1600}.
      *
      * @param arguments what the user typed after the command word.
      * @return the moment tasks are being measured against.

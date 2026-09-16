@@ -59,7 +59,7 @@ public class DateTimeFormatTest {
                     HermesException.class, () -> DateTimeFormat.parseDateTime(input), input);
 
             assertEquals("'" + input + "' is no date I can read. "
-                    + "Write it thus, for instance: 27 Aug 2026 1500", exception.getMessage());
+                    + "Write it thus, for instance: 17/08/2026 1500", exception.getMessage());
         }
     }
 
@@ -72,7 +72,7 @@ public class DateTimeFormatTest {
                     HermesException.class, () -> DateTimeFormat.parseDateTime(input), input);
 
             assertEquals("'" + input + "' is no date I can read. "
-                    + "Write it thus, for instance: 27 Aug 2026 1500", exception.getMessage());
+                    + "Write it thus, for instance: 17/08/2026 1500", exception.getMessage());
         }
     }
 
@@ -88,6 +88,7 @@ public class DateTimeFormatTest {
     @Test
     public void parseDateTime_formatSuggestedInError_isAccepted() throws HermesException {
         // The error message tells the user to write a date this way, so it must work.
-        assertEquals(AFTERNOON, DateTimeFormat.parseDateTime("27 Aug 2026 1500"));
+        assertEquals(LocalDateTime.of(2026, 8, 17, 15, 0),
+                DateTimeFormat.parseDateTime("17/08/2026 1500"));
     }
 }

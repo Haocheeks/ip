@@ -203,7 +203,7 @@ public class ParserTest {
 
     @Test
     public void parse_deadlineWithUnreadableDate_quotesTheDate() {
-        assertEquals("'next week' is no date I can read. Write it thus, for instance: 27 Aug 2026 1500",
+        assertEquals("'next week' is no date I can read. Write it thus, for instance: 17/08/2026 1500",
                 errorFrom("deadline essay /by next week"));
     }
 
@@ -264,7 +264,7 @@ public class ParserTest {
 
     @Test
     public void parse_eventWithUnreadableEnd_quotesTheDate() {
-        assertEquals("'soon' is no date I can read. Write it thus, for instance: 27 Aug 2026 1500",
+        assertEquals("'soon' is no date I can read. Write it thus, for instance: 17/08/2026 1500",
                 errorFrom("event talk /from 27 Aug 2026 1500 /to soon"));
     }
 
@@ -321,7 +321,7 @@ public class ParserTest {
 
     @Test
     public void parse_dueWithUnreadableDate_quotesTheDate() {
-        assertEquals("'never' is no date I can read. Write it thus, for instance: 27 Aug 2026 1500",
+        assertEquals("'never' is no date I can read. Write it thus, for instance: 17/08/2026 1500",
                 errorFrom("due /by never"));
     }
 

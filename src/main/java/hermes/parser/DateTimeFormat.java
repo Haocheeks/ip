@@ -112,7 +112,7 @@ public enum DateTimeFormat {
 
         if (format == null) {
             throw new HermesException("'" + dateTime
-                    + "' is no date I can read. Write it thus, for instance: 27 Aug 2026 1500");
+                    + "' is no date I can read. Write it thus, for instance: 17/08/2026 1500");
         }
 
         DateTimeFormatter formatter = format.getFormatter();
