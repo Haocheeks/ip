@@ -84,63 +84,11 @@ public class LogBook {
      *                         not be written to storage.
      */
     public String mark(int... indexes) throws HermesException {
-        // Every index is checked before any task is marked. Checking as each
-        // task goes would leave the list half changed.
-        for (int index : indexes) {
-            checkIndex(index);
-        }
-
-        cache();
-
-        List<Task> marked = new ArrayList<>();
-        List<Task> alreadyMarked = new ArrayList<>();
-
-        for (int index : indexes) {
-            Task taskToBeMarked = this.tasks.get(index);
-            boolean isMarkedSuccessfully = taskToBeMarked.mark();
-
-            if (isMarkedSuccessfully) {
-                marked.add(taskToBeMarked);
-            } else {
-                alreadyMarked.add(taskToBeMarked);
-            }
-        }
-
-        int numberMarked = marked.size();
-        int numberAlreadyMarked = alreadyMarked.size();
-
-        String markedMessage = numberMarked == 0
-                ? ""
-                : String.format("""
-                Well done. I declare the following task%s as fulfilled:
-                  %s
-                """,
-                numberMarked == 1 ? "" : "s",
-                marked.stream().map(Task::toString).collect(Collectors.joining("\n  ")));
-
-        String alreadyMarkedMessage = numberAlreadyMarked == 0
-                ? ""
-                : String.format("""
-                The following task%s %s already fulfilled:
-                  %s
-                """,
-                numberAlreadyMarked == 1 ? "" : "s",
-                numberAlreadyMarked == 1 ? "was" : "were",
-                alreadyMarked.stream().map(Task::toString).collect(Collectors.joining("\n  ")));
-
-        this.storage.save(this.tasks);
-
-        if (numberMarked > 0 && numberAlreadyMarked > 0) {
-            return markedMessage + "\n" + alreadyMarkedMessage;
-        } else if (numberMarked > 0) {
-            return markedMessage;
-        } else {
-            return alreadyMarkedMessage;
-        }
+        return applyStatusChange(true, indexes);
     }
 
     /**
-     * Marks one task as no longer completed.
+     * Marks every task listed as no longer completed.
      *
      * @param indexes the tasks' positions in the list, counting from zero.
      * @return the message confirming the change.
@@ -148,59 +96,72 @@ public class LogBook {
      *     not be written to storage.
      */
     public String unmark(int... indexes) throws HermesException {
-        // Every index is checked before any task is unmarked. Checking as
-        // each task goes would leave the list half changed.
+        return applyStatusChange(false, indexes);
+    }
+
+    /**
+     * Marks every task listed as completed, or as no longer completed.
+     *
+     * <p>Marking and unmarking differ only in which method of {@link Task} is
+     * called and in the wording of the reply, so the work is written here once
+     * rather than twice.
+     *
+     * <p>Tasks that were already in the state asked for are reported apart from
+     * those the change touched, so the user can see which of the numbers they
+     * gave made no difference.
+     *
+     * @param isMarking true to mark the tasks, false to unmark them.
+     * @param indexes the tasks' positions in the list, counting from zero.
+     * @return the message confirming the change.
+     * @throws HermesException if the number names no task, or the change could
+     *     not be written to storage.
+     */
+    private String applyStatusChange(boolean isMarking, int... indexes) throws HermesException {
+        // Every index is checked before any task is changed. Checking as each
+        // task goes would leave the list half changed.
         for (int index : indexes) {
             checkIndex(index);
         }
 
         cache();
 
-        List<Task> unmarked = new ArrayList<>();
-        List<Task> alreadyUnmarked = new ArrayList<>();
+        List<Task> changed = new ArrayList<>();
+        List<Task> unchanged = new ArrayList<>();
 
         for (int index : indexes) {
-            Task taskToBeUnmarked = this.tasks.get(index);
-            boolean isUnmarkedSuccessfully = taskToBeUnmarked.unmark();
+            Task task = this.tasks.get(index);
+            boolean wasChanged = isMarking ? task.mark() : task.unmark();
 
-            if (isUnmarkedSuccessfully) {
-                unmarked.add(taskToBeUnmarked);
+            if (wasChanged) {
+                changed.add(task);
             } else {
-                alreadyUnmarked.add(taskToBeUnmarked);
+                unchanged.add(task);
             }
         }
 
-        int numberUnmarked = unmarked.size();
-        int numberAlreadyUnmarked = alreadyUnmarked.size();
-
-        String unmarkedMessage = numberUnmarked == 0
-                ? ""
-                : String.format("""
-                As thou wishest. I declare the following task%s as unfulfilled:
-                  %s
-                """,
-                numberUnmarked == 1 ? "" : "s",
-                unmarked.stream().map(Task::toString).collect(Collectors.joining("\n  ")));
-
-        String alreadyUnmarkedMessage = numberAlreadyUnmarked == 0
-                ? ""
-                : String.format("""
-                The following task%s %s already unfulfilled:
-                  %s
-                """,
-                numberAlreadyUnmarked == 1 ? "" : "s",
-                numberAlreadyUnmarked == 1 ? "was" : "were",
-                alreadyUnmarked.stream().map(Task::toString).collect(Collectors.joining("\n  ")));
-
         this.storage.save(this.tasks);
 
-        if (numberUnmarked > 0 && numberAlreadyUnmarked > 0) {
-            return unmarkedMessage + "\n" + alreadyUnmarkedMessage;
-        } else if (numberUnmarked > 0) {
-            return unmarkedMessage;
-        } else {
-            return alreadyUnmarkedMessage;
+        String state = isMarking ? "fulfilled" : "unfulfilled";
+        String changedMessage = "";
+        String unchangedMessage = "";
+
+        if (!changed.isEmpty()) {
+            changedMessage = String.format("%s I declare the following task%s as %s:\n  %s\n",
+                    isMarking ? "Well done." : "As thou wishest.",
+                    changed.size() == 1 ? "" : "s", state,
+                    changed.stream().map(Task::toString).collect(Collectors.joining("\n  ")));
         }
+
+        if (!unchanged.isEmpty()) {
+            unchangedMessage = String.format("The following task%s %s already %s:\n  %s\n",
+                    unchanged.size() == 1 ? "" : "s",
+                    unchanged.size() == 1 ? "was" : "were", state,
+                    unchanged.stream().map(Task::toString).collect(Collectors.joining("\n  ")));
+        }
+
+        // A blank line separates the two groups, but only when both are spoken of.
+        boolean hasBothGroups = !changedMessage.isEmpty() && !unchangedMessage.isEmpty();
+        return changedMessage + (hasBothGroups ? "\n" : "") + unchangedMessage;
     }
 
     /**
