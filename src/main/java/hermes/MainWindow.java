@@ -42,7 +42,11 @@ public class MainWindow extends AnchorPane {
      */
     @FXML
     public void initialize() {
-        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        // Binding vvalue would fix it to a pixel height, far outside the
+        // 0 to 1 range it expects, which leaves the mouse wheel moving a
+        // number that never reaches the visible range. Setting it on each
+        // change keeps the newest message in view and the wheel working.
+        dialogContainer.heightProperty().addListener(observable -> scrollPane.setVvalue(1.0));
         dialogContainer.getChildren().add(
                 DialogBox.getHermesDialog(Ui.GREETING, hermesImage));
     }
