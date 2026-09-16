@@ -27,6 +27,7 @@ public class Main extends Application {
             stage.setMinHeight(MIN_HEIGHT);
             stage.setMinWidth(MIN_WIDTH);
             fxmlLoader.<MainWindow>getController().setHermes(hermes);
+            stage.setTitle("Hermes");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
