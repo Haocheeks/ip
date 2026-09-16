@@ -53,14 +53,22 @@ public class LogBook {
      * method works unchanged for todos, deadlines and events.
      *
      * @param task the task to store.
-     * @return the message confirming the task was added.
+     * @return the message confirming the task was added, headed by a warning
+     *     when an identical task is listed already.
      * @throws HermesException if the task could not be written to storage.
      */
     public String log(Task task) throws HermesException {
+        // The task is still added. A repeated errand may well be meant, so the
+        // user is told and left to decide, rather than having it refused.
+        boolean isAlreadyListed = this.tasks.stream().anyMatch(listed -> listed.hasSameDetails(task));
+        String warning = isAlreadyListed
+                ? "Take heed: this task already stands upon thy scroll.\n"
+                : "";
+
         cache();
         this.tasks.add(task);
         this.storage.save(this.tasks);
-        return String.format("""
+        return warning + String.format("""
                 It is recorded. I have set down this task:
                   %s
                 Thy scroll now holds %d task%s.

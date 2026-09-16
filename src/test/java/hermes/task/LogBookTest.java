@@ -82,6 +82,43 @@ public class LogBookTest {
     }
 
     @Test
+    public void log_taskAlreadyListed_addedWithAWarningFirst() throws HermesException {
+        logTodos("read");
+
+        assertEquals("""
+                Take heed: this task already stands upon thy scroll.
+                It is recorded. I have set down this task:
+                  [T][ ] read
+                Thy scroll now holds 2 tasks.
+                """, logBook.log(new ToDo("read")));
+        assertEquals("1. [T][ ] read\n2. [T][ ] read\n", logBook.listTasks());
+    }
+
+    @Test
+    public void log_taskAlreadyListedButCompleted_stillWarns() throws HermesException {
+        logTodos("read");
+        logBook.mark(0);
+
+        assertEquals("""
+                Take heed: this task already stands upon thy scroll.
+                It is recorded. I have set down this task:
+                  [T][ ] read
+                Thy scroll now holds 2 tasks.
+                """, logBook.log(new ToDo("read")));
+    }
+
+    @Test
+    public void log_sameDescriptionButDifferentDate_noWarning() throws HermesException {
+        logBook.log(new Deadline("essay", LocalDateTime.of(2026, 8, 27, 15, 0)));
+
+        assertEquals("""
+                It is recorded. I have set down this task:
+                  [D][ ] essay (by: 28 Aug 2026 1500)
+                Thy scroll now holds 2 tasks.
+                """, logBook.log(new Deadline("essay", LocalDateTime.of(2026, 8, 28, 15, 0))));
+    }
+
+    @Test
     public void log_task_savedToDataFile() throws HermesException, IOException {
         logTodos("read");
 
