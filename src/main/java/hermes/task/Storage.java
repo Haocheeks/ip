@@ -29,7 +29,7 @@ public class Storage {
     private int skippedLines = 0;
 
     /**
-     * @param filePath where the tasks are stored, relative to the working directory
+     * @param filePath where the tasks are stored, relative to the working directory.
      */
     public Storage(String filePath) {
         this.file = new File(filePath);

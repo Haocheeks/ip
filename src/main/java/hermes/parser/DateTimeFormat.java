@@ -11,10 +11,10 @@ import hermes.HermesException;
 /**
  * List of the various DateFormat and DateTimeFormat Hermes can accept.
  *
- * <P>This names the type of Date and DateTimeFormat users might input and converts
+ * <p>This names the type of Date and DateTimeFormat users might input and converts
  * the String into a DateTimeFormatter.
  *
- * <P>A boolean variable called isDateOnly to differentiate between DateFormat and DateTimeFormat.
+ * <p>A boolean variable called isDateOnly to differentiate between DateFormat and DateTimeFormat.
  */
 public enum DateTimeFormat {
 
@@ -62,8 +62,8 @@ public enum DateTimeFormat {
     /**
      * Analyses a Date Time String and attempts to parse the value with an appropriate formatter.
      *
-     * @param dateTime String of the date (and time) inputted by the users
-     * @return the appropriate DateTimeFormatter if present else returns null
+     * @param dateTime String of the date (and time) inputted by the users.
+     * @return the appropriate DateTimeFormatter if present else returns null.
      */
     private static DateTimeFormat findMatchingFormat(String dateTime) {
         for (DateTimeFormat format : DateTimeFormat.values()) {
@@ -75,8 +75,7 @@ public enum DateTimeFormat {
     }
 
     /**
-     * Helper function to check if the formatter is able to parse the date (and time) String input
-     * from the user.
+     * Returns true if the formatter can read the date (and time) the user typed.
      *
      * @param dateTime String of the date (and time) the user inputted.
      * @param formatter A DateTimeFormatter that will be used to attempt to parse the dateTime.

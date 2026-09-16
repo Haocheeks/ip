@@ -76,16 +76,16 @@ public class LogBook {
     }
 
     /**
-     * Marks every tasks listed as completed.
+     * Marks every task listed as completed.
      *
-     * @param indexes the task's position in the list, counting from zero.
+     * @param indexes the tasks' positions in the list, counting from zero.
      * @return the message confirming the change.
      * @throws HermesException if the number names no task, or the change could
      *                         not be written to storage.
      */
     public String mark(int... indexes) throws HermesException {
-        // Every index is checked first before any tasks is marked,
-        // checking as each task goes will leave the list half changed
+        // Every index is checked before any task is marked. Checking as each
+        // task goes would leave the list half changed.
         for (int index : indexes) {
             checkIndex(index);
         }
@@ -142,14 +142,14 @@ public class LogBook {
     /**
      * Marks one task as no longer completed.
      *
-     * @param indexes the task's position in the list, counting from zero.
+     * @param indexes the tasks' positions in the list, counting from zero.
      * @return the message confirming the change.
      * @throws HermesException if the number names no task, or the change could
      *     not be written to storage.
      */
     public String unmark(int... indexes) throws HermesException {
-        // Every index is checked first before any tasks is unmarked,
-        // checking as each task goes will leave the list half changed
+        // Every index is checked before any task is unmarked. Checking as
+        // each task goes would leave the list half changed.
         for (int index : indexes) {
             checkIndex(index);
         }
@@ -220,8 +220,6 @@ public class LogBook {
     public String delete(int... indexes) throws HermesException {
         Arrays.sort(indexes);
 
-        // Every index is checked first before any tasks is unmarked,
-        // checking as each task goes will leave the list half changed
         for (int index : indexes) {
             checkIndex(index);
         }
@@ -317,7 +315,7 @@ public class LogBook {
     /**
      * Reverts the list to its previous state by one step.
      *
-     * @return the updated tasks after the undo action was performed
+     * @return the updated tasks after the undo action was performed.
      * @throws HermesException if the previous tasks could not be written to storage.
      */
     public String undo() throws HermesException {
@@ -346,7 +344,7 @@ public class LogBook {
     }
 
     /**
-     * Checks to ensure that the index inputted into the method is a valid one
+     * Checks that the index names a task that exists.
      *
      * @param index index of task we are manipulating.
      * @throws HermesException error indicating index out of bounds exception.

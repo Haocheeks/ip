@@ -9,7 +9,7 @@ public class DeleteCommand extends Command {
     private final int[] indexes;
 
     /**
-     * @param indexes the tasks' positions in the list, counting from zero
+     * @param indexes the tasks' positions in the list, counting from zero.
      */
     public DeleteCommand(int... indexes) {
         this.indexes = indexes;

@@ -68,10 +68,24 @@ public class DialogBox extends HBox {
         dialog.getStyleClass().add("reply-label");
     }
 
+    /**
+     * Returns a dialog box holding what the user typed.
+     *
+     * @param text the line the user entered.
+     * @param image the user's picture.
+     * @return a dialog box with the picture on the right.
+     */
     public static DialogBox getUserDialog(String text, Image image) {
         return new DialogBox(text, image);
     }
 
+    /**
+     * Returns a dialog box holding a reply from Hermes.
+     *
+     * @param text the reply to show.
+     * @param image Hermes's picture.
+     * @return a dialog box flipped so the picture sits on the left.
+     */
     public static DialogBox getHermesDialog(String text, Image image) {
         DialogBox dialogBox = new DialogBox(text, image);
         dialogBox.flip();

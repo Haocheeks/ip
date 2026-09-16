@@ -39,9 +39,9 @@ public class Parser {
      * that comes back is ready to run. Input Hermes cannot use is reported as a
      * {@link HermesException} instead, and nothing is carried out.
      *
-     * @param input one full line of input, already trimmed
-     * @return the command the user asked for
-     * @throws HermesException if the input names a command but cannot supply it
+     * @param input one full line of input, already trimmed.
+     * @return the command the user asked for.
+     * @throws HermesException if the input names a command but cannot supply it.
      */
     public Command parse(String input) throws HermesException {
         String commandWord = parseCommandWord(input);
@@ -70,8 +70,8 @@ public class Parser {
      * Returns the first word of the input, so an unrecognized command can be
      * quoted back to the user.
      *
-     * @param input one full line of input, already trimmed
-     * @return the word the user typed as a command
+     * @param input one full line of input, already trimmed.
+     * @return the word the user typed as a command.
      */
     private String parseCommandWord(String input) {
         return input.split("\\s+", 2)[0];
@@ -80,8 +80,8 @@ public class Parser {
     /**
      * Returns everything the user typed after the command word.
      *
-     * @param input one full line of input, already trimmed
-     * @return the arguments, or an empty string if the command stood alone
+     * @param input one full line of input, already trimmed.
+     * @return the arguments, or an empty string if the command stood alone.
      */
     private String parseArguments(String input) {
         String[] argumentParts = input.split("\\s+", 2);
@@ -89,11 +89,11 @@ public class Parser {
     }
 
     /**
-     * Checks to ensure that only one keyword is given for the find operation
+     * Returns the single word the user asked Hermes to search for.
      *
-     * @param arguments what the user typed after the command word
-     * @return the keyword
-     * @throws HermesException too many keywords were provided by the user
+     * @param arguments what the user typed after the command word.
+     * @return the keyword.
+     * @throws HermesException too many keywords were provided by the user.
      */
     private String parseFindOperation(String arguments) throws HermesException {
         String[] argumentParts = arguments.split("\\s+");

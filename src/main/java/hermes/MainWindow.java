@@ -13,7 +13,10 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 /**
- * Main Window
+ * The window the user talks to Hermes through.
+ *
+ * <p>It holds the conversation, the text field and the send button, and
+ * passes each line the user types to the back end.
  */
 public class MainWindow extends AnchorPane {
 
