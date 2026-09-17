@@ -27,6 +27,7 @@ Contents
   - [Leaving](#leaving-bye)
 - [Dates Hermes Understands](#dates-hermes-understands)
 - [Saving Your Tasks](#saving-your-tasks)
+- [Troubleshooting](#troubleshooting)
 
 Getting Started
 ---
@@ -298,3 +299,20 @@ it from. You never need to save by hand.
 That file is plain text, so you can edit it yourself. Hermes sets aside any
 line it cannot read and tells you how many it skipped when it starts. Those
 lines are lost at the next save. Copy the file before editing it.
+
+Troubleshooting
+---
+
+**My tasks are gone after I restarted Hermes. What do I do?**
+
+1. Close Hermes.
+2. Open your terminal and navigate to the folder you started Hermes from last
+   time. This folder holds a `data` folder with your tasks inside.
+3. Run `java -jar hermes.jar` from that folder.
+4. Start Hermes from this same folder every time.
+
+**Hermes does not start and shows `UnsupportedClassVersionError`. What do I do?**
+
+1. Run `java -version` to check which Java you have.
+2. Install Java 25 or later if the version shown is lower than 25.
+3. Run `java -jar hermes.jar` again.
