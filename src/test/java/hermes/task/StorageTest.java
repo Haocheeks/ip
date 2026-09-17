@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -112,6 +113,31 @@ public class StorageTest {
         storage.load();
 
         assertEquals(0, storage.getSkippedLines());
+    }
+
+    @Test
+    public void load_fileCannotBeOpened_returnsNothingAndReportsIt() throws IOException {
+        // A folder where the file should be cannot be opened on any system.
+        Path file = Files.createDirectory(tempDir.resolve("Hermes.txt"));
+        Storage storage = new Storage(file.toString());
+
+        assertTrue(storage.load().isEmpty());
+        assertTrue(storage.isFileUnreadable());
+    }
+
+    @Test
+    public void save_afterFileCouldNotBeOpened_leavesFileUntouched() throws IOException {
+        Path file = tempDir.resolve("Hermes.txt");
+        Files.write(file, List.of("T | 0 | kept safe"));
+        // Some systems ignore this permission, so the test is skipped there.
+        assumeTrue(file.toFile().setReadable(false) && !Files.isReadable(file));
+        Storage storage = new Storage(file.toString());
+
+        storage.load();
+
+        assertThrows(HermesException.class, () -> storage.save(List.of(new ToDo("read"))));
+        file.toFile().setReadable(true);
+        assertEquals(List.of("T | 0 | kept safe"), Files.readAllLines(file));
     }
 
     @Test

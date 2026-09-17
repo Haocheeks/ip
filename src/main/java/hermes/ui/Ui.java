@@ -99,6 +99,26 @@ public class Ui {
     }
 
     /**
+     * Builds the error shown when the data file exists but could not be opened.
+     *
+     * <p>It is written plainly rather than in Hermes's usual voice. The user
+     * must understand it at once and know how to fix it.
+     *
+     * @param path where the tasks are stored, so the message can name it.
+     * @return the error to show the user.
+     */
+    public static String formatUnreadableError(String path) {
+        return String.format("""
+                Error: Hermes could not open your task file, %s.
+                Your saved tasks have not been loaded and no changes will be saved.
+                To fix this:
+                1. Close Hermes.
+                2. Make sure %s is a file you have permission to read and write.
+                3. Start Hermes again.
+                """, path, path);
+    }
+
+    /**
      * Reports something that went wrong.
      *
      * <p>Errors are framed exactly like any other reply; this exists so callers

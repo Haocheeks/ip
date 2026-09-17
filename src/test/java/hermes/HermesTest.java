@@ -12,6 +12,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import hermes.ui.Ui;
+
 /**
  * Tests what Hermes hands back to the window for each line of input.
  *
@@ -95,5 +97,19 @@ public class HermesTest {
 
         assertTrue(newHermes().describeSkippedLines()
                 .startsWith("Alas, I could not read 2 lines in my records, and have set them aside."));
+    }
+
+    @Test
+    public void describeUnreadableFile_fileOpens_saysNothing() throws IOException {
+        Files.write(tempDir.resolve("Hermes.txt"), List.of("T | 0 | read"));
+
+        assertEquals("", newHermes().describeUnreadableFile());
+    }
+
+    @Test
+    public void describeUnreadableFile_fileCannotBeOpened_explainsHowToFixIt() throws IOException {
+        Files.createDirectory(tempDir.resolve("Hermes.txt"));
+
+        assertEquals(Ui.formatUnreadableError("data/Hermes.txt"), newHermes().describeUnreadableFile());
     }
 }

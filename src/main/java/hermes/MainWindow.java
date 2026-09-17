@@ -60,6 +60,11 @@ public class MainWindow extends AnchorPane {
 
     public void setHermes(Hermes hermes) {
         this.hermes = hermes;
+        String error = this.hermes.describeUnreadableFile();
+        if (!error.isEmpty()) {
+            dialogContainer.getChildren().add(
+                    DialogBox.getErrorDialog(error, hermesImage));
+        }
         String warning = this.hermes.describeSkippedLines();
         if (!warning.isEmpty()) {
             dialogContainer.getChildren().add(

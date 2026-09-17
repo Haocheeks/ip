@@ -39,6 +39,9 @@ public class Storage {
     /** How many lines the most recent {@link #load()} could not understand. */
     private int skippedLines = 0;
 
+    /** Whether the most recent {@link #load()} found the file but could not open it. */
+    private boolean isFileUnreadable = false;
+
     /**
      * @param filePath where the tasks are stored, relative to the working directory.
      */
@@ -57,11 +60,15 @@ public class Storage {
      * allowed to stop the load, so one damaged line does not cost the user
      * every other task. Ask {@link #getSkippedLines()} how many were lost.
      *
+     * <p>A file that exists but cannot be opened gives an empty list. Ask
+     * {@link #isFileUnreadable()} whether that happened.
+     *
      * @return the tasks read from the file, in the order they were stored.
      */
     public ArrayList<Task> load() {
         ArrayList<Task> tasks = new ArrayList<>();
         this.skippedLines = 0;
+        this.isFileUnreadable = false;
 
         if (!this.file.exists()) {
             this.file.getParentFile().mkdirs();
@@ -79,9 +86,8 @@ public class Storage {
                 }
             }
         } catch (FileNotFoundException e) {
-            // Unreachable: the file was found to exist just above. Rethrowing
-            // unchecked keeps that assumption honest if it ever stops holding.
-            throw new RuntimeException(e);
+            // The file exists but could not be opened, usually for lack of permission.
+            this.isFileUnreadable = true;
         }
 
         return tasks;
@@ -165,9 +171,19 @@ public class Storage {
      * survive being closed.
      *
      * @param tasks the tasks to write, in the order they should be stored.
-     * @throws HermesException if the data file could not be written.
+     * @throws HermesException if the data file could not be opened when it was
+     *     loaded or could not be written.
      */
     public void save(List<Task> tasks) throws HermesException {
+        // Leave the file unchanged if it could not be opened when loading. The list
+        // in memory is missing the tasks in that file. Writing it out would erase them.
+        if (this.isFileUnreadable) {
+            throw new HermesException(String.format("""
+                    Error: This change was not saved because Hermes could not open %s.
+                    Close Hermes, fix the file's permissions and start Hermes again.
+                    """, this.file));
+        }
+
         List<String> lines = tasks.stream()
                 .map(Task::getFileContent)
                 .toList();
@@ -215,5 +231,15 @@ public class Storage {
      */
     public int getSkippedLines() {
         return this.skippedLines;
+    }
+
+    /**
+     * Returns whether the data file existed but could not be opened on the most
+     * recent load.
+     *
+     * @return true if the file could not be opened.
+     */
+    public boolean isFileUnreadable() {
+        return this.isFileUnreadable;
     }
 }

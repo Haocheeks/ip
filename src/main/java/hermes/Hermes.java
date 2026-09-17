@@ -51,6 +51,12 @@ public class Hermes {
 
         ui.showWelcome();
 
+        String error = hermes.describeUnreadableFile();
+
+        if (!error.isEmpty()) {
+            ui.showError(error);
+        }
+
         String warning = hermes.describeSkippedLines();
 
         if (!warning.isEmpty()) {
@@ -87,6 +93,19 @@ public class Hermes {
 
         if (skipped > 0) {
             return Ui.formatLoadingError(skipped, DATA_PATH);
+        }
+        return "";
+    }
+
+    /**
+     * Describes the error when the data file could not be opened as Hermes
+     * started. Says nothing when the file opened.
+     *
+     * @return the error to show, empty if the file opened.
+     */
+    protected String describeUnreadableFile() {
+        if (this.logBook.isFileUnreadable()) {
+            return Ui.formatUnreadableError(DATA_PATH);
         }
         return "";
     }

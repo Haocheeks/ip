@@ -47,6 +47,16 @@ public class LogBook {
     }
 
     /**
+     * Returns whether the data file existed but could not be opened when these
+     * tasks were loaded.
+     *
+     * @return true if the file could not be opened.
+     */
+    public boolean isFileUnreadable() {
+        return this.storage.isFileUnreadable();
+    }
+
+    /**
      * Stores an already-built task and reports how many tasks are now held.
      *
      * <p>The caller decides which kind of {@link Task} to create, so this

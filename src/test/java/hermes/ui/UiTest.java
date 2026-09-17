@@ -104,4 +104,16 @@ public class UiTest {
                 elsewhere.txt first, shouldst thou need it.
                 """, Ui.formatLoadingError(3, "elsewhere.txt"));
     }
+
+    @Test
+    public void formatUnreadableError_path_namesItAndSaysHowToFixIt() {
+        assertEquals("""
+                Error: Hermes could not open your task file, data/Hermes.txt.
+                Your saved tasks have not been loaded and no changes will be saved.
+                To fix this:
+                1. Close Hermes.
+                2. Make sure data/Hermes.txt is a file you have permission to read and write.
+                3. Start Hermes again.
+                """, Ui.formatUnreadableError("data/Hermes.txt"));
+    }
 }
