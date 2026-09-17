@@ -60,7 +60,7 @@ public class Hermes {
         String warning = hermes.describeSkippedLines();
 
         if (!warning.isEmpty()) {
-            ui.show(warning);
+            ui.showError(warning);
         }
 
         boolean isRunning = true;

@@ -74,7 +74,7 @@ public class Ui {
     }
 
     /**
-     * Builds the warning shown when some stored records could not be read.
+     * Builds the error shown when some stored records could not be read.
      *
      * <p>Skipped lines are not held in memory, so the next save rewrites the
      * file without them. Saying so up front gives the user the chance to
@@ -87,15 +87,14 @@ public class Ui {
      *
      * @param skippedLines how many lines were unreadable, always at least one.
      * @param path where those records are stored, so the message can name it.
-     * @return the warning to show the user.
+     * @return the error to show the user.
      */
     public static String formatLoadingError(int skippedLines, String path) {
         return String.format("""
-                Alas, I could not read %d line%s in my records, and have set %s aside.
-                Whatever I cannot read shall be lost when next I save, so look to
-                %s first, shouldst thou need it.
-                """, skippedLines, skippedLines == 1 ? "" : "s",
-                skippedLines == 1 ? "it" : "them", path);
+                Error: Hermes could not read %d line%s in your task file, %s.
+                Unreadable lines will be lost the next time Hermes saves.
+                To keep them, close Hermes and fix the file before starting Hermes again.
+                """, skippedLines, skippedLines == 1 ? "" : "s", path);
     }
 
     /**

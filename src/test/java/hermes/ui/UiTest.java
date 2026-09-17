@@ -90,18 +90,18 @@ public class UiTest {
     @Test
     public void formatLoadingError_oneLine_speaksOfIt() {
         assertEquals("""
-                Alas, I could not read 1 line in my records, and have set it aside.
-                Whatever I cannot read shall be lost when next I save, so look to
-                data/Hermes.txt first, shouldst thou need it.
+                Error: Hermes could not read 1 line in your task file, data/Hermes.txt.
+                Unreadable lines will be lost the next time Hermes saves.
+                To keep them, close Hermes and fix the file before starting Hermes again.
                 """, Ui.formatLoadingError(1, "data/Hermes.txt"));
     }
 
     @Test
     public void formatLoadingError_severalLines_speaksOfThem() {
         assertEquals("""
-                Alas, I could not read 3 lines in my records, and have set them aside.
-                Whatever I cannot read shall be lost when next I save, so look to
-                elsewhere.txt first, shouldst thou need it.
+                Error: Hermes could not read 3 lines in your task file, elsewhere.txt.
+                Unreadable lines will be lost the next time Hermes saves.
+                To keep them, close Hermes and fix the file before starting Hermes again.
                 """, Ui.formatLoadingError(3, "elsewhere.txt"));
     }
 

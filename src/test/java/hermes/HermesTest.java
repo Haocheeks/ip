@@ -96,7 +96,7 @@ public class HermesTest {
         Files.write(tempDir.resolve("Hermes.txt"), List.of("rubbish", "T | 0 | read", "T | 0"));
 
         assertTrue(newHermes().describeSkippedLines()
-                .startsWith("Alas, I could not read 2 lines in my records, and have set them aside."));
+                .startsWith("Error: Hermes could not read 2 lines in your task file, data/Hermes.txt."));
     }
 
     @Test
