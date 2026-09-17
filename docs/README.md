@@ -36,7 +36,7 @@ Getting Started
      ```
      java -version
      ```
-2. Download the latest version of hermes.jar by clicking this [link](https://github.com/Haocheeks/ip/releases/download/v0.2/hermes.jar).
+2. Download the latest version of hermes.jar by clicking this [link](https://github.com/Haocheeks/ip/releases/download/A-Release/hermes.jar).
 3. Save the JAR file in an empty folder.
 4. Open your terminal and navigate to the directory where you saved the file.
 5. Run the following command to start the chat interface.
